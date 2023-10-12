@@ -1,0 +1,5 @@
+ANCHO = 1920
+ALTO = 1080
+FPS = 30
+
+VIDAS = 3
