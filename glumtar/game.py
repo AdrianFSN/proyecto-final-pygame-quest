@@ -1,12 +1,12 @@
 import pygame
-from . import HEIGHT, WEIGHT
+from . import HEIGHT, WIDTH
 from .scenes import FrontPage, MatchLevel1, MatchLevel2, ResolveLevel1, ResolveLevel2, BestPlayers
 
 
 class Glumtar:
     def __init__(self):
         pygame.init()
-        self.pantalla = pygame.display.set_mode((WEIGHT, HEIGHT))
+        self.pantalla = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Glumtar | Avoid 'em All")
 
         self.scenes = [FrontPage(self.pantalla),

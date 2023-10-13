@@ -1,6 +1,7 @@
 import pygame
 
 from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, FPS, ROBIN_EGG_BLUE, SPACE_CADET
+from .entities import Ship
 
 
 class Scene:
@@ -34,6 +35,7 @@ class FrontPage(Scene):
 class MatchLevel1(Scene):
     def __init__(self, screen):
         super().__init__(screen)
+        self.player = Ship()
 
     def mainLoop(self):
         super().mainLoop()
@@ -46,6 +48,9 @@ class MatchLevel1(Scene):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
             self.screen.fill(ROBIN_EGG_BLUE)
+
+            self.player.update()
+            self.screen.blit(self.player.img_new_size, self.player.rect)
             pygame.display.flip()
 
         return False

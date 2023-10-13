@@ -12,6 +12,7 @@ He optado por escribir el código en inglés, para tratar de acostumbrarme a los
 # Carpeta tools
 En la carpeta tools encontrarás herramientas útiles para el diseño del juego:
 
-*Paleta de colores creada con coolors: [Ver en la web](https://coolors.co/c0d6df-2e2d4d-d88373-bd1e1e-4ecdc4)
+* Paleta de colores creada con coolors: [Ver en la web](https://coolors.co/c0d6df-2e2d4d-d88373-bd1e1e-4ecdc4)
+
     - Versión en png.
     - Versión en scss.
