@@ -1,13 +1,13 @@
 import os
-from typing import Any
 import pygame
 from . import HEIGHT, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
-    margin = 50
+    margin = 70
     speed = 5
     size_modifier = 4
+    speed_boost = .7
 
     def __init__(self):
         super().__init__()
@@ -25,11 +25,23 @@ class Ship(pygame.sprite.Sprite):
     def update(self):
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_UP]:
-            self.rect.y -= self.speed
+            self.accelerated_speed = self.speed
+            self.rect.y -= self.speed + \
+                self.accelerate(self.accelerated_speed)
             if self.rect.top < 0:
                 self.rect.top = 0
 
         if pressed[pygame.K_DOWN]:
-            self.rect.y += self.speed
+            self.accelerated_speed = self.speed
+            self.rect.y += self.speed + \
+                self.accelerate(self.accelerated_speed)
             if self.rect.bottom > HEIGHT:
                 self.rect.bottom = HEIGHT
+
+    def accelerate(self, speed):
+        acceleration = speed
+        acceleration *= self.speed_boost
+        if self.accelerated_speed != self.speed:
+            return self.accelerated_speed
+
+        return acceleration
