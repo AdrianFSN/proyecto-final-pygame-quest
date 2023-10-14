@@ -1,7 +1,7 @@
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, FPS, ROBIN_EGG_BLUE, SPACE_CADET
-from .entities import Ship
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, FPS, HEIGHT, ROBIN_EGG_BLUE, SPACE_CADET, WIDTH
+from .entities import Meteorite, Ship
 
 
 class Scene:
@@ -36,6 +36,7 @@ class MatchLevel1(Scene):
     def __init__(self, screen):
         super().__init__(screen)
         self.player = Ship()
+        self.meteorite = Meteorite(20)
 
     def mainLoop(self):
         super().mainLoop()
@@ -51,6 +52,9 @@ class MatchLevel1(Scene):
 
             self.player.update()
             self.screen.blit(self.player.img_new_size, self.player.rect)
+            self.meteorite.update()
+            self.screen.blit(self.meteorite.img_new_size, self.meteorite.rect)
+
             pygame.display.flip()
 
         return False

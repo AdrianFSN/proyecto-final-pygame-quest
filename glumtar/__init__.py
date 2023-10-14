@@ -1,6 +1,6 @@
 WIDTH = 1280
 HEIGHT = 720
-FPS = 30
+FPS = 60
 
 LIVES = 3
 # Selected colors palette RGB
