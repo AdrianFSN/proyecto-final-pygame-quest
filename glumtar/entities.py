@@ -52,9 +52,11 @@ class Ship(pygame.sprite.Sprite):
 
 class Meteorite(pygame.sprite.Sprite):
     SPEED = 5
-    SIZE_MODIFIER = 3
+    SIZE_MODIFIER = 5
+    SIZE_CONTROLLER = random.randint(1, SIZE_MODIFIER - 1)
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
+    ROTATION_SPEED = 2
 
     def __init__(self, posX=WIDTH):
         super().__init__()
@@ -64,9 +66,12 @@ class Meteorite(pygame.sprite.Sprite):
         for image in self.METEORITE_IMG:
             img_route = os.path.join(
                 'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
+
         self.image = pygame.image.load(img_route)
-        self.image_n_width = self.image.get_width()/self.SIZE_MODIFIER
-        self.image_n_height = self.image.get_height()/self.SIZE_MODIFIER
+        self.image_n_width = self.image.get_width(
+        )/(self.SIZE_MODIFIER - self.SIZE_CONTROLLER)
+        self.image_n_height = self.image.get_height(
+        )/(self.SIZE_MODIFIER - self.SIZE_CONTROLLER)
 
         self.img_new_size = pygame.transform.scale(
             self.image, (self.image_n_width, self.image_n_height))
@@ -74,8 +79,16 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect = self.img_new_size.get_rect(
             midright=(self.positionX, self.positionY))
 
+        self.rotating_meteorite = self.img_new_size
+        self.rotation_angle = 0
+
     def update(self):
         self.rect.x -= self.SPEED
         if self.rect.right < 0:
             self.SPEED = 0
             return True, print("El mono ha salido")
+
+        if self.rect.right > 0:
+            self.rotation_angle += self.ROTATION_SPEED
+            self.rotating_meteorite = pygame.transform.rotate(
+                self.img_new_size, self.rotation_angle)

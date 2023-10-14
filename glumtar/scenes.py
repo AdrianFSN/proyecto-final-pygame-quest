@@ -53,7 +53,8 @@ class MatchLevel1(Scene):
             self.player.update()
             self.screen.blit(self.player.img_new_size, self.player.rect)
             self.meteorite.update()
-            self.screen.blit(self.meteorite.img_new_size, self.meteorite.rect)
+            self.screen.blit(self.meteorite.rotating_meteorite,
+                             self.meteorite.rect)
 
             pygame.display.flip()
 
