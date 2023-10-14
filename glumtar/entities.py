@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import HEIGHT, WIDTH
+from . import HEIGHT, WIDTH, MARGIN
 
 
 class Ship(pygame.sprite.Sprite):
@@ -51,18 +51,22 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Meteorite(pygame.sprite.Sprite):
-    speed = 5
-    size_modifier = 4
+    SPEED = 5
+    SIZE_MODIFIER = 3
+    METEORITE_IMG = ['meteorite0_0.png',
+                     'meteorite1_0.png', 'meteorite2_0.png']
 
-    def __init__(self, posY, posX=WIDTH):
+    def __init__(self, posX=WIDTH):
         super().__init__()
         self.positionX = posX
-        self.positionY = posY
-        img_route = os.path.join(
-            'glumtar', 'resources', 'images', 'ship0_0.png')
+        self.positionY = random.randint(MARGIN, HEIGHT)
+        index = random.randint(0, len(self.METEORITE_IMG)-1)
+        for image in self.METEORITE_IMG:
+            img_route = os.path.join(
+                'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
         self.image = pygame.image.load(img_route)
-        self.image_n_width = self.image.get_width()/self.size_modifier
-        self.image_n_height = self.image.get_height()/self.size_modifier
+        self.image_n_width = self.image.get_width()/self.SIZE_MODIFIER
+        self.image_n_height = self.image.get_height()/self.SIZE_MODIFIER
 
         self.img_new_size = pygame.transform.scale(
             self.image, (self.image_n_width, self.image_n_height))
@@ -71,7 +75,7 @@ class Meteorite(pygame.sprite.Sprite):
             midright=(self.positionX, self.positionY))
 
     def update(self):
-        self.rect.x -= self.speed
+        self.rect.x -= self.SPEED
         if self.rect.right < 0:
-            self.speed = 0
+            self.SPEED = 0
             return True, print("El mono ha salido")

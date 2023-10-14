@@ -36,7 +36,7 @@ class MatchLevel1(Scene):
     def __init__(self, screen):
         super().__init__(screen)
         self.player = Ship()
-        self.meteorite = Meteorite(20)
+        self.meteorite = Meteorite()
 
     def mainLoop(self):
         super().mainLoop()
