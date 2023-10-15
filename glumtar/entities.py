@@ -17,6 +17,9 @@ class Ship(pygame.sprite.Sprite):
         img_route = os.path.join(
             'glumtar', 'resources', 'images', 'ship0_0.png')
         self.image = pygame.image.load(img_route)
+        self.resize_ship()
+
+    def resize_ship(self):
         self.image_n_width = self.image.get_width()/self.size_modifier
         self.image_n_height = self.image.get_height()/self.size_modifier
 
@@ -52,8 +55,9 @@ class Ship(pygame.sprite.Sprite):
 
 class Meteorite(pygame.sprite.Sprite):
     SPEED = 5
-    SIZE_MODIFIER = 5
-    SIZE_CONTROLLER = random.randint(1, SIZE_MODIFIER - 1)
+    SIZE_MODIFIER_MAX = 6
+    SIZE_MODIFIER_MIN = 2
+    SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX - 1)
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
     ROTATION_SPEED = 2
@@ -62,30 +66,37 @@ class Meteorite(pygame.sprite.Sprite):
         super().__init__()
         self.positionX = posX
         self.positionY = random.randint(MARGIN, HEIGHT)
+        self.assing_costume()
+        self.resize_meteorites()
+
+        self.rotating_meteorite = self.img_new_size
+        self.rotation_angle = 0
+
+    def assing_costume(self):
         index = random.randint(0, len(self.METEORITE_IMG)-1)
         for image in self.METEORITE_IMG:
             img_route = os.path.join(
                 'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
 
         self.image = pygame.image.load(img_route)
+
+    def resize_meteorites(self):
         self.image_n_width = self.image.get_width(
-        )/(self.SIZE_MODIFIER - self.SIZE_CONTROLLER)
+        )/(self.SIZE_MODIFIER_MAX - self.SIZE_CONTROLLER)
         self.image_n_height = self.image.get_height(
-        )/(self.SIZE_MODIFIER - self.SIZE_CONTROLLER)
+        )/(self.SIZE_MODIFIER_MAX - self.SIZE_CONTROLLER)
 
         self.img_new_size = pygame.transform.scale(
             self.image, (self.image_n_width, self.image_n_height))
 
         self.rect = self.img_new_size.get_rect(
             midright=(self.positionX, self.positionY))
-
-        self.rotating_meteorite = self.img_new_size
-        self.rotation_angle = 0
+        if self.positionY > HEIGHT - self.image_n_height/2:
+            self.positionY = HEIGHT - self.rect.bottom
 
     def update(self):
         self.rect.x -= self.SPEED
         if self.rect.right < 0:
-            self.SPEED = 0
             return True, print("El mono ha salido")
 
         if self.rect.right > 0:
