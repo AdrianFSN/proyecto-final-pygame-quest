@@ -56,7 +56,7 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Meteorite(pygame.sprite.Sprite):
-    SPEED = 5
+    speed = 5
     SIZE_MODIFIER_MAX = 6
     SIZE_MODIFIER_MIN = 2
     SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX - 1)
@@ -97,7 +97,7 @@ class Meteorite(pygame.sprite.Sprite):
             self.positionY = HEIGHT - self.rect.bottom
 
     def update(self):
-        self.rect.x -= self.SPEED
+        self.rect.x -= self.speed
         if self.rect.right < 0:
             return True, print("El mono ha salido")
 
