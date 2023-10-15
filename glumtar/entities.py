@@ -8,10 +8,10 @@ from . import HEIGHT, WIDTH, MARGIN
 
 class Ship(pygame.sprite.Sprite):
     margin = 70
-    default_speed = 5
+    default_speed = 0
     speed = default_speed
     size_modifier = 4
-    speed_boost = 1.7
+    speed_boost = .5
 
     def __init__(self):
         super().__init__()
@@ -45,6 +45,7 @@ class Ship(pygame.sprite.Sprite):
             self.speed += self.speed_boost
             if self.rect.top < 0:
                 self.rect.top = 0
+        self.reset_speed()
 
         if pressed[pygame.K_DOWN]:
             self.rect.y += self.speed
