@@ -80,7 +80,7 @@ class MatchLevel1(Scene):
                 self.random_meteorite)
 
         # print("He añadido un meteorito")
-        print(self.generated_meteorites)
+        # print(self.generated_meteorites)
 
 
 class ResolveLevel1(Scene):

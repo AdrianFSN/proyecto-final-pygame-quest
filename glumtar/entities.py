@@ -63,18 +63,12 @@ class Meteorite(pygame.sprite.Sprite):
     OUTER_MARGIN = 50
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
-    ROTATION_SPEED = 2
-    rotation_angle = 0
 
     def __init__(self, posX=WIDTH + OUTER_MARGIN):
         super().__init__()
         self.positionX = posX
         self.positionY = random.randint(MARGIN, HEIGHT)
         self.assing_costume()
-
-        self.resize_meteorites()
-
-        self.rotating_meteorite = self.img_new_size
 
     def assing_costume(self):
         index = random.randint(0, len(self.METEORITE_IMG)-1)
@@ -83,8 +77,10 @@ class Meteorite(pygame.sprite.Sprite):
                 'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
 
         self.image = pygame.image.load(img_route)
+        self.rect = self.image.get_rect(
+            midright=(self.positionX, self.positionY))
 
-    def resize_meteorites(self):
+    """ def resize_meteorites(self):
         self.image_n_width = self.image.get_width(
         )/self.SIZE_CONTROLLER
         self.image_n_height = self.image.get_height(
@@ -96,13 +92,11 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect = self.img_new_size.get_rect(
             midright=(self.positionX, self.positionY))
         if self.positionY > HEIGHT - self.image_n_height/2:
-            self.positionY = HEIGHT - self.rect.bottom/2
+            self.positionY = HEIGHT - self.rect.bottom/2 """
 
     def update(self):
         self.rect.x -= self.speed
+        if self.positionY > HEIGHT - self.image.get_height()/2:
+            self.positionY = HEIGHT - self.image.get_height()/2
         if self.rect.right < 0:
             return True
-
-        self.rotation_angle += self.ROTATION_SPEED
-        self.rotating_meteorite = pygame.transform.rotate(
-            self.img_new_size, self.rotation_angle)
