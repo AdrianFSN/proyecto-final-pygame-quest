@@ -1,7 +1,8 @@
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, FPS, HEIGHT, ROBIN_EGG_BLUE, SPACE_CADET, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import Meteorite, Ship
+from tools.timers_and_countdowns import Timer
 
 
 class Scene:
@@ -36,13 +37,16 @@ class MatchLevel1(Scene):
     def __init__(self, screen):
         super().__init__(screen)
         self.player = Ship()
-        self.meteorite = Meteorite()
+        self.meteorites_group = pygame.sprite.Group()
+        self.timer = Timer(DEFAULT_TIMER)
+        self.set_timer = self.timer.set_timer()
 
     def mainLoop(self):
         super().mainLoop()
         exit = False
         while not exit:
             self.reloj.tick(FPS)
+            self.set_timer -= 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -52,13 +56,21 @@ class MatchLevel1(Scene):
 
             self.player.update()
             self.screen.blit(self.player.img_new_size, self.player.rect)
-            self.meteorite.update()
-            self.screen.blit(self.meteorite.rotating_meteorite,
-                             self.meteorite.rect)
+
+            self.fill_meteorites_group()
+
+            # self.screen.blit(self.meteorite.rotating_meteorite,
+            # self.meteorite.update()
+            #                 self.meteorite.rect)
 
             pygame.display.flip()
 
         return False
+
+    def fill_meteorites_group(self):
+        if self.set_timer % TIME_UNIT == 0:
+            self.meteorites_group.add(Meteorite())
+            print("He añadido un meteorito")
 
 
 class ResolveLevel1(Scene):

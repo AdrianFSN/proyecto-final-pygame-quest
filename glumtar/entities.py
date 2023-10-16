@@ -63,6 +63,7 @@ class Meteorite(pygame.sprite.Sprite):
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
     ROTATION_SPEED = 2
+    DEFAULT_TIMER = 7200
 
     def __init__(self, posX=WIDTH):
         super().__init__()
@@ -94,7 +95,7 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect = self.img_new_size.get_rect(
             midright=(self.positionX, self.positionY))
         if self.positionY > HEIGHT - self.image_n_height/2:
-            self.positionY = HEIGHT - self.rect.bottom
+            self.positionY = HEIGHT - self.rect.bottom/2
 
     def update(self):
         self.rect.x -= self.speed
