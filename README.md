@@ -16,3 +16,8 @@ En la carpeta tools encontrarás herramientas útiles para el diseño del juego:
 
     - Versión en png.
     - Versión en scss.
+
+* Archivo timers and countdowns:
+
+    - Timers: para controlar cuándo pasan cosas. Por ejemplo, el relleno del grupo de meteoritos o el movimiento del fondo.
+    - Countdowns: para congelar la partida y hacer una cuenta atrás antes de empezar cada partida.
