@@ -57,23 +57,24 @@ class Ship(pygame.sprite.Sprite):
 
 class Meteorite(pygame.sprite.Sprite):
     speed = 5
-    SIZE_MODIFIER_MAX = 6
-    SIZE_MODIFIER_MIN = 2
-    SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX - 1)
+    SIZE_MODIFIER_MAX = 5
+    SIZE_MODIFIER_MIN = 1
+    SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
+    OUTER_MARGIN = 50
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
     ROTATION_SPEED = 2
-    DEFAULT_TIMER = 7200
+    rotation_angle = 0
 
-    def __init__(self, posX=WIDTH):
+    def __init__(self, posX=WIDTH + OUTER_MARGIN):
         super().__init__()
         self.positionX = posX
         self.positionY = random.randint(MARGIN, HEIGHT)
         self.assing_costume()
+
         self.resize_meteorites()
 
         self.rotating_meteorite = self.img_new_size
-        self.rotation_angle = 0
 
     def assing_costume(self):
         index = random.randint(0, len(self.METEORITE_IMG)-1)
@@ -85,9 +86,9 @@ class Meteorite(pygame.sprite.Sprite):
 
     def resize_meteorites(self):
         self.image_n_width = self.image.get_width(
-        )/(self.SIZE_MODIFIER_MAX - self.SIZE_CONTROLLER)
+        )/self.SIZE_CONTROLLER
         self.image_n_height = self.image.get_height(
-        )/(self.SIZE_MODIFIER_MAX - self.SIZE_CONTROLLER)
+        )/self.SIZE_CONTROLLER
 
         self.img_new_size = pygame.transform.scale(
             self.image, (self.image_n_width, self.image_n_height))
@@ -100,9 +101,8 @@ class Meteorite(pygame.sprite.Sprite):
     def update(self):
         self.rect.x -= self.speed
         if self.rect.right < 0:
-            return True, print("El mono ha salido")
+            return True
 
-        if self.rect.right > 0:
-            self.rotation_angle += self.ROTATION_SPEED
-            self.rotating_meteorite = pygame.transform.rotate(
-                self.img_new_size, self.rotation_angle)
+        self.rotation_angle += self.ROTATION_SPEED
+        self.rotating_meteorite = pygame.transform.rotate(
+            self.img_new_size, self.rotation_angle)
