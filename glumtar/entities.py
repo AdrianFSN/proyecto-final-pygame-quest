@@ -57,6 +57,7 @@ class Ship(pygame.sprite.Sprite):
 
 class Meteorite(pygame.sprite.Sprite):
     DEFAULT_SPEED = 7
+    DEFAULT_POINTS = 5
     SIZE_MODIFIER_MAX = 5
     SIZE_MODIFIER_MIN = 1
     SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
@@ -66,10 +67,14 @@ class Meteorite(pygame.sprite.Sprite):
     SPEED_FAMILY_0 = DEFAULT_SPEED
     SPEED_FAMILY_1 = DEFAULT_SPEED + 2.5
     SPEED_FAMILY_2 = DEFAULT_SPEED + 5.5
+    POINTS_FAMILY_0 = DEFAULT_POINTS
+    POINTS_FAMILY_1 = DEFAULT_POINTS * 2
+    POINTS_FAMILY_2 = DEFAULT_POINTS * 3
 
-    def __init__(self, speed=DEFAULT_SPEED, posX=WIDTH + OUTER_MARGIN):
+    def __init__(self, speed=DEFAULT_SPEED, points=DEFAULT_POINTS, posX=WIDTH + OUTER_MARGIN):
         super().__init__()
         self.speed = speed
+        self.points = points
         self.positionX = posX
         self.positionY = random.randint(MARGIN, HEIGHT)
         self.assing_family()
@@ -82,8 +87,11 @@ class Meteorite(pygame.sprite.Sprite):
 
         if 'meteorite1_' in img_route:
             self.speed = self.SPEED_FAMILY_1
+            self.points = self.POINTS_FAMILY_1
+
         elif 'meteorite2_' in img_route:
             self.speed = self.SPEED_FAMILY_2
+            self.points = self.POINTS_FAMILY_2
 
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
@@ -97,7 +105,7 @@ class Meteorite(pygame.sprite.Sprite):
             self.rect.top = MARGIN
 
         if self.rect.right < 0:
-            return True
+            return self.points, print('He mandado ', self.points)
 
 
 class Scoreboard:
