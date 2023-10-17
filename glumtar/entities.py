@@ -57,7 +57,7 @@ class Ship(pygame.sprite.Sprite):
 
 class Meteorite(pygame.sprite.Sprite):
     DEFAULT_SPEED = 7
-    DEFAULT_POINTS = 5
+    DEFAULT_POINTS = 1
     SIZE_MODIFIER_MAX = 5
     SIZE_MODIFIER_MIN = 1
     SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
@@ -104,9 +104,6 @@ class Meteorite(pygame.sprite.Sprite):
         elif self.rect.top < MARGIN:
             self.rect.top = MARGIN
 
-        if self.rect.right < 0:
-            return self.points, print('He mandado ', self.points)
-
 
 class Scoreboard:
     margin_title = 50
@@ -129,11 +126,3 @@ class Scoreboard:
         pointsX = SCOREBOARD_MARGIN
         pointsY = SCOREBOARD_HEIGHT
         screen.blit(scoreboard_text, (pointsX, pointsY))
-
-        # self.font_style_title = pygame.font.Font(
-        #    self.font_route, FONT_SIZE - self.font_title_adjust)
-        # scoreboard_name = self.font_style_title.render(
-        #    self.scoreboard_title, True, COLUMBIA_BLUE)
-        # pointsX = SCOREBOARD_MARGIN + self.margin_title
-        # pointsY = SCOREBOARD_HEIGHT + self.font_title_adjust
-        # screen.blit(scoreboard_name, (pointsX, pointsY))

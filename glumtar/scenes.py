@@ -48,12 +48,10 @@ class MatchLevel1(Scene):
         self.scoreboard = Scoreboard()
 
         self.player = Ship()
-        # self.meteorites_group = pygame.sprite.Group()
         self.timer = Timer(DEFAULT_TIMER)
         self.set_timer = self.timer.set_timer()
         self.random_meteorite = None
-        self.generated_meteorites = pygame.sprite.AbstractGroup()
-        # self.meteorite = Meteorite()
+        self.generated_meteorites = pygame.sprite.Group()
 
     def mainLoop(self):
         super().mainLoop()
@@ -73,7 +71,7 @@ class MatchLevel1(Scene):
             self.screen.fill(ROBIN_EGG_BLUE)
             self.paint_background(self.background_posX,
                                   self.background_posY, self.set_timer)
-            # print(self.set_timer)
+
             self.scoreboard.show_scoreboard(self.screen)
 
             self.player.update()
@@ -82,10 +80,11 @@ class MatchLevel1(Scene):
             self.generate_meteorites()
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
-
-            # self.meteorite.update()
-            # self.screen.blit(self.meteorite.rotating_meteorite,
-            # self.meteorite.rect)
+            if len(self.generated_meteorites) > 0:
+                for meteorite in self.generated_meteorites:
+                    if meteorite.rect.right < 0:
+                        self.scoreboard.increase_score(meteorite.points)
+                        self.generated_meteorites.remove(meteorite)
 
             pygame.display.flip()
 
