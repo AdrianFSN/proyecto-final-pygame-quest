@@ -3,7 +3,7 @@ import os
 import pygame
 
 from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
-from .entities import Meteorite, Ship
+from .entities import Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Timer
 
 
@@ -45,6 +45,8 @@ class MatchLevel1(Scene):
         self.background_posX = 0
         self.background_posY = 0
 
+        self.scoreboard = Scoreboard()
+
         self.player = Ship()
         # self.meteorites_group = pygame.sprite.Group()
         self.timer = Timer(DEFAULT_TIMER)
@@ -71,7 +73,8 @@ class MatchLevel1(Scene):
             self.screen.fill(ROBIN_EGG_BLUE)
             self.paint_background(self.background_posX,
                                   self.background_posY, self.set_timer)
-            print(self.set_timer)
+            # print(self.set_timer)
+            self.scoreboard.show_scoreboard(self.screen)
 
             self.player.update()
             self.screen.blit(self.player.img_new_size, self.player.rect)

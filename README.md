@@ -21,3 +21,9 @@ En la carpeta tools encontrarás herramientas útiles para el diseño del juego:
 
     - Timers: para controlar cuándo pasan cosas. Por ejemplo, el relleno del grupo de meteoritos o el movimiento del fondo.
     - Countdowns: para congelar la partida y hacer una cuenta atrás antes de empezar cada partida.
+
+# Fuentes
+He elegido la fuente Press Start 2P, por su aspecto de video juego antiguo. Se puede descargar de forma gratuita en [Google fonts: ](https://fonts.google.com/specimen/Press+Start+2P?query=press+start)
+
+# Imágenes
+Las imágenes las estoy creando yo en lugar de recurrir a librerías.

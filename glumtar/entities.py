@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import HEIGHT, WIDTH, MARGIN
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, SCOREBOARD_WIDTH, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -98,3 +98,34 @@ class Meteorite(pygame.sprite.Sprite):
 
         if self.rect.right < 0:
             return True
+
+
+class Scoreboard:
+    margin_title = 50
+    font_title_adjust = 20
+
+    def __init__(self, points=0):
+        self.scoreboard_value = points
+        font = FONT
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.scoreboard_title = 'PUNTOS'
+
+    def increase_score(self, score_up):
+        self.scoreboard_value += score_up
+
+    def show_scoreboard(self, screen):
+        score_string = str(self.scoreboard_value)
+        scoreboard_text = self.font_style.render(
+            score_string, True, COLUMBIA_BLUE)
+        pointsX = SCOREBOARD_MARGIN
+        pointsY = SCOREBOARD_HEIGHT
+        screen.blit(scoreboard_text, (pointsX, pointsY))
+
+        # self.font_style_title = pygame.font.Font(
+        #    self.font_route, FONT_SIZE - self.font_title_adjust)
+        # scoreboard_name = self.font_style_title.render(
+        #    self.scoreboard_title, True, COLUMBIA_BLUE)
+        # pointsX = SCOREBOARD_MARGIN + self.margin_title
+        # pointsY = SCOREBOARD_HEIGHT + self.font_title_adjust
+        # screen.blit(scoreboard_name, (pointsX, pointsY))
