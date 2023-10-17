@@ -1,6 +1,8 @@
+import os
+
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import Meteorite, Ship
 from tools.timers_and_countdowns import Timer
 
@@ -42,7 +44,7 @@ class MatchLevel1(Scene):
         self.timer = Timer(DEFAULT_TIMER)
         self.set_timer = self.timer.set_timer()
         self.random_meteorite = None
-        self.generated_meteorites = pygame.sprite.RenderClear()
+        self.generated_meteorites = pygame.sprite.AbstractGroup()
         # self.meteorite = Meteorite()
 
     def mainLoop(self):

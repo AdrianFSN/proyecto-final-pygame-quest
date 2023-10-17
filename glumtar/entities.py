@@ -56,25 +56,34 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Meteorite(pygame.sprite.Sprite):
-    speed = 5
+    DEFAULT_SPEED = 7
     SIZE_MODIFIER_MAX = 5
     SIZE_MODIFIER_MIN = 1
     SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
-    OUTER_MARGIN = 50
+    OUTER_MARGIN = 150
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
+    SPEED_FAMILY_0 = DEFAULT_SPEED
+    SPEED_FAMILY_1 = DEFAULT_SPEED + 2
+    SPEED_FAMILY_2 = DEFAULT_SPEED + 5
 
-    def __init__(self, posX=WIDTH + OUTER_MARGIN):
+    def __init__(self, speed=DEFAULT_SPEED, posX=WIDTH + OUTER_MARGIN):
         super().__init__()
+        self.speed = speed
         self.positionX = posX
         self.positionY = random.randint(MARGIN, HEIGHT)
-        self.assing_costume()
+        self.assing_family()
 
-    def assing_costume(self):
+    def assing_family(self):
         index = random.randint(0, len(self.METEORITE_IMG)-1)
         for image in self.METEORITE_IMG:
             img_route = os.path.join(
                 'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
+
+        if 'meteorite1_' in img_route:
+            self.speed = self.SPEED_FAMILY_1
+        elif 'meteorite2_' in img_route:
+            self.speed = self.SPEED_FAMILY_2
 
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
@@ -90,13 +99,14 @@ class Meteorite(pygame.sprite.Sprite):
             self.image, (self.image_n_width, self.image_n_height))
 
         self.rect = self.img_new_size.get_rect(
-            midright=(self.positionX, self.positionY))
-        if self.positionY > HEIGHT - self.image_n_height/2:
-            self.positionY = HEIGHT - self.rect.bottom/2 """
+            midright=(self.positionX, self.positionY)) """
 
     def update(self):
         self.rect.x -= self.speed
-        if self.positionY > HEIGHT - self.image.get_height()/2:
-            self.positionY = HEIGHT - self.image.get_height()/2
+        if self.rect.bottom > HEIGHT:
+            self.rect.bottom = HEIGHT
+        elif self.rect.top < MARGIN:
+            self.rect.top = MARGIN
+
         if self.rect.right < 0:
             return True
