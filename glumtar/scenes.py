@@ -36,7 +36,6 @@ class FrontPage(Scene):
 
 
 class MatchLevel1(Scene):
-
     def __init__(self, screen):
         super().__init__(screen)
         bg_route = os.path.join('glumtar', 'resources',
