@@ -7,7 +7,7 @@ from . import HEIGHT, WIDTH, MARGIN
 
 
 class Ship(pygame.sprite.Sprite):
-    margin = 70
+    left_margin = 70
     default_speed = 0
     speed = default_speed
     size_modifier = 4
@@ -27,7 +27,8 @@ class Ship(pygame.sprite.Sprite):
         self.img_new_size = pygame.transform.scale(
             self.image, (self.image_n_width, self.image_n_height))
 
-        self.rect = self.img_new_size.get_rect(midleft=(self.margin, HEIGHT/2))
+        self.rect = self.img_new_size.get_rect(
+            midleft=(self.left_margin, (HEIGHT + MARGIN)/2))
 
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
@@ -39,12 +40,11 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         pressed = pygame.key.get_pressed()
-
         if pressed[pygame.K_UP]:
             self.rect.y -= self.speed
             self.speed += self.speed_boost
-            if self.rect.top < 0:
-                self.rect.top = 0
+            if self.rect.top < MARGIN:
+                self.rect.top = MARGIN
         self.reset_speed()
 
         if pressed[pygame.K_DOWN]:
@@ -64,8 +64,8 @@ class Meteorite(pygame.sprite.Sprite):
     METEORITE_IMG = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
     SPEED_FAMILY_0 = DEFAULT_SPEED
-    SPEED_FAMILY_1 = DEFAULT_SPEED + 2
-    SPEED_FAMILY_2 = DEFAULT_SPEED + 5
+    SPEED_FAMILY_1 = DEFAULT_SPEED + 2.5
+    SPEED_FAMILY_2 = DEFAULT_SPEED + 5.5
 
     def __init__(self, speed=DEFAULT_SPEED, posX=WIDTH + OUTER_MARGIN):
         super().__init__()
@@ -88,18 +88,6 @@ class Meteorite(pygame.sprite.Sprite):
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
             midright=(self.positionX, self.positionY))
-
-    """ def resize_meteorites(self):
-        self.image_n_width = self.image.get_width(
-        )/self.SIZE_CONTROLLER
-        self.image_n_height = self.image.get_height(
-        )/self.SIZE_CONTROLLER
-
-        self.img_new_size = pygame.transform.scale(
-            self.image, (self.image_n_width, self.image_n_height))
-
-        self.rect = self.img_new_size.get_rect(
-            midright=(self.positionX, self.positionY)) """
 
     def update(self):
         self.rect.x -= self.speed
