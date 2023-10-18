@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, SCOREBOARD_WIDTH, WIDTH
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_HEIGHT, LIVES_MARGIN, MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -56,22 +56,22 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Meteorite(pygame.sprite.Sprite):
-    DEFAULT_SPEED = 7
-    DEFAULT_POINTS = 1
-    SIZE_MODIFIER_MAX = 5
-    SIZE_MODIFIER_MIN = 1
-    SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
-    OUTER_MARGIN = 150
-    METEORITE_IMG = ['meteorite0_0.png',
+    default_speed = 7
+    default_points = 1
+    # SIZE_MODIFIER_MAX = 5
+    # SIZE_MODIFIER_MIN = 1
+    # SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
+    outer_margin = 150
+    meteorite_img = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
-    SPEED_FAMILY_0 = DEFAULT_SPEED
-    SPEED_FAMILY_1 = DEFAULT_SPEED + 2.5
-    SPEED_FAMILY_2 = DEFAULT_SPEED + 5.5
-    POINTS_FAMILY_0 = DEFAULT_POINTS
-    POINTS_FAMILY_1 = DEFAULT_POINTS * 2
-    POINTS_FAMILY_2 = DEFAULT_POINTS * 3
+    speed_family_0 = default_speed
+    speed_family_1 = default_speed + 2.5
+    speed_family_2 = default_speed + 5.5
+    points_family_0 = default_points
+    points_family_1 = default_points * 2
+    points_family_2 = default_points * 3
 
-    def __init__(self, speed=DEFAULT_SPEED, points=DEFAULT_POINTS, posX=WIDTH + OUTER_MARGIN):
+    def __init__(self, speed=default_speed, points=default_points, posX=WIDTH + outer_margin):
         super().__init__()
         self.speed = speed
         self.points = points
@@ -80,18 +80,18 @@ class Meteorite(pygame.sprite.Sprite):
         self.assing_family()
 
     def assing_family(self):
-        index = random.randint(0, len(self.METEORITE_IMG)-1)
-        for image in self.METEORITE_IMG:
+        index = random.randint(0, len(self.meteorite_img)-1)
+        for image in self.meteorite_img:
             img_route = os.path.join(
                 'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
 
         if 'meteorite1_' in img_route:
-            self.speed = self.SPEED_FAMILY_1
-            self.points = self.POINTS_FAMILY_1
+            self.speed = self.speed_family_1
+            self.points = self.points_family_1
 
         elif 'meteorite2_' in img_route:
-            self.speed = self.SPEED_FAMILY_2
-            self.points = self.POINTS_FAMILY_2
+            self.speed = self.speed_family_2
+            self.points = self.points_family_2
 
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
@@ -114,7 +114,6 @@ class Scoreboard:
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
-        self.scoreboard_title = 'PUNTOS'
 
     def increase_score(self, score_up):
         self.scoreboard_value += score_up
@@ -126,3 +125,34 @@ class Scoreboard:
         pointsX = SCOREBOARD_MARGIN
         pointsY = SCOREBOARD_HEIGHT
         screen.blit(scoreboard_text, (pointsX, pointsY))
+
+
+class LivesCounter:
+    def __init__(self, lives=LIVES):
+        self.lives_value = lives
+        font = FONT
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.available_lives = {}
+        self.livesX = WIDTH - LIVES_MARGIN
+        self.livesY = LIVES_HEIGHT
+        self.heartsX = WIDTH - 50
+        self.heartsY = self.livesY + 20
+
+        for index in range(1, LIVES + 1):
+            hearts_route = os.path.join(
+                'glumtar', 'resources', 'images', f'lives{index}.png')
+            self.available_lives[index] = hearts_route
+
+        self.hearts_image = pygame.image.load(
+            self.available_lives.get(self.lives_value))
+        self.rect = self.hearts_image.get_rect(
+            midright=(self.heartsX, self.heartsY))
+        print(self.available_lives)
+
+    def show_lives(self, screen):
+        lives_string = str(self.lives_value)
+        lives_text = self.font_style.render(
+            lives_string, True, COLUMBIA_BLUE)
+        screen.blit(lives_text, (self.livesX, self.livesY))
+        screen.blit(self.hearts_image, self.rect)
