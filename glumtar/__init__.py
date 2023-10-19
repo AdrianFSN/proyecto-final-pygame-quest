@@ -10,6 +10,8 @@ FONT = 'PressStart2P-Regular.ttf'
 FONT_SIZE = 40
 
 # Entities settings
+METEO_OUTER_MARGIN = 150
+
 SCOREBOARD_HEIGHT = 30
 SCOREBOARD_MARGIN = 70
 

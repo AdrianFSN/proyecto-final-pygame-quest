@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_HEIGHT, LIVES_MARGIN, MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, WIDTH
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_HEIGHT, LIVES_MARGIN, MARGIN, METEO_OUTER_MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -61,7 +61,7 @@ class Meteorite(pygame.sprite.Sprite):
     # SIZE_MODIFIER_MAX = 5
     # SIZE_MODIFIER_MIN = 1
     # SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
-    outer_margin = 150
+    outer_margin = WIDTH + METEO_OUTER_MARGIN
     meteorite_img = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
     speed_family_0 = default_speed
@@ -71,7 +71,7 @@ class Meteorite(pygame.sprite.Sprite):
     points_family_1 = default_points * 2
     points_family_2 = default_points * 3
 
-    def __init__(self, speed=default_speed, points=default_points, posX=WIDTH + outer_margin):
+    def __init__(self, speed=default_speed, points=default_points, posX=outer_margin):
         super().__init__()
         self.speed = speed
         self.points = points
