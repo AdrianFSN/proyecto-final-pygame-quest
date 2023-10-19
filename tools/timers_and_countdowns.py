@@ -31,6 +31,7 @@ class CountDown:
         self.pos_X = WIDTH/2
         self.pos_Y = HEIGHT/2
         self.init_value = self.count_top - 1
+        self.reset = False
 
     def set_count_down(self, screen):
         current_time = pygame.time.get_ticks()
@@ -44,4 +45,10 @@ class CountDown:
             self.init_value -= 1
             self.initial_time = current_time
 
-        print("He pasado por", time_passed, self.init_value)
+    def reset_count_down(self):
+        if self.init_value < 0:
+            self.init_value = self.count_top - 1
+            self.reset = True
+            return self.reset
+
+        # print("He pasado por", time_passed, self.init_value)
