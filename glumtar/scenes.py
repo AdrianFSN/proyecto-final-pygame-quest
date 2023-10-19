@@ -2,15 +2,15 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, LIVES, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
-from tools.timers_and_countdowns import Timer
+from tools.timers_and_countdowns import CountDown, Timer
 
 
 class Scene:
     def __init__(self, screen):
         self.screen = screen
-        self.reloj = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
 
     def mainLoop(self):
         print("Empty method for Scene's main loop")
@@ -47,9 +47,14 @@ class MatchLevel1(Scene):
         self.scoreboard = Scoreboard()
         self.lives_counter = LivesCounter()
 
-        self.player = Ship()
         self.timer = Timer(DEFAULT_TIMER)
         self.set_timer = self.timer.set_timer()
+
+        self.countdown = CountDown(self.clock, self.timer)
+
+        self.player = None
+        self.ship = pygame.sprite.GroupSingle()
+
         self.random_meteorite = None
         self.generated_meteorites = pygame.sprite.Group()
 
@@ -57,8 +62,12 @@ class MatchLevel1(Scene):
         super().mainLoop()
         exit = False
         stop_timer = False
+        countdown_stop = False
+        self.lives_counter.end_game = False
         while not exit:
-            self.reloj.tick(FPS)
+            self.clock.tick(FPS)
+            # if start_countdown:
+            # start_countdown = False
             if not stop_timer:
                 self.set_timer -= 1
                 if self.set_timer == 0:
@@ -72,11 +81,15 @@ class MatchLevel1(Scene):
             self.paint_background(self.background_posX,
                                   self.background_posY, self.set_timer)
 
+            if not countdown_stop:
+                self.countdown.set_count_down(self.screen)
+                if self.countdown.init_value < 0:
+                    countdown_stop = True
+
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
 
-            self.player.update()
-            self.screen.blit(self.player.img_new_size, self.player.rect)
+            self.generate_ship()
 
             self.generate_meteorites()
             self.generated_meteorites.draw(self.screen)
@@ -86,10 +99,21 @@ class MatchLevel1(Scene):
                     if meteorite.rect.right < 0:
                         self.scoreboard.increase_score(meteorite.points)
                         self.generated_meteorites.remove(meteorite)
+                        # print("He quitado un meteorito")
+            self.collision = False
+            self.check_collision()
+            self.lives_counter.reduce_lives(self.collision)
 
             pygame.display.flip()
 
         return False
+
+    def generate_ship(self):
+        if self.lives_counter.lives_value in range(1, LIVES+1):
+            self.player = Ship()
+            self.ship.add(self.player)
+        self.player.update()
+        self.screen.blit(self.player.image, self.player.rect)
 
     def generate_meteorites(self):
         if self.set_timer > 0:
@@ -105,6 +129,23 @@ class MatchLevel1(Scene):
         self.screen.blit(self.background, (posX, posY))
         if self.set_timer != 0:
             self.background_posX -= 1
+
+    def kill(self):
+        pygame.sprite.Sprite.kill(self.player)
+        self.ship.remove(self.player)
+        print("He quitado una nave de su grupo")
+        # pygame.mixer.Sound("algo").play()
+
+    def check_collision(self):
+        # detected_collision = []
+        # collision = False
+        for items in self.generated_meteorites:
+            if pygame.sprite.collide_mask(self.player, items):
+                self.collision = True
+                self.kill()
+                print("He matado la nave)")
+                # detected_collision.append(collision)
+                return self.collision
 
 
 class ResolveLevel1(Scene):

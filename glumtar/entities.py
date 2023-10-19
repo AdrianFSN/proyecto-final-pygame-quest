@@ -10,7 +10,6 @@ class Ship(pygame.sprite.Sprite):
     left_margin = 70
     default_speed = 0
     speed = default_speed
-    size_modifier = 4
     speed_boost = .5
 
     def __init__(self):
@@ -18,16 +17,7 @@ class Ship(pygame.sprite.Sprite):
         img_route = os.path.join(
             'glumtar', 'resources', 'images', 'ship0_0.png')
         self.image = pygame.image.load(img_route)
-        self.resize_ship()
-
-    def resize_ship(self):
-        self.image_n_width = self.image.get_width()/self.size_modifier
-        self.image_n_height = self.image.get_height()/self.size_modifier
-
-        self.img_new_size = pygame.transform.scale(
-            self.image, (self.image_n_width, self.image_n_height))
-
-        self.rect = self.img_new_size.get_rect(
+        self.rect = self.image.get_rect(
             midleft=(self.left_margin, (HEIGHT + MARGIN)/2))
 
     def reset_speed(self):
@@ -58,9 +48,6 @@ class Ship(pygame.sprite.Sprite):
 class Meteorite(pygame.sprite.Sprite):
     default_speed = 7
     default_points = 1
-    # SIZE_MODIFIER_MAX = 5
-    # SIZE_MODIFIER_MIN = 1
-    # SIZE_CONTROLLER = random.randint(SIZE_MODIFIER_MIN, SIZE_MODIFIER_MAX)
     outer_margin = WIDTH + METEO_OUTER_MARGIN
     meteorite_img = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
@@ -138,6 +125,9 @@ class LivesCounter:
         self.livesY = LIVES_HEIGHT
         self.heartsX = WIDTH - 50
         self.heartsY = self.livesY + 20
+        self.decrease_lives = 1
+
+        self.end_game = False
 
         for index in range(1, LIVES + 1):
             hearts_route = os.path.join(
@@ -156,3 +146,15 @@ class LivesCounter:
             lives_string, True, COLUMBIA_BLUE)
         screen.blit(lives_text, (self.livesX, self.livesY))
         screen.blit(self.hearts_image, self.rect)
+
+    def reduce_lives(self, collision):
+        collision = collision
+        if collision == True:
+            self.lives_value -= self.decrease_lives
+            collision = False
+            return collision, print(collision)
+
+        if self.lives_value == 0:
+            self.end_game = True
+
+            return self.end_game
