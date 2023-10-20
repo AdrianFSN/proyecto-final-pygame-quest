@@ -1,6 +1,6 @@
 import os
 import pygame
-from glumtar import COLUMBIA_BLUE, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FPS, HEIGHT, WIDTH
+from glumtar import COLUMBIA_BLUE, COUNTDOWN_TIME, FONT, FONT_SIZE, FPS, HEIGHT, WIDTH
 
 
 class ScrollBG:
@@ -13,6 +13,8 @@ class ScrollBG:
 
 
 class CountDown:
+    trigger_countdown = pygame.USEREVENT + 1
+    pygame.time.set_timer(self.trigger_meteorite, COUNTDOWN_TIME)
     count_top = 6
     count_min = 0
     countdown_range = (count_min, count_top)

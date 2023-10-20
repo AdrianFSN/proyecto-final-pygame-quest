@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_BG_SCROLL, FPS, HEIGHT, LIVES, MARGIN, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, HEIGHT, LIVES, MARGIN, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import CountDown, ScrollBG
 
@@ -50,7 +50,7 @@ class MatchLevel1(Scene):
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
 
-        self.countdown = CountDown(self.clock, self.bg_scroll)
+        self.countdown = CountDown()
 
         self.player = None
         self.ship = pygame.sprite.GroupSingle()
