@@ -8,7 +8,7 @@ class ScrollBG:
         self.start = start
         self.accumulate_starts = {'start': self.start}
 
-    def set_timer(self):
+    def set_bg_timer(self):
         return self.accumulate_starts.get('start')
 
 
