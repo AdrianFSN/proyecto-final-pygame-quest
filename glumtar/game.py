@@ -7,7 +7,7 @@ class Glumtar:
     def __init__(self):
         pygame.init()
         self.pantalla = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption("Glumtar | Avoid 'em All")
+        pygame.display.set_caption("Glumtar | The Quest")
 
         self.scenes = [FrontPage(self.pantalla),
                        MatchLevel1(self.pantalla),
