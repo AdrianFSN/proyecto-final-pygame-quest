@@ -13,16 +13,12 @@ class ScrollBG:
 
 
 class CountDown:
-    trigger_countdown = pygame.USEREVENT + 1
-    pygame.time.set_timer(self.trigger_meteorite, COUNTDOWN_TIME)
     count_top = 6
     count_min = 0
-    countdown_range = (count_min, count_top)
-    timer_secs = 1000
+    timer_secs = COUNTDOWN_TIME
 
-    def __init__(self, clock, timer, range=countdown_range):
+    def __init__(self, clock):
         self.clock = clock
-        self.timer = timer
         self.initial_time = pygame.time.get_ticks()
 
         self.range = range
@@ -33,20 +29,23 @@ class CountDown:
         self.pos_Y = HEIGHT/2
         self.init_value = self.count_top - 1
         self.reset = False
+        self.init_value_str = str(self.init_value)
+        self.init_value_text = self.font_style.render(
+            self.init_value_str, True, COLUMBIA_BLUE)
 
-    def set_count_down(self, screen):
+    def set_countdown(self, screen):
         current_time = pygame.time.get_ticks()
         time_passed = current_time-self.initial_time
-        init_value_str = str(self.init_value)
-        init_value_text = self.font_style.render(
-            init_value_str, True, COLUMBIA_BLUE)
-        screen.blit(init_value_text, (self.pos_X, self.pos_Y))
+        self.init_value_str = str(self.init_value)
+        self.init_value_text = self.font_style.render(
+            self.init_value_str, True, COLUMBIA_BLUE)
 
         if time_passed >= self.timer_secs:
             self.init_value -= 1
             self.initial_time = current_time
+            screen.blit(self.init_value_text, (self.pos_X, self.pos_Y))
 
-    def reset_count_down(self):
+    def reset_countdown(self):
         if self.init_value < 0:
             self.init_value = self.count_top - 1
             self.reset = True

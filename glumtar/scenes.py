@@ -50,29 +50,32 @@ class MatchLevel1(Scene):
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
 
-        self.countdown = CountDown()
+        self.countdown = None
 
         self.player = None
         self.ship = pygame.sprite.GroupSingle()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
+        self.initial_time = pygame.time.get_ticks()
+        self.current_time = None
 
         self.random_meteorite = None
         self.generated_meteorites = pygame.sprite.Group()
 
-        self.countdown_stop = None
-
     def mainLoop(self):
         super().mainLoop()
         exit = False
-        stop_timer = False
-        # self.countdown_stop = False
+        stop_bg_scroll = False
         self.lives_counter.end_game = False
         trigger_ship = False
+        countdown_start = True
 
         while not exit:
             self.clock.tick(FPS)
+            self.screen.fill(ROBIN_EGG_BLUE)
+            self.paint_background(self.background_posX,
+                                  self.background_posY, self.set_bg_scroll)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -81,14 +84,25 @@ class MatchLevel1(Scene):
                 if event.type == self.trigger_meteorite:
                     self.generate_meteorites()
 
-            self.screen.fill(ROBIN_EGG_BLUE)
-            self.paint_background(self.background_posX,
-                                  self.background_posY, self.set_bg_scroll)
-            # self.initialize_countdown()
-            if not stop_timer:
+            if countdown_start:
+                self.initialize_countdown()
+                print("He iniciado la cuenta atrás")
+                self.countdown.set_countdown(self.screen)
+                self.screen.blit(self.countdown.init_value_text,
+                                 (self.countdown.pos_X, self.countdown.pos_Y))
+                self.countdown.reset_countdown()
+                if self.countdown.reset:
+                    countdown_start = False
+
+            # if self.countdown.init_value < 0:
+            #   self.countdown.reset_countdown()
+            #    print("He reseteado la cuenta")
+            #   countdown_stop = True
+
+            if not stop_bg_scroll:
                 self.set_bg_scroll -= 1
                 if self.set_bg_scroll <= 0:
-                    stop_timer = True
+                    stop_bg_scroll = True
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
@@ -99,7 +113,6 @@ class MatchLevel1(Scene):
                     self.ship.update()
                     trigger_ship = False
 
-            # self.generate_meteorites()
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
             if len(self.generated_meteorites) > 0:
@@ -111,7 +124,7 @@ class MatchLevel1(Scene):
 
             # self.collision = False
             self.killed_ship = False
-            self.check_collision()
+            # self.check_collision()
             self.lives_counter.reduce_lives(self.killed_ship)
 
             pygame.display.flip()
@@ -119,12 +132,7 @@ class MatchLevel1(Scene):
         return False
 
     def initialize_countdown(self):
-        if not self.countdown_stop:
-            self.set_bg_scroll = 0
-            self.countdown.set_count_down(self.screen)
-            if self.countdown.init_value < 0:
-                self.countdown_stop = True
-                self.set_bg_scroll = self.bg_scroll.set_bg_timer()
+        self.countdown = CountDown(self.clock)
 
     def generate_ship(self):
         self.player = Ship()
@@ -182,7 +190,7 @@ class ResolveLevel1(Scene):
         super().mainLoop()
         exit = False
         while not exit:
-            self.reloj.tick(FPS)
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -202,7 +210,7 @@ class MatchLevel2(Scene):
         super().mainLoop()
         exit = False
         while not exit:
-            self.reloj.tick(FPS)
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -222,7 +230,7 @@ class ResolveLevel2(Scene):
         super().mainLoop()
         exit = False
         while not exit:
-            self.reloj.tick(FPS)
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
