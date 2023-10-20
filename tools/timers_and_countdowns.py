@@ -1,15 +1,14 @@
 import os
 import pygame
-from glumtar import COLUMBIA_BLUE, DEFAULT_TIMER, FONT, FONT_SIZE, FPS, HEIGHT, WIDTH
+from glumtar import COLUMBIA_BLUE, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FPS, HEIGHT, WIDTH
 
 
-class Timer:
+class ScrollBG:
     def __init__(self, start=3600):
         self.start = start
         self.accumulate_starts = {'start': self.start}
 
     def set_timer(self):
-
         return self.accumulate_starts.get('start')
 
 

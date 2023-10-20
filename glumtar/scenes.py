@@ -2,9 +2,9 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_TIMER, FPS, HEIGHT, LIVES, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, DEFAULT_BG_SCROLL, FPS, HEIGHT, LIVES, MARGIN, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
-from tools.timers_and_countdowns import CountDown, Timer
+from tools.timers_and_countdowns import CountDown, ScrollBG
 
 
 class Scene:
@@ -47,10 +47,10 @@ class MatchLevel1(Scene):
         self.scoreboard = Scoreboard()
         self.lives_counter = LivesCounter()
 
-        self.timer = Timer(DEFAULT_TIMER)
-        self.set_timer = None
+        self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
+        self.set_bg_scroll = DEFAULT_BG_SCROLL
 
-        self.countdown = CountDown(self.clock, self.timer)
+        self.countdown = CountDown(self.clock, self.bg_scroll)
 
         self.player = None
         self.ship = pygame.sprite.GroupSingle()
@@ -64,7 +64,7 @@ class MatchLevel1(Scene):
         super().mainLoop()
         exit = False
         stop_timer = False
-        self.countdown_stop = False
+        # self.countdown_stop = False
         self.lives_counter.end_game = False
         trigger_ship = False
         while not exit:
@@ -77,11 +77,11 @@ class MatchLevel1(Scene):
             self.screen.fill(ROBIN_EGG_BLUE)
 
             self.paint_background(self.background_posX,
-                                  self.background_posY, self.set_timer)
-            self.initialize_countdown()
+                                  self.background_posY, self.set_bg_scroll)
+            # self.initialize_countdown()
             if not stop_timer:
-                self.set_timer -= 1
-                if self.set_timer == 0:
+                self.set_bg_scroll -= 1
+                if self.set_bg_scroll <= 0:
                     stop_timer = True
 
             self.scoreboard.show_scoreboard(self.screen)
@@ -114,11 +114,11 @@ class MatchLevel1(Scene):
 
     def initialize_countdown(self):
         if not self.countdown_stop:
-            self.set_timer = 0
+            self.set_bg_scroll = 0
             self.countdown.set_count_down(self.screen)
             if self.countdown.init_value < 0:
                 self.countdown_stop = True
-                self.set_timer = self.timer.set_timer()
+                self.set_bg_scroll = self.bg_scroll.set_timer()
 
     def generate_ship(self):
         self.player = Ship()
@@ -126,8 +126,8 @@ class MatchLevel1(Scene):
         self.screen.blit(self.player.image, self.player.rect)
 
     def generate_meteorites(self):
-        if self.set_timer > 0:
-            if self.set_timer % TIME_UNIT == 0:
+        if self.set_bg_scroll > 0:
+            if self.set_bg_scroll % TIME_UNIT == 0:
                 self.random_meteorite = Meteorite()
                 self.generated_meteorites.add(
                     self.random_meteorite)
@@ -139,7 +139,7 @@ class MatchLevel1(Scene):
         posY = posY
         timer = timer
         self.screen.blit(self.background, (posX, posY))
-        if self.set_timer != 0:
+        if self.set_bg_scroll != 0:
             self.background_posX -= 1
 
     def kill_ship(self):
@@ -167,7 +167,7 @@ class MatchLevel1(Scene):
                 # detected_collision.append(collision)
                 # return self.collision
                 self.countdown_stop = False
-            return self.countdown_stop, self.initialize_countdown()
+            return self.countdown_stop
 
 
 class ResolveLevel1(Scene):
