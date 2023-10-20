@@ -52,11 +52,15 @@ class MatchLevel1(Scene):
 
         self.countdown = None
 
-        self.player = None
-        self.ship = pygame.sprite.GroupSingle()
+        self.player = Ship()
+        # self.ship = pygame.sprite.GroupSingle()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
+
+        # self.start_a_countdown = pygame.USEREVENT + 2
+        # pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
+
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
 
@@ -68,7 +72,7 @@ class MatchLevel1(Scene):
         exit = False
         stop_bg_scroll = False
         self.lives_counter.end_game = False
-        trigger_ship = False
+        # trigger_ship = False
         countdown_start = True
 
         while not exit:
@@ -90,14 +94,10 @@ class MatchLevel1(Scene):
                 self.countdown.set_countdown(self.screen)
                 self.screen.blit(self.countdown.init_value_text,
                                  (self.countdown.pos_X, self.countdown.pos_Y))
+                print("He pintado la cuenta atrás")
                 self.countdown.reset_countdown()
                 if self.countdown.reset:
                     countdown_start = False
-
-            # if self.countdown.init_value < 0:
-            #   self.countdown.reset_countdown()
-            #    print("He reseteado la cuenta")
-            #   countdown_stop = True
 
             if not stop_bg_scroll:
                 self.set_bg_scroll -= 1
@@ -107,11 +107,11 @@ class MatchLevel1(Scene):
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
 
-            if self.lives_counter.lives_value in range(1, LIVES+1):
-                if not trigger_ship:
-                    self.generate_ship()
-                    self.ship.update()
-                    trigger_ship = False
+            # if self.lives_counter.lives_value in range(1, LIVES+1):
+            # if not trigger_ship:
+            self.player.update()
+            self.screen.blit(self.player.image, self.player.rect)
+            # trigger_ship = False
 
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
@@ -132,11 +132,12 @@ class MatchLevel1(Scene):
         return False
 
     def initialize_countdown(self):
-        self.countdown = CountDown(self.clock)
+        self.countdown = CountDown()
 
     def generate_ship(self):
         self.player = Ship()
-        self.ship.add(self.player)
+        self.player.update()
+        # self.ship.add(self.player)
         self.screen.blit(self.player.image, self.player.rect)
 
     def generate_meteorites(self):

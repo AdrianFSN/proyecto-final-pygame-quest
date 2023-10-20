@@ -17,11 +17,9 @@ class CountDown:
     count_min = 0
     timer_secs = COUNTDOWN_TIME
 
-    def __init__(self, clock):
-        self.clock = clock
+    def __init__(self):
+        # self.clock = clock
         self.initial_time = pygame.time.get_ticks()
-
-        self.range = range
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
@@ -39,6 +37,7 @@ class CountDown:
         self.init_value_str = str(self.init_value)
         self.init_value_text = self.font_style.render(
             self.init_value_str, True, COLUMBIA_BLUE)
+        screen.blit(self.init_value_text, (self.pos_X, self.pos_Y))
 
         if time_passed >= self.timer_secs:
             self.init_value -= 1
