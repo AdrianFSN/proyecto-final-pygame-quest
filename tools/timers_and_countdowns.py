@@ -13,6 +13,7 @@ class ScrollBG:
 
 
 class Countdown:
+    title_controller_Y = 70
 
     def __init__(self, screen, start=3, stop=0):
         self.start = start
@@ -21,13 +22,14 @@ class Countdown:
         self.screen = screen
 
         font = FONT
-        font_size = FONT_SIZE + FONT_SIZE_CONTROLLER
+        self.title_font_size = FONT_SIZE + FONT_SIZE_CONTROLLER
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
-        self.font_style = pygame.font.Font(self.font_route, font_size)
-        self.pos_X = WIDTH/2
-        self.pos_Y = HEIGHT/2
+        self.font_style = pygame.font.Font(
+            self.font_route, self.title_font_size)
+        self.pos_X = (WIDTH - (FONT_SIZE + FONT_SIZE_CONTROLLER))/2
+        self.pos_Y = (HEIGHT - (FONT_SIZE + FONT_SIZE_CONTROLLER))/2
 
-        self.reset = False
+        self.title = ''
 
     def draw_countdown(self):
         if self.counter >= self.stop:
@@ -40,5 +42,19 @@ class Countdown:
         self.counter -= 1
 
     def reset_countdown(self):
-        # self.counter = self.stop
         self.counter = self.start
+
+    def add_countdown_title(self, message="Start in:"):
+        self.title = message
+
+        font = FONT
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(
+            self.font_route, FONT_SIZE + FONT_SIZE_CONTROLLER)
+        self.title_pos_X = (WIDTH - (len(self.title)*self.title_font_size))/2
+        self.title_pos_Y = self.pos_Y - self.title_controller_Y
+
+        title_render = self.font_style.render(
+            self.title, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            title_render, (self.title_pos_X, self.title_pos_Y))

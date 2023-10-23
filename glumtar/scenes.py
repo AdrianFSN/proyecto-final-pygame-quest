@@ -102,6 +102,7 @@ class MatchLevel1(Scene):
 
             if countdown_active:
                 self.countdown.draw_countdown()
+                self.countdown.add_countdown_title()
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
