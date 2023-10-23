@@ -4,7 +4,7 @@ import pygame
 
 from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, HEIGHT, LIVES, MARGIN, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
-from tools.timers_and_countdowns import CountDown, ScrollBG
+from tools.timers_and_countdowns import Countdown, ScrollBG
 
 
 class Scene:
@@ -50,16 +50,15 @@ class MatchLevel1(Scene):
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
 
-        self.countdown = None
-
         self.player = Ship()
         # self.ship = pygame.sprite.GroupSingle()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
 
-        # self.start_a_countdown = pygame.USEREVENT + 2
-        # pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
+        self.countdown = Countdown(self.screen, 5, 0)
+        self.start_a_countdown = pygame.USEREVENT + 2
+        pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
 
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
@@ -73,7 +72,7 @@ class MatchLevel1(Scene):
         stop_bg_scroll = False
         self.lives_counter.end_game = False
         # trigger_ship = False
-        countdown_start = True
+        countdown_active = True
 
         while not exit:
             self.clock.tick(FPS)
@@ -86,18 +85,11 @@ class MatchLevel1(Scene):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
                 if event.type == self.trigger_meteorite:
-                    self.generate_meteorites()
-
-            if countdown_start:
-                self.initialize_countdown()
-                print("He iniciado la cuenta atrás")
-                self.countdown.set_countdown(self.screen)
-                self.screen.blit(self.countdown.init_value_text,
-                                 (self.countdown.pos_X, self.countdown.pos_Y))
-                print("He pintado la cuenta atrás")
-                self.countdown.reset_countdown()
-                if self.countdown.reset:
-                    countdown_start = False
+                    if not countdown_active:
+                        self.generate_meteorites()
+                if event.type == self.start_a_countdown:
+                    if countdown_active:
+                        self.countdown.discount_countdown()
 
             if not stop_bg_scroll:
                 self.set_bg_scroll -= 1
@@ -106,6 +98,14 @@ class MatchLevel1(Scene):
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
+
+            if countdown_active:
+                self.countdown.draw_countdown()
+                if self.countdown.counter < self.countdown.stop:
+                    countdown_active = False
+                    self.countdown.reset_countdown()
+                print("He iniciado la cuenta atrás",
+                      self.countdown.counter)
 
             # if self.lives_counter.lives_value in range(1, LIVES+1):
             # if not trigger_ship:
@@ -132,7 +132,7 @@ class MatchLevel1(Scene):
         return False
 
     def initialize_countdown(self):
-        self.countdown = CountDown()
+        self.countdown = Countdown(self.screen, 5, 0)
 
     def generate_ship(self):
         self.player = Ship()

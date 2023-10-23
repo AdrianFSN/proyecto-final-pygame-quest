@@ -36,7 +36,7 @@ class Ship(pygame.sprite.Sprite):
             if self.rect.top < MARGIN:
                 self.rect.top = MARGIN
         self.reset_speed()
-        print("Estoy en el update de la nave")
+        # print("Estoy en el update de la nave")
 
         if pressed[pygame.K_DOWN]:
             self.rect.y += self.speed

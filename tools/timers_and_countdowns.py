@@ -12,42 +12,31 @@ class ScrollBG:
         return self.accumulate_starts.get('start')
 
 
-class CountDown:
-    count_top = 6
-    count_min = 0
-    timer_secs = COUNTDOWN_TIME
+class Countdown:
+    def __init__(self, screen, start=3, stop=0):
+        self.start = start
+        self.counter = self.start
+        self.stop = stop
+        self.screen = screen
 
-    def __init__(self):
-        # self.clock = clock
-        self.initial_time = pygame.time.get_ticks()
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.pos_X = WIDTH/2
         self.pos_Y = HEIGHT/2
-        self.init_value = self.count_top - 1
+
         self.reset = False
-        self.init_value_str = str(self.init_value)
-        self.init_value_text = self.font_style.render(
-            self.init_value_str, True, COLUMBIA_BLUE)
 
-    def set_countdown(self, screen):
-        current_time = pygame.time.get_ticks()
-        time_passed = current_time-self.initial_time
-        self.init_value_str = str(self.init_value)
-        self.init_value_text = self.font_style.render(
-            self.init_value_str, True, COLUMBIA_BLUE)
-        screen.blit(self.init_value_text, (self.pos_X, self.pos_Y))
+    def draw_countdown(self):
+        if self.counter >= self.stop:
+            counter_str = str(self.counter)
+            counter_text = self.font_style.render(
+                counter_str, True, COLUMBIA_BLUE)
+            self.screen.blit(counter_text, (self.pos_X, self.pos_Y))
 
-        if time_passed >= self.timer_secs:
-            self.init_value -= 1
-            self.initial_time = current_time
-            screen.blit(self.init_value_text, (self.pos_X, self.pos_Y))
+    def discount_countdown(self):
+        self.counter -= 1
 
     def reset_countdown(self):
-        if self.init_value < 0:
-            self.init_value = self.count_top - 1
-            self.reset = True
-            return self.reset
-
-        # print("He pasado por", time_passed, self.init_value)
+        # self.counter = self.stop
+        self.counter = self.start
