@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_HEIGHT, LIVES_MARGIN, MARGIN, METEO_OUTER_MARGIN, SCOREBOARD_HEIGHT, SCOREBOARD_MARGIN, WIDTH
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_MARGIN, TOP_MARGIN_LIMIT, METEO_OUTER_MARGIN, SCOREBOARD_MARGIN, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -18,7 +18,7 @@ class Ship(pygame.sprite.Sprite):
             'glumtar', 'resources', 'images', 'ship0_0.png')
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
-            midleft=(self.left_margin, (HEIGHT + MARGIN)/2))
+            midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
 
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
@@ -33,8 +33,8 @@ class Ship(pygame.sprite.Sprite):
         if pressed[pygame.K_UP]:
             self.rect.y -= self.speed
             self.speed += self.speed_boost
-            if self.rect.top < MARGIN:
-                self.rect.top = MARGIN
+            if self.rect.top < TOP_MARGIN_LIMIT:
+                self.rect.top = TOP_MARGIN_LIMIT
         self.reset_speed()
         # print("Estoy en el update de la nave")
 
@@ -64,7 +64,7 @@ class Meteorite(pygame.sprite.Sprite):
         self.speed = speed
         self.points = points
         self.positionX = posX
-        self.positionY = random.randint(MARGIN, HEIGHT)
+        self.positionY = random.randint(TOP_MARGIN_LIMIT, HEIGHT)
         self.assing_family()
 
     def assing_family(self):
@@ -89,8 +89,8 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect.x -= self.speed
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
-        elif self.rect.top < MARGIN:
-            self.rect.top = MARGIN
+        elif self.rect.top < TOP_MARGIN_LIMIT:
+            self.rect.top = TOP_MARGIN_LIMIT
 
 
 class Scoreboard:
@@ -111,7 +111,7 @@ class Scoreboard:
         scoreboard_text = self.font_style.render(
             score_string, True, COLUMBIA_BLUE)
         pointsX = SCOREBOARD_MARGIN
-        pointsY = SCOREBOARD_HEIGHT
+        pointsY = TOP_MARGIN_LIMIT - FONT_SIZE
         screen.blit(scoreboard_text, (pointsX, pointsY))
 
 
@@ -123,9 +123,9 @@ class LivesCounter:
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.available_lives = {}
         self.livesX = WIDTH - LIVES_MARGIN
-        self.livesY = LIVES_HEIGHT
+        self.livesY = TOP_MARGIN_LIMIT - FONT_SIZE
         self.heartsX = WIDTH - 50
-        self.heartsY = self.livesY + 20
+        self.heartsY = self.livesY
         self.decrease_lives = 1
 
         self.end_game = False

@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, HEIGHT, LIVES, MARGIN, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TIME_UNIT, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -79,6 +79,7 @@ class MatchLevel1(Scene):
             self.screen.fill(ROBIN_EGG_BLUE)
             self.paint_background(self.background_posX,
                                   self.background_posY, self.set_bg_scroll)
+            self.add_glumtar_title()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -104,8 +105,6 @@ class MatchLevel1(Scene):
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
-                print("He iniciado la cuenta atrás",
-                      self.countdown.counter)
 
             # if self.lives_counter.lives_value in range(1, LIVES+1):
             # if not trigger_ship:
@@ -181,6 +180,21 @@ class MatchLevel1(Scene):
                 # return self.collision
                 self.countdown_stop = False
             return self.countdown_stop
+
+    def add_glumtar_title(self):
+        self.title = "Glumtar | The Quest"
+
+        font = FONT
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
+        self.pos_X = (WIDTH - ((len(self.title)*TITLE_FONT_SIZE)))/2
+        self.pos_Y = TOP_MARGIN_LIMIT - TITLE_FONT_SIZE
+
+        title_render = self.font_style.render(
+            self.title, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            title_render, (self.pos_X, self.pos_Y))
+        print(len(self.title))
 
 
 class ResolveLevel1(Scene):
