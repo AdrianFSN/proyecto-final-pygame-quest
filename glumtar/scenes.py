@@ -194,7 +194,6 @@ class MatchLevel1(Scene):
             self.title, True, COLUMBIA_BLUE)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
-        print(len(self.title))
 
 
 class ResolveLevel1(Scene):

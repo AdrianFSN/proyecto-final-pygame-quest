@@ -1,6 +1,6 @@
 import os
 import pygame
-from glumtar import COLUMBIA_BLUE, COUNTDOWN_TIME, FONT, FONT_SIZE, FPS, HEIGHT, WIDTH
+from glumtar import COLUMBIA_BLUE, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, HEIGHT, WIDTH
 
 
 class ScrollBG:
@@ -13,6 +13,7 @@ class ScrollBG:
 
 
 class Countdown:
+
     def __init__(self, screen, start=3, stop=0):
         self.start = start
         self.counter = self.start
@@ -20,8 +21,9 @@ class Countdown:
         self.screen = screen
 
         font = FONT
+        font_size = FONT_SIZE + FONT_SIZE_CONTROLLER
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
-        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.font_style = pygame.font.Font(self.font_route, font_size)
         self.pos_X = WIDTH/2
         self.pos_Y = HEIGHT/2
 
