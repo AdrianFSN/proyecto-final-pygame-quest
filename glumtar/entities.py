@@ -125,7 +125,7 @@ class LivesCounter:
         self.livesX = WIDTH - LIVES_MARGIN
         self.livesY = TOP_MARGIN_LIMIT - FONT_SIZE
         self.heartsX = WIDTH - 50
-        self.heartsY = self.livesY
+        self.heartsY = TOP_MARGIN_LIMIT
         self.decrease_lives = 1
 
         self.end_game = False
@@ -139,7 +139,6 @@ class LivesCounter:
             self.available_lives.get(self.lives_value))
         self.rect = self.hearts_image.get_rect(
             midright=(self.heartsX, self.heartsY))
-        print(self.available_lives)
 
     def show_lives(self, screen):
         lives_string = str(self.lives_value)
