@@ -183,7 +183,7 @@ class MatchLevel1(Scene):
             return self.countdown_stop
 
     def add_glumtar_title(self):
-        self.title = "Glumtar | The Quest"
+        self.title = "Level 1"
 
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)

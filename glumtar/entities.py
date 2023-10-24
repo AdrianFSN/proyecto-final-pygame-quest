@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_MARGIN, TOP_MARGIN_LIMIT, METEO_OUTER_MARGIN, SCOREBOARD_MARGIN, WIDTH
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_MARGIN, TOP_MARGIN_LIMIT, HEARTS_MARGIN, METEO_OUTER_MARGIN, SCOREBOARD_MARGIN, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -124,8 +124,6 @@ class LivesCounter:
         self.available_lives = {}
         self.livesX = WIDTH - LIVES_MARGIN
         self.livesY = TOP_MARGIN_LIMIT - FONT_SIZE
-        self.heartsX = WIDTH - 50
-        self.heartsY = TOP_MARGIN_LIMIT
         self.decrease_lives = 1
 
         self.end_game = False
@@ -137,6 +135,8 @@ class LivesCounter:
 
         self.hearts_image = pygame.image.load(
             self.available_lives.get(self.lives_value))
+        self.heartsX = WIDTH - HEARTS_MARGIN
+        self.heartsY = TOP_MARGIN_LIMIT - (self.hearts_image.get_height()/2)
         self.rect = self.hearts_image.get_rect(
             midright=(self.heartsX, self.heartsY))
 
