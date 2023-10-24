@@ -60,13 +60,16 @@ class MatchLevel1(Scene):
         self.start_a_countdown = pygame.USEREVENT + 2
         pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
 
+        self.request_go_to_records = pygame.USEREVENT + 3
+        pygame.time.set_timer(self.request_go_to_records, 3000)
+
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
 
         self.random_meteorite = None
         self.generated_meteorites = pygame.sprite.Group()
         self.collision_detected = False
-        self.end_game = False
+        # self.end_game = False
 
     def mainLoop(self):
         super().mainLoop()
@@ -74,6 +77,8 @@ class MatchLevel1(Scene):
         stop_bg_scroll = False
         # trigger_ship = False
         countdown_active = True
+        game_started = False
+        end_game = False
 
         while not exit:
             self.clock.tick(FPS)
@@ -84,14 +89,18 @@ class MatchLevel1(Scene):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    exit = True
+                # if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    # exit = True
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
                 if event.type == self.start_a_countdown:
                     if countdown_active:
                         self.countdown.discount_countdown()
+                if event.type == self.request_go_to_records:
+                    if end_game:
+                        self.go_to_records()
+                        exit = True
 
             if not stop_bg_scroll:
                 self.set_bg_scroll -= 1
@@ -99,11 +108,8 @@ class MatchLevel1(Scene):
                     stop_bg_scroll = True
 
             self.scoreboard.show_scoreboard(self.screen)
-            self.end_game = self.lives_counter.show_lives(self.screen)
-            print(f"End game está en {self.end_game}")
-
-            if self.end_game:
-                return self.end_game, print("he mandado un end_game")
+            end_game = self.lives_counter.show_lives(self.screen)
+            print(f"End game está en {end_game}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
@@ -112,20 +118,17 @@ class MatchLevel1(Scene):
                     countdown_active = False
                     self.countdown.reset_countdown()
 
-            # if self.lives_counter.lives_value in range(1, LIVES+1):
-            # if not trigger_ship:
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
-            # trigger_ship = False
 
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
             if len(self.generated_meteorites) > 0:
                 if self.check_collision():
-                    self.play_ship_explosion_sound()
                     self.collision_detected = True
                     self.lives_counter.reduce_lives(
                         self.collision_detected)
+                    self.play_ship_explosion_sound()
 
                 for meteorite in self.generated_meteorites:
                     if meteorite.rect.right < 0:
@@ -182,6 +185,11 @@ class MatchLevel1(Scene):
             self.title, True, COLUMBIA_BLUE)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
+
+    def go_to_records(self):
+        go_to_scene = MatchLevel2(self.screen)
+
+        return go_to_scene.mainLoop()
 
 
 class ResolveLevel1(Scene):
