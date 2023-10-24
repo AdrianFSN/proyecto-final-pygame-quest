@@ -122,6 +122,7 @@ class MatchLevel1(Scene):
             self.generated_meteorites.update()
             if len(self.generated_meteorites) > 0:
                 if self.check_collision():
+                    self.play_ship_explosion_sound()
                     self.collision_detected = True
                     self.lives_counter.reduce_lives(
                         self.collision_detected)
@@ -135,14 +136,11 @@ class MatchLevel1(Scene):
 
         return False
 
-    """     def initialize_countdown(self):
-        self.countdown = Countdown(self.screen, 5, 0) """
-
-    def generate_ship(self):
+    """ def generate_ship(self):
         self.player = Ship()
         self.player.update()
         # self.ship.add(self.player)
-        self.screen.blit(self.player.image, self.player.rect)
+        self.screen.blit(self.player.image, self.player.rect) """
 
     def generate_meteorites(self):
         self.random_meteorite = Meteorite()
@@ -159,18 +157,17 @@ class MatchLevel1(Scene):
         if self.set_bg_scroll != 0:
             self.background_posX -= 1
 
-    """ def kill_ship(self):
-        pygame.sprite.Sprite.kill(self.player)
-        self.ship.remove(self.player)
-        self.killed_ship = True
-        print("Debería haber borrado la nave")
-        # pygame.mixer.Sound("algo").play() """
-
     def check_collision(self):
         if pygame.sprite.spritecollide(
                 self.player, self.generated_meteorites, True, pygame.sprite.collide_mask):
             print("He matado un meteorito")
-            return True, print(self.collision_detected)
+            return True
+
+    def play_ship_explosion_sound(self):
+        boom_route = os.path.join(
+            'glumtar', 'resources', 'sounds', 'Boom1.wav')
+        pygame.mixer.init()
+        pygame.mixer.Sound(boom_route).play()
 
     def add_level_title(self):
         self.title = "Level 1"
