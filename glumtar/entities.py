@@ -14,11 +14,32 @@ class Ship(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        img_route = os.path.join(
+        self.img_route = os.path.join(
             'glumtar', 'resources', 'images', 'ship0_0.png')
-        self.image = pygame.image.load(img_route)
+        self.image = pygame.image.load(self.img_route)
         self.rect = self.image.get_rect(
             midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
+
+        # self.expl_frame = 1
+
+        self.explosion_frames = {}
+        for index in range(1, 61):
+            self.explosion_img_route = os.path.join(
+                'glumtar', 'resources', 'images', 'explosion_frames', f'explosion{index}.png')
+            self.explosion_frames[index] = self.explosion_img_route
+
+    def explode_the_ship(self, amount):
+        amount = amount
+        # for self.expl_frame in self.explosion_frames:
+        if amount <= 60:
+            self.image = pygame.image.load(
+                self.explosion_frames.get(amount))
+            print(
+                f"He pintado la imagen {self.explosion_frames.get(amount)}")
+        # amount += 1
+
+    # def change_frame(self):
+        # self.expl_frame += 1
 
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
@@ -36,7 +57,6 @@ class Ship(pygame.sprite.Sprite):
             if self.rect.top < TOP_MARGIN_LIMIT:
                 self.rect.top = TOP_MARGIN_LIMIT
         self.reset_speed()
-        # print("Estoy en el update de la nave")
 
         if pressed[pygame.K_DOWN]:
             self.rect.y += self.speed

@@ -63,12 +63,17 @@ class MatchLevel1(Scene):
         self.request_go_to_records = pygame.USEREVENT + 3
         pygame.time.set_timer(self.request_go_to_records, 3000)
 
+        self.activate_explosion_frames = pygame.USEREVENT + 4
+        pygame.time.set_timer(self.activate_explosion_frames, 5)
+        self.frames_speed = 1
+
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
 
         self.random_meteorite = None
         self.generated_meteorites = pygame.sprite.Group()
         self.collision_detected = False
+        self.allow_collisions = False
         # self.end_game = False
 
     def mainLoop(self):
@@ -77,8 +82,8 @@ class MatchLevel1(Scene):
         stop_bg_scroll = False
         # trigger_ship = False
         countdown_active = True
-        game_started = False
         end_game = False
+        activate_explosion = False
 
         while not exit:
             self.clock.tick(FPS)
@@ -97,10 +102,20 @@ class MatchLevel1(Scene):
                 if event.type == self.start_a_countdown:
                     if countdown_active:
                         self.countdown.discount_countdown()
+                if event.type == self.activate_explosion_frames:
+                    if activate_explosion:
+                        self.player.explode_the_ship(self.frames_speed)
+                        self.screen.blit(self.player.image, self.player.rect)
+                        if self.frames_speed <= len(self.player.explosion_frames):
+                            self.frames_speed += 1
+                        else:
+                            activate_explosion = False
+                            countdown_active = True
                 if event.type == self.request_go_to_records:
                     if end_game:
                         self.go_to_records()
                         exit = True
+                        break
 
             if not stop_bg_scroll:
                 self.set_bg_scroll -= 1
@@ -109,14 +124,16 @@ class MatchLevel1(Scene):
 
             self.scoreboard.show_scoreboard(self.screen)
             end_game = self.lives_counter.show_lives(self.screen)
-            print(f"End game está en {end_game}")
+            # print(f"End game está en {end_game}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
                 self.countdown.add_countdown_title()
+                self.allow_collisions = False
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
+                    self.allow_collisions = True
 
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
@@ -124,16 +141,19 @@ class MatchLevel1(Scene):
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
             if len(self.generated_meteorites) > 0:
-                if self.check_collision():
-                    self.collision_detected = True
-                    self.lives_counter.reduce_lives(
-                        self.collision_detected)
-                    self.play_ship_explosion_sound()
+                if self.allow_collisions == True:
+                    if self.check_collision():
+                        activate_explosion = True
+                        self.collision_detected = True
+                        self.lives_counter.reduce_lives(
+                            self.collision_detected)
+                        self.play_ship_explosion_sound()
 
                 for meteorite in self.generated_meteorites:
                     if meteorite.rect.right < 0:
                         self.scoreboard.increase_score(meteorite.points)
                         self.generated_meteorites.remove(meteorite)
+            # self.player.explode_the_ship()
 
             pygame.display.flip()
 
@@ -152,6 +172,17 @@ class MatchLevel1(Scene):
         self.screen.blit(self.random_meteorite.image,
                          self.random_meteorite.rect)
 
+    """ def explode_the_ship(self):
+        explosion_frames = {}
+        for index in range(1, 8):
+            explosion_img_route = os.path.join(
+                'glumtar', 'resources', 'images', f'explosion{index}.png')
+            explosion_frames[index] = explosion_img_route
+        frame = 1
+        for frames in explosion_frames:
+            self.player.image = pygame.image.load(explosion_frames.get(frame))
+            frame += 1 """
+
     def paint_background(self, posX, posY, timer):
         posX = posX
         posY = posY
@@ -163,7 +194,6 @@ class MatchLevel1(Scene):
     def check_collision(self):
         if pygame.sprite.spritecollide(
                 self.player, self.generated_meteorites, True, pygame.sprite.collide_mask):
-            print("He matado un meteorito")
             return True
 
     def play_ship_explosion_sound(self):
