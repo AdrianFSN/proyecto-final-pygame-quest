@@ -149,7 +149,7 @@ class LivesCounter:
 
     def reduce_lives(self, collision):
         collision = collision
-        if collision == True:
+        if collision:
             self.lives_value -= self.decrease_lives
             collision = False
             return collision, print(collision)

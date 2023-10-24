@@ -65,6 +65,7 @@ class MatchLevel1(Scene):
 
         self.random_meteorite = None
         self.generated_meteorites = pygame.sprite.Group()
+        self.collision_detected = False
 
     def mainLoop(self):
         super().mainLoop()
@@ -79,7 +80,7 @@ class MatchLevel1(Scene):
             self.screen.fill(ROBIN_EGG_BLUE)
             self.paint_background(self.background_posX,
                                   self.background_posY, self.set_bg_scroll)
-            self.add_glumtar_title()
+            self.add_level_title()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
@@ -116,23 +117,22 @@ class MatchLevel1(Scene):
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
             if len(self.generated_meteorites) > 0:
+                if self.check_collision():
+                    self.collision_detected = True
+                    self.lives_counter.reduce_lives(self.collision_detected)
                 for meteorite in self.generated_meteorites:
                     if meteorite.rect.right < 0:
                         self.scoreboard.increase_score(meteorite.points)
                         self.generated_meteorites.remove(meteorite)
-                        # print("He quitado un meteorito")
 
-            # self.collision = False
             self.killed_ship = False
-            # self.check_collision()
-            self.lives_counter.reduce_lives(self.killed_ship)
 
             pygame.display.flip()
 
         return False
 
-    def initialize_countdown(self):
-        self.countdown = Countdown(self.screen, 5, 0)
+    """     def initialize_countdown(self):
+        self.countdown = Countdown(self.screen, 5, 0) """
 
     def generate_ship(self):
         self.player = Ship()
@@ -155,34 +155,20 @@ class MatchLevel1(Scene):
         if self.set_bg_scroll != 0:
             self.background_posX -= 1
 
-    def kill_ship(self):
+    """ def kill_ship(self):
         pygame.sprite.Sprite.kill(self.player)
         self.ship.remove(self.player)
         self.killed_ship = True
         print("Debería haber borrado la nave")
-        # pygame.mixer.Sound("algo").play()
-
-    def kill_meteorite(self):
-        pygame.sprite.Sprite.kill(self.random_meteorite)
-        self.generated_meteorites.remove(self.random_meteorite)
-        print("Debería haber borrado el meteorito")
+        # pygame.mixer.Sound("algo").play() """
 
     def check_collision(self):
-        # detected_collision = []
-        for items in self.generated_meteorites:
-            # nave_muerta = pygame.sprite.collide_mask(self.player, items)
-            if pygame.sprite.collide_mask(self.player, items):
-                self.kill_ship()
-                print("He matado la nave")
-                print(self.ship)
-            if pygame.sprite.collide_mask(items, self.player):
-                self.kill_meteorite()
-                # detected_collision.append(collision)
-                # return self.collision
-                self.countdown_stop = False
-            return self.countdown_stop
+        if pygame.sprite.spritecollide(
+                self.player, self.generated_meteorites, True, pygame.sprite.collide_mask):
+            print("He matado un meteorito")
+            return True, print(self.collision_detected)
 
-    def add_glumtar_title(self):
+    def add_level_title(self):
         self.title = "Level 1"
 
         font = FONT
