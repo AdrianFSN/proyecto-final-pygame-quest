@@ -141,20 +141,25 @@ class LivesCounter:
             midright=(self.heartsX, self.heartsY))
 
     def show_lives(self, screen):
-        lives_string = str(self.lives_value)
-        lives_text = self.font_style.render(
-            lives_string, True, COLUMBIA_BLUE)
-        screen.blit(lives_text, (self.livesX, self.livesY))
-        screen.blit(self.hearts_image, self.rect)
+        if self.lives_value > 0:
+            self.hearts_image = pygame.image.load(
+                self.available_lives.get(self.lives_value))
+            lives_string = str(self.lives_value)
+            lives_text = self.font_style.render(
+                lives_string, True, COLUMBIA_BLUE)
+            screen.blit(lives_text, (self.livesX, self.livesY))
+            screen.blit(self.hearts_image, self.rect)
+            return False
+        else:
+            return True
 
     def reduce_lives(self, collision):
         collision = collision
         if collision:
-            self.lives_value -= self.decrease_lives
-            collision = False
-            return collision, print(collision)
-
-        if self.lives_value == 0:
-            self.end_game = True
-
-            return self.end_game
+            if self.lives_value >= 1:
+                self.lives_value -= self.decrease_lives
+                collision = False
+                return collision
+            else:
+                collision = False
+                return collision
