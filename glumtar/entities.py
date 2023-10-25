@@ -35,6 +35,16 @@ class Ship(pygame.sprite.Sprite):
             self.image = pygame.image.load(
                 self.explosion_frames.get(amount))
 
+    def reset_ship_costume(self, initialize):
+        initialize = initialize
+
+        if initialize:
+            self.img_route = os.path.join(
+                'glumtar', 'resources', 'images', 'ship0_0.png')
+            self.image = pygame.image.load(self.img_route)
+            self.rect = self.image.get_rect(
+                midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
+
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
         self.pressed_up = self.pressed[pygame.K_UP]
