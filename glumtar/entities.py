@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from . import COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_MARGIN, TOP_MARGIN_LIMIT, HEARTS_MARGIN, METEO_OUTER_MARGIN, SCOREBOARD_MARGIN, WIDTH
+from . import ANIMATION_FRAMES, COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, LIVES, LIVES_MARGIN, TOP_MARGIN_LIMIT, HEARTS_MARGIN, METEO_OUTER_MARGIN, SCOREBOARD_MARGIN, WIDTH
 
 
 class Ship(pygame.sprite.Sprite):
@@ -23,7 +23,7 @@ class Ship(pygame.sprite.Sprite):
         # self.expl_frame = 1
 
         self.explosion_frames = {}
-        for index in range(1, 61):
+        for index in range(1, ANIMATION_FRAMES):
             self.explosion_img_route = os.path.join(
                 'glumtar', 'resources', 'images', 'explosion_frames', f'explosion{index}.png')
             self.explosion_frames[index] = self.explosion_img_route
@@ -31,7 +31,7 @@ class Ship(pygame.sprite.Sprite):
     def explode_the_ship(self, amount):
         amount = amount
         # for self.expl_frame in self.explosion_frames:
-        if amount <= 60:
+        if amount < ANIMATION_FRAMES:
             self.image = pygame.image.load(
                 self.explosion_frames.get(amount))
 

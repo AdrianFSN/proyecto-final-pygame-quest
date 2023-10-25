@@ -1,3 +1,5 @@
+# Animations
+ANIMATION_FRAMES = 61  # Animations should have 60 frames
 
 # Colors palette RGB
 COLUMBIA_BLUE = (192, 214, 223)
@@ -31,6 +33,6 @@ LIVES_MARGIN = 300
 HEARTS_MARGIN = 70
 
 # Triggers and countdowns times
-METEO_FREQUENCY_LEVEL1 = 1000
-
 COUNTDOWN_TIME = 1000
+GO_TO_RECORDS_DELAY = 10000
+METEO_FREQUENCY_LEVEL1 = 1000

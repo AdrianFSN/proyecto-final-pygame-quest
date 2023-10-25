@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -61,7 +61,7 @@ class MatchLevel1(Scene):
         pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
 
         self.request_go_to_records = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.request_go_to_records, 5000)
+        pygame.time.set_timer(self.request_go_to_records, GO_TO_RECORDS_DELAY)
 
         self.activate_explosion_frames = pygame.USEREVENT + 4
         pygame.time.set_timer(self.activate_explosion_frames, 5)
