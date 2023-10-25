@@ -20,8 +20,6 @@ class Ship(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(
             midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
 
-        # self.expl_frame = 1
-
         self.explosion_frames = {}
         for index in range(1, ANIMATION_FRAMES):
             self.explosion_img_route = os.path.join(
@@ -30,20 +28,16 @@ class Ship(pygame.sprite.Sprite):
 
     def explode_the_ship(self, amount):
         amount = amount
-        # for self.expl_frame in self.explosion_frames:
         if amount < ANIMATION_FRAMES:
             self.image = pygame.image.load(
                 self.explosion_frames.get(amount))
 
-    def reset_ship_costume(self, initialize):
-        initialize = initialize
-
-        if initialize:
-            self.img_route = os.path.join(
-                'glumtar', 'resources', 'images', 'ship0_0.png')
-            self.image = pygame.image.load(self.img_route)
-            self.rect = self.image.get_rect(
-                midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
+    def reset_ship_costume(self):
+        self.img_route = os.path.join(
+            'glumtar', 'resources', 'images', 'ship0_0.png')
+        self.image = pygame.image.load(self.img_route)
+        self.rect = self.image.get_rect(
+            midleft=(self.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2))
 
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
