@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, BG_SCROLL_SPEED, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -53,7 +53,6 @@ class MatchLevel1(Scene):
         self.set_bg_scroll = DEFAULT_BG_SCROLL
         self.player = player
         # self.player = Ship()
-        # self.ship = pygame.sprite.GroupSingle()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
@@ -125,7 +124,7 @@ class MatchLevel1(Scene):
                         break
 
             if not self.stop_bg_scroll:
-                self.set_bg_scroll -= 1
+                self.set_bg_scroll -= BG_SCROLL_SPEED
                 if self.set_bg_scroll <= 0:
                     self.stop_bg_scroll = True
                     print(self.stop_bg_scroll)
@@ -245,8 +244,7 @@ class MatchLevel1(Scene):
         return go_to_scene.mainLoop()
 
 
-"""class ResolveLevel1(MatchLevel1):
-    pass
+class ResolveLevel1(Scene):
 
     def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
@@ -273,6 +271,13 @@ class MatchLevel1(Scene):
             self.screen.fill(CORAL_PINK)
             self.paint_background(self.background_posX,
                                   self.background_posY)
+            self.add_level_title()
+
+            self.scoreboard.show_scoreboard(self.screen)
+            self.lives_counter.show_lives(self.screen)
+
+            self.player.update()
+            self.screen.blit(self.player.image, self.player.rect)
 
             pygame.display.flip()
 
@@ -281,7 +286,20 @@ class MatchLevel1(Scene):
     def paint_background(self, posX, posY):
         posX = posX
         posY = posY
-        self.screen.blit(self.background, (posX, posY)) """
+        self.screen.blit(self.background, (posX, posY))
+
+    def add_level_title(self):
+        self.title = "Level 1"
+        font = FONT
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
+        self.pos_X = (WIDTH - ((len(self.title)*TITLE_FONT_SIZE)))/2
+        self.pos_Y = TOP_MARGIN_LIMIT - TITLE_FONT_SIZE
+
+        title_render = self.font_style.render(
+            self.title, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            title_render, (self.pos_X, self.pos_Y))
 
 
 class MatchLevel2(Scene):
