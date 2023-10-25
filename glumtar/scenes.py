@@ -276,8 +276,9 @@ class ResolveLevel1(Scene):
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
 
-            self.player.update()
+            # self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
+            self.player.land_ship()
 
             pygame.display.flip()
 

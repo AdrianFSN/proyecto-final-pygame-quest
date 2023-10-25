@@ -11,6 +11,7 @@ class Ship(pygame.sprite.Sprite):
     default_speed = 0
     speed = default_speed
     speed_boost = .5
+    landing_speed = 2
 
     def __init__(self):
         super().__init__()
@@ -62,6 +63,20 @@ class Ship(pygame.sprite.Sprite):
             if self.rect.bottom > HEIGHT:
                 self.rect.bottom = HEIGHT
         self.reset_speed()
+
+    def land_ship(self):
+        if self.rect.y < (HEIGHT - self.image.get_height())/2:
+            self.rect.y += self.landing_speed
+            if self.rect.y >= (HEIGHT - self.image.get_height())/2:
+                self.rect.x += self.landing_speed
+
+        elif self.rect.y > (HEIGHT - self.image.get_height())/2:
+            self.rect.y -= self.landing_speed
+            if self.rect.y == (HEIGHT - self.image.get_height())/2:
+                self.rect.x += self.landing_speed
+
+        if self.rect.x >= (WIDTH - self.image.get_width())/2:
+            self.landing_speed = 0
 
 
 class Meteorite(pygame.sprite.Sprite):
