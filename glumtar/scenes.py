@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -61,11 +61,14 @@ class MatchLevel1(Scene):
         pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
 
         self.request_go_to_records = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.request_go_to_records, 5000)
+        pygame.time.set_timer(self.request_go_to_records, GO_TO_RECORDS_DELAY)
 
         self.activate_explosion_frames = pygame.USEREVENT + 4
         pygame.time.set_timer(self.activate_explosion_frames, 5)
         self.frames_speed = 1
+
+        """ self.turn_back_to_ship_costume = pygame.USEREVENT + 5
+        pygame.time.set_timer(self.turn_back_to_ship_costume, 1000) """
 
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
@@ -87,6 +90,7 @@ class MatchLevel1(Scene):
         countdown_active = True
         end_game = False
         activate_explosion = False
+        initialize_ship_costume = False
 
         while not exit:
             self.clock.tick(FPS)
@@ -106,13 +110,21 @@ class MatchLevel1(Scene):
                 if event.type == self.activate_explosion_frames:
                     if activate_explosion:
                         self.player.explode_the_ship(self.frames_speed)
-                        self.screen.blit(self.player.image, self.player.rect)
+                        # self.screen.blit(self.player.image, self.player.rect)
                         if self.frames_speed <= len(self.player.explosion_frames):
                             self.frames_speed += 1
                         else:
                             activate_explosion = False
                             if self.lives_counter.lives_value > 0:
                                 countdown_active = True
+                """ if event.type == self.turn_back_to_ship_costume:
+                    if initialize_ship_costume:
+                        self.player.reset_ship_costume(
+                            self.screen, initialize_ship_costume)
+                        self.screen.blit(
+                            self.player.image, self.player.rect) """
+                # initialize_ship_costume = False
+
                 if event.type == self.request_go_to_records:
                     if end_game:
                         self.go_to_records()
@@ -134,16 +146,26 @@ class MatchLevel1(Scene):
             self.lives_counter.show_lives(self.screen)
             # print(f"End game está en {end_game}")
 
+            if initialize_ship_costume:
+                self.player.reset_ship_costume(initialize_ship_costume)
+                print(initialize_ship_costume)
+
             if countdown_active:
                 self.countdown.draw_countdown()
                 self.countdown.add_countdown_title()
                 self.allow_collisions = False
                 self.allow_points = False
+                initialize_ship_costume = True
+                print(initialize_ship_costume)
+
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
                     self.allow_collisions = True
                     self.allow_points = True
+                    initialize_ship_costume = False
+                    self.screen.blit(self.player.image, self.player.rect)
+                    print(initialize_ship_costume)
 
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
@@ -220,6 +242,16 @@ class MatchLevel1(Scene):
             self.title, True, COLUMBIA_BLUE)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
+
+    """ def reset_ship_costume(self, initialize):
+        initialize = initialize
+
+        if initialize:
+            self.player.img_route = os.path.join(
+                'glumtar', 'resources', 'images', 'ship0_0.png')
+            self.player.image = pygame.image.load(self.player.img_route)
+            self.player.rect = self.player.image.get_rect(
+                midleft=(self.player.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2)) """
 
     def show_game_over(self):
         game_over_title = "Game Over"
