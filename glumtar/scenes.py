@@ -36,7 +36,7 @@ class FrontPage(Scene):
 
 
 class MatchLevel1(Scene):
-    def __init__(self, screen):
+    def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
         bg_route = os.path.join('glumtar', 'resources',
                                 'images', 'BG_level1.jpg')
@@ -44,13 +44,15 @@ class MatchLevel1(Scene):
         self.background_posX = 0
         self.background_posY = 0
 
-        self.scoreboard = Scoreboard()
-        self.lives_counter = LivesCounter()
+        self.scoreboard = scoreboard
+        # self.scoreboard = Scoreboard()
+        self.lives_counter = livescounter
+        # self.lives_counter = LivesCounter()
 
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
-
-        self.player = Ship()
+        self.player = player
+        # self.player = Ship()
         # self.ship = pygame.sprite.GroupSingle()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
@@ -88,7 +90,7 @@ class MatchLevel1(Scene):
         end_game = False
         activate_explosion = False
         initialize_ship_costume = False
-        allow_ship_update = True
+        # allow_ship_update = True
 
         while not exit:
             self.clock.tick(FPS)
@@ -182,12 +184,6 @@ class MatchLevel1(Scene):
 
         return False
 
-    """ def generate_ship(self):
-        self.player = Ship()
-        self.player.update()
-        # self.ship.add(self.player)
-        self.screen.blit(self.player.image, self.player.rect) """
-
     def generate_meteorites(self):
         self.random_meteorite = Meteorite()
         self.generated_meteorites.add(
@@ -249,9 +245,20 @@ class MatchLevel1(Scene):
         return go_to_scene.mainLoop()
 
 
-class ResolveLevel1(Scene):
-    def __init__(self, screen):
+"""class ResolveLevel1(MatchLevel1):
+    pass
+
+    def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
+        bg_route = os.path.join('glumtar', 'resources',
+                                'images', 'planet1.jpg')
+        self.background = pygame.image.load(bg_route)
+        self.background_posX = 0
+        self.background_posY = 0
+
+        self.player = player
+        self.scoreboard = scoreboard
+        self.lives_counter = livescounter
 
     def mainLoop(self):
         super().mainLoop()
@@ -264,9 +271,17 @@ class ResolveLevel1(Scene):
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
             self.screen.fill(CORAL_PINK)
+            self.paint_background(self.background_posX,
+                                  self.background_posY)
+
             pygame.display.flip()
 
         return False
+
+    def paint_background(self, posX, posY):
+        posX = posX
+        posY = posY
+        self.screen.blit(self.background, (posX, posY)) """
 
 
 class MatchLevel2(Scene):
