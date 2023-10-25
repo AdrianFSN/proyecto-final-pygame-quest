@@ -1,20 +1,25 @@
 import pygame
 from . import HEIGHT, WIDTH
-from .scenes import FrontPage, MatchLevel1, MatchLevel2, ResolveLevel1, ResolveLevel2, BestPlayers
+from .scenes import FrontPage, MatchLevel1, MatchLevel2, ResolveLevel2, BestPlayers
+from .entities import LivesCounter, Scoreboard, Ship
 
 
 class Glumtar:
     def __init__(self):
         pygame.init()
-        self.pantalla = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Glumtar | The Quest")
+        self.player = Ship()
+        self.scoreboard = Scoreboard()
+        self.lives_counter = LivesCounter()
 
-        self.scenes = [FrontPage(self.pantalla),
-                       MatchLevel1(self.pantalla),
-                       ResolveLevel1(self.pantalla),
-                       MatchLevel2(self.pantalla),
-                       ResolveLevel2(self.pantalla),
-                       BestPlayers(self.pantalla),
+        self.scenes = [FrontPage(self.screen),
+                       MatchLevel1(self.screen, self.player,
+                                   self.scoreboard, self.lives_counter),
+
+                       MatchLevel2(self.screen),
+                       ResolveLevel2(self.screen),
+                       BestPlayers(self.screen),
                        ]
 
     def play(self):
