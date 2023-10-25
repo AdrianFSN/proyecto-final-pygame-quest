@@ -49,14 +49,14 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP]:
+        if pressed[pygame.K_UP] and not pressed[pygame.K_DOWN]:
             self.rect.y -= self.speed
             self.speed += self.speed_boost
             if self.rect.top < TOP_MARGIN_LIMIT:
                 self.rect.top = TOP_MARGIN_LIMIT
         self.reset_speed()
 
-        if pressed[pygame.K_DOWN]:
+        if pressed[pygame.K_DOWN] and not pressed[pygame.K_UP]:
             self.rect.y += self.speed
             self.speed += self.speed_boost
             if self.rect.bottom > HEIGHT:
