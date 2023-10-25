@@ -34,12 +34,6 @@ class Ship(pygame.sprite.Sprite):
         if amount <= 60:
             self.image = pygame.image.load(
                 self.explosion_frames.get(amount))
-            print(
-                f"He pintado la imagen {self.explosion_frames.get(amount)}")
-        # amount += 1
-
-    # def change_frame(self):
-        # self.expl_frame += 1
 
     def reset_speed(self):
         self.pressed = pygame.key.get_pressed()
@@ -148,7 +142,7 @@ class LivesCounter:
 
         self.end_game = False
 
-        for index in range(1, LIVES + 1):
+        for index in range(0, LIVES + 1):
             hearts_route = os.path.join(
                 'glumtar', 'resources', 'images', f'lives{index}.png')
             self.available_lives[index] = hearts_route
@@ -161,7 +155,7 @@ class LivesCounter:
             midright=(self.heartsX, self.heartsY))
 
     def show_lives(self, screen):
-        if self.lives_value > 0:
+        if self.lives_value >= 0:
             self.hearts_image = pygame.image.load(
                 self.available_lives.get(self.lives_value))
             lives_string = str(self.lives_value)

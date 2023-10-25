@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -110,7 +110,8 @@ class MatchLevel1(Scene):
                             self.frames_speed += 1
                         else:
                             activate_explosion = False
-                            countdown_active = True
+                            if self.lives_counter.lives_value > 0:
+                                countdown_active = True
                 if event.type == self.request_go_to_records:
                     if end_game:
                         self.go_to_records()
@@ -140,20 +141,25 @@ class MatchLevel1(Scene):
 
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
+
             if len(self.generated_meteorites) > 0:
                 if self.allow_collisions == True:
                     if self.check_collision():
                         activate_explosion = True
                         self.collision_detected = True
+                        self.play_ship_explosion_sound()
                         self.lives_counter.reduce_lives(
                             self.collision_detected)
-                        self.play_ship_explosion_sound()
+
+            if self.lives_counter.lives_value == 0:
+                self.show_game_over()
+                self.allow_collisions = False
+                countdown_active = False
 
                 for meteorite in self.generated_meteorites:
                     if meteorite.rect.right < 0:
                         self.scoreboard.increase_score(meteorite.points)
                         self.generated_meteorites.remove(meteorite)
-            # self.player.explode_the_ship()
 
             pygame.display.flip()
 
@@ -171,17 +177,6 @@ class MatchLevel1(Scene):
             self.random_meteorite)
         self.screen.blit(self.random_meteorite.image,
                          self.random_meteorite.rect)
-
-    """ def explode_the_ship(self):
-        explosion_frames = {}
-        for index in range(1, 8):
-            explosion_img_route = os.path.join(
-                'glumtar', 'resources', 'images', f'explosion{index}.png')
-            explosion_frames[index] = explosion_img_route
-        frame = 1
-        for frames in explosion_frames:
-            self.player.image = pygame.image.load(explosion_frames.get(frame))
-            frame += 1 """
 
     def paint_background(self, posX, posY, timer):
         posX = posX
@@ -204,7 +199,6 @@ class MatchLevel1(Scene):
 
     def add_level_title(self):
         self.title = "Level 1"
-
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
@@ -215,6 +209,22 @@ class MatchLevel1(Scene):
             self.title, True, COLUMBIA_BLUE)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
+
+    def show_game_over(self):
+        game_over_title = "Game Over"
+        font = FONT
+        self.execute_game_over = True
+        self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
+        self.font_style = pygame.font.Font(
+            self.font_route, FONT_SIZE + FONT_SIZE_CONTROLLER)
+        self.pos_X = (WIDTH - ((len(game_over_title)*FONT_SIZE)))/2
+        self.pos_Y = (HEIGHT - FONT_SIZE)/2
+
+        game_over_title_render = self.font_style.render(
+            game_over_title, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            game_over_title_render, (self.pos_X, self.pos_Y))
+        return self.execute_game_over
 
     def go_to_records(self):
         go_to_scene = MatchLevel2(self.screen)
