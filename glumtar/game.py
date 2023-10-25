@@ -1,6 +1,6 @@
 import pygame
 from . import HEIGHT, WIDTH
-from .scenes import FrontPage, MatchLevel1, MatchLevel2, ResolveLevel2, BestPlayers
+from .scenes import FrontPage, MatchLevel1, MatchLevel2, ResolveLevel1, ResolveLevel2, BestPlayers
 from .entities import LivesCounter, Scoreboard, Ship
 
 
@@ -16,7 +16,8 @@ class Glumtar:
         self.scenes = [FrontPage(self.screen),
                        MatchLevel1(self.screen, self.player,
                                    self.scoreboard, self.lives_counter),
-
+                       ResolveLevel1(self.screen, self.player,
+                                     self.scoreboard, self.lives_counter),
                        MatchLevel2(self.screen),
                        ResolveLevel2(self.screen),
                        BestPlayers(self.screen),
