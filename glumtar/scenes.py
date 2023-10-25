@@ -110,20 +110,13 @@ class MatchLevel1(Scene):
                 if event.type == self.activate_explosion_frames:
                     if activate_explosion:
                         self.player.explode_the_ship(self.frames_speed)
-                        # self.screen.blit(self.player.image, self.player.rect)
                         if self.frames_speed <= len(self.player.explosion_frames):
                             self.frames_speed += 1
                         else:
                             activate_explosion = False
+                            self.frames_speed = 1
                             if self.lives_counter.lives_value > 0:
                                 countdown_active = True
-                """ if event.type == self.turn_back_to_ship_costume:
-                    if initialize_ship_costume:
-                        self.player.reset_ship_costume(
-                            self.screen, initialize_ship_costume)
-                        self.screen.blit(
-                            self.player.image, self.player.rect) """
-                # initialize_ship_costume = False
 
                 if event.type == self.request_go_to_records:
                     if end_game:
@@ -141,29 +134,25 @@ class MatchLevel1(Scene):
                     print(self.stop_bg_scroll)
 
             end_game = self.execute_game_over
+            # if end_game:
+            #    self.player.reset_ship_costume()
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
             # print(f"End game está en {end_game}")
 
-            if initialize_ship_costume:
-                self.player.reset_ship_costume(initialize_ship_costume)
-                print(initialize_ship_costume)
-
             if countdown_active:
                 self.countdown.draw_countdown()
                 self.countdown.add_countdown_title()
+                self.player.reset_ship_costume()
                 self.allow_collisions = False
                 self.allow_points = False
-                initialize_ship_costume = True
-                print(initialize_ship_costume)
 
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
                     self.allow_collisions = True
                     self.allow_points = True
-                    initialize_ship_costume = False
                     self.screen.blit(self.player.image, self.player.rect)
                     print(initialize_ship_costume)
 
@@ -173,14 +162,13 @@ class MatchLevel1(Scene):
             self.generated_meteorites.draw(self.screen)
             self.generated_meteorites.update()
 
-            if len(self.generated_meteorites) > 0:
-                if self.allow_collisions == True:
-                    if self.check_collision():
-                        activate_explosion = True
-                        self.collision_detected = True
-                        self.play_ship_explosion_sound()
-                        self.lives_counter.reduce_lives(
-                            self.collision_detected)
+            if self.allow_collisions == True:
+                if self.check_collision():
+                    activate_explosion = True
+                    self.collision_detected = True
+                    self.play_ship_explosion_sound()
+                    self.lives_counter.reduce_lives(
+                        self.collision_detected)
 
             if self.lives_counter.lives_value == 0:
                 self.show_game_over()
@@ -242,16 +230,6 @@ class MatchLevel1(Scene):
             self.title, True, COLUMBIA_BLUE)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
-
-    """ def reset_ship_costume(self, initialize):
-        initialize = initialize
-
-        if initialize:
-            self.player.img_route = os.path.join(
-                'glumtar', 'resources', 'images', 'ship0_0.png')
-            self.player.image = pygame.image.load(self.player.img_route)
-            self.player.rect = self.player.image.get_rect(
-                midleft=(self.player.left_margin, (HEIGHT + TOP_MARGIN_LIMIT)/2)) """
 
     def show_game_over(self):
         game_over_title = "Game Over"
