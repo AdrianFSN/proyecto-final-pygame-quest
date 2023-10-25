@@ -61,7 +61,7 @@ class MatchLevel1(Scene):
         pygame.time.set_timer(self.start_a_countdown, COUNTDOWN_TIME)
 
         self.request_go_to_records = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.request_go_to_records, 3000)
+        pygame.time.set_timer(self.request_go_to_records, 5000)
 
         self.activate_explosion_frames = pygame.USEREVENT + 4
         pygame.time.set_timer(self.activate_explosion_frames, 5)
@@ -74,12 +74,15 @@ class MatchLevel1(Scene):
         self.generated_meteorites = pygame.sprite.Group()
         self.collision_detected = False
         self.allow_collisions = False
+        self.allow_points = True
+        self.execute_game_over = False
+        self.stop_bg_scroll = False
         # self.end_game = False
 
     def mainLoop(self):
         super().mainLoop()
         exit = False
-        stop_bg_scroll = False
+        # stop_bg_scroll = False
         # trigger_ship = False
         countdown_active = True
         end_game = False
@@ -94,8 +97,6 @@ class MatchLevel1(Scene):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
-                # if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    # exit = True
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
@@ -115,26 +116,34 @@ class MatchLevel1(Scene):
                 if event.type == self.request_go_to_records:
                     if end_game:
                         self.go_to_records()
-                        exit = True
                         break
 
-            if not stop_bg_scroll:
+            if not self.stop_bg_scroll:
                 self.set_bg_scroll -= 1
                 if self.set_bg_scroll <= 0:
-                    stop_bg_scroll = True
+                    self.stop_bg_scroll = True
+                    print(self.stop_bg_scroll)
+                    exit = True
+                elif end_game:
+                    self.stop_bg_scroll = True
+                    print(self.stop_bg_scroll)
+
+            end_game = self.execute_game_over
 
             self.scoreboard.show_scoreboard(self.screen)
-            end_game = self.lives_counter.show_lives(self.screen)
+            self.lives_counter.show_lives(self.screen)
             # print(f"End game está en {end_game}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
                 self.countdown.add_countdown_title()
                 self.allow_collisions = False
+                self.allow_points = False
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
                     self.countdown.reset_countdown()
                     self.allow_collisions = True
+                    self.allow_points = True
 
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
@@ -155,11 +164,13 @@ class MatchLevel1(Scene):
                 self.show_game_over()
                 self.allow_collisions = False
                 countdown_active = False
+                self.allow_points = False
 
-                for meteorite in self.generated_meteorites:
-                    if meteorite.rect.right < 0:
+            for meteorite in self.generated_meteorites:
+                if meteorite.rect.right < 0:
+                    self.generated_meteorites.remove(meteorite)
+                    if self.allow_points:
                         self.scoreboard.increase_score(meteorite.points)
-                        self.generated_meteorites.remove(meteorite)
 
             pygame.display.flip()
 
