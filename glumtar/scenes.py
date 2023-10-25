@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FPS, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -65,10 +65,7 @@ class MatchLevel1(Scene):
 
         self.activate_explosion_frames = pygame.USEREVENT + 4
         pygame.time.set_timer(self.activate_explosion_frames, 5)
-        self.frames_speed = 1
-
-        """ self.turn_back_to_ship_costume = pygame.USEREVENT + 5
-        pygame.time.set_timer(self.turn_back_to_ship_costume, 1000) """
+        self.frames_speed = FRAMES_SPEED
 
         self.initial_time = pygame.time.get_ticks()
         self.current_time = None
@@ -91,6 +88,7 @@ class MatchLevel1(Scene):
         end_game = False
         activate_explosion = False
         initialize_ship_costume = False
+        allow_ship_update = True
 
         while not exit:
             self.clock.tick(FPS)
@@ -114,7 +112,8 @@ class MatchLevel1(Scene):
                             self.frames_speed += 1
                         else:
                             activate_explosion = False
-                            self.frames_speed = 1
+                            self.frames_speed = FRAMES_SPEED
+                            self.player.reset_ship_costume()
                             if self.lives_counter.lives_value > 0:
                                 countdown_active = True
 
@@ -134,8 +133,6 @@ class MatchLevel1(Scene):
                     print(self.stop_bg_scroll)
 
             end_game = self.execute_game_over
-            # if end_game:
-            #    self.player.reset_ship_costume()
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
@@ -144,7 +141,6 @@ class MatchLevel1(Scene):
             if countdown_active:
                 self.countdown.draw_countdown()
                 self.countdown.add_countdown_title()
-                self.player.reset_ship_costume()
                 self.allow_collisions = False
                 self.allow_points = False
 
