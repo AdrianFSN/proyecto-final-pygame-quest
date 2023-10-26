@@ -127,11 +127,12 @@ class MatchLevel1(Scene):
                 self.set_bg_scroll -= BG_SCROLL_SPEED
                 if self.set_bg_scroll <= 0:
                     self.stop_bg_scroll = True
-                    print(self.stop_bg_scroll)
+                    print(f'Este esl scroll stop {self.stop_bg_scroll}')
                     exit = True
                 elif end_game:
                     self.stop_bg_scroll = True
-                    print(self.stop_bg_scroll)
+                    print(
+                        f'Este esl scroll stop desde end game {self.stop_bg_scroll}')
 
             end_game = self.execute_game_over
 
@@ -195,7 +196,7 @@ class MatchLevel1(Scene):
         posY = posY
         timer = timer
         self.screen.blit(self.background, (posX, posY))
-        if self.set_bg_scroll != 0:
+        if self.set_bg_scroll != 0:  # Esto es lo que realmente para el scroll.
             self.background_posX -= 1
 
     def check_collision(self):
@@ -239,6 +240,7 @@ class MatchLevel1(Scene):
         return self.execute_game_over
 
     def go_to_records(self):
+        return
         go_to_scene = MatchLevel2(self.screen)
 
         return go_to_scene.mainLoop()
@@ -276,9 +278,14 @@ class ResolveLevel1(Scene):
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
 
-            # self.player.update()
-            self.screen.blit(self.player.image, self.player.rect)
-            self.player.land_ship()
+            self.player.land = True
+            self.player.update()
+            if not self.player.request_draw_rotation:
+                self.screen.blit(self.player.image, self.player.rect)
+            """ else:
+                self.screen.blit(self.player.rotated_image,
+                                 self.player.rotated_image_rect) """
+            # self.player.land_ship()
 
             pygame.display.flip()
 

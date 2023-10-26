@@ -12,9 +12,19 @@ class Ship(pygame.sprite.Sprite):
     speed = default_speed
     speed_boost = .5
     landing_speed = 2
+    rotating_speed = 2
+    rotation_angle = 10
+    pos_ship_after_rotation = (0, 0)
 
-    def __init__(self):
+    def __init__(self, screen, land=False):
         super().__init__()
+        self.screen = screen
+        self.land = land
+        self.request_draw_rotation = False
+
+        self.rotated_image = None
+        self.rotated_image_rect = None
+
         self.img_route = os.path.join(
             'glumtar', 'resources', 'images', 'ship0_0.png')
         self.image = pygame.image.load(self.img_route)
@@ -49,22 +59,26 @@ class Ship(pygame.sprite.Sprite):
             return self.speed
 
     def update(self):
-        pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_UP] and not pressed[pygame.K_DOWN]:
-            self.rect.y -= self.speed
-            self.speed += self.speed_boost
-            if self.rect.top < TOP_MARGIN_LIMIT:
-                self.rect.top = TOP_MARGIN_LIMIT
-        self.reset_speed()
+        if not self.land:
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_UP] and not pressed[pygame.K_DOWN]:
+                self.rect.y -= self.speed
+                self.speed += self.speed_boost
+                if self.rect.top < TOP_MARGIN_LIMIT:
+                    self.rect.top = TOP_MARGIN_LIMIT
+            self.reset_speed()
 
-        if pressed[pygame.K_DOWN] and not pressed[pygame.K_UP]:
-            self.rect.y += self.speed
-            self.speed += self.speed_boost
-            if self.rect.bottom > HEIGHT:
-                self.rect.bottom = HEIGHT
-        self.reset_speed()
+            if pressed[pygame.K_DOWN] and not pressed[pygame.K_UP]:
+                self.rect.y += self.speed
+                self.speed += self.speed_boost
+                if self.rect.bottom > HEIGHT:
+                    self.rect.bottom = HEIGHT
+            self.reset_speed()
+        else:
+            self.land_ship()
 
     def land_ship(self):
+        descend_speed = 2
         if self.rect.y < (HEIGHT - self.image.get_height())/2:
             self.rect.y += self.landing_speed
             if self.rect.y >= (HEIGHT - self.image.get_height())/2:
@@ -77,6 +91,29 @@ class Ship(pygame.sprite.Sprite):
 
         if self.rect.x >= (WIDTH - self.image.get_width())/2:
             self.landing_speed = 0
+        if self.landing_speed == 0:
+            self.rotate_ship()
+
+    def rotate_ship(self):
+        rotation_center = self.rect.center
+        original_image = pygame.image.load(self.img_route)
+
+        if self.rotation_angle < 180:
+            self.rotated_image = pygame.transform.rotate(
+                original_image, self.rotation_angle)
+            self.rotated_image_rect = self.rotated_image.get_rect(
+                center=(rotation_center))
+            self.screen.blit(self.rotated_image, self.rotated_image_rect)
+            self.rotation_angle += self.rotating_speed
+            self.request_draw_rotation = True
+            self.pos_ship_after_rotation = (
+                self.rotated_image_rect.x, self.rotated_image_rect.y)
+        else:
+            self.rect = self.rotated_image_rect
+            self.image = self.rotated_image
+            self.request_draw_rotation = False
+
+        return self.request_draw_rotation
 
 
 class Meteorite(pygame.sprite.Sprite):
