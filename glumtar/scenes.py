@@ -282,10 +282,6 @@ class ResolveLevel1(Scene):
             self.player.update()
             if not self.player.request_draw_rotation:
                 self.screen.blit(self.player.image, self.player.rect)
-            """ else:
-                self.screen.blit(self.player.rotated_image,
-                                 self.player.rotated_image_rect) """
-            # self.player.land_ship()
 
             pygame.display.flip()
 

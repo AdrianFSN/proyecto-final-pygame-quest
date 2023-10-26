@@ -14,14 +14,15 @@ class Ship(pygame.sprite.Sprite):
     landing_speed = 2
     rotating_speed = 2
     rotation_angle = 10
-    pos_ship_after_rotation = (0, 0)
+    stop_landing = HEIGHT - 200
 
     def __init__(self, screen, land=False):
         super().__init__()
         self.screen = screen
         self.land = land
-        self.request_draw_rotation = False
 
+        self.request_draw_rotation = False
+        self.rotation_ended = False
         self.rotated_image = None
         self.rotated_image_rect = None
 
@@ -79,20 +80,23 @@ class Ship(pygame.sprite.Sprite):
 
     def land_ship(self):
         descend_speed = 2
-        if self.rect.y < (HEIGHT - self.image.get_height())/2:
-            self.rect.y += self.landing_speed
-            if self.rect.y >= (HEIGHT - self.image.get_height())/2:
-                self.rect.x += self.landing_speed
+        if self.rect.top < (HEIGHT - self.image.get_height())/2:
+            self.rect.top += self.landing_speed
+            if self.rect.top >= (HEIGHT - self.image.get_height())/2:
+                self.rect.right += self.landing_speed
 
-        elif self.rect.y > (HEIGHT - self.image.get_height())/2:
-            self.rect.y -= self.landing_speed
-            if self.rect.y == (HEIGHT - self.image.get_height())/2:
-                self.rect.x += self.landing_speed
+        elif self.rect.bottom > (HEIGHT - self.image.get_height())/2:
+            self.rect.bottom -= self.landing_speed
+            if self.rect.bottom == (HEIGHT - self.image.get_height())/2:
+                self.rect.right += self.landing_speed
 
         if self.rect.x >= (WIDTH - self.image.get_width())/2:
             self.landing_speed = 0
         if self.landing_speed == 0:
             self.rotate_ship()
+        if self.rotation_ended:
+            if self.rect.bottom <= self.stop_landing:
+                self.rect.bottom += descend_speed
 
     def rotate_ship(self):
         rotation_center = self.rect.center
@@ -105,13 +109,16 @@ class Ship(pygame.sprite.Sprite):
                 center=(rotation_center))
             self.screen.blit(self.rotated_image, self.rotated_image_rect)
             self.rotation_angle += self.rotating_speed
+            original_image = pygame.image.load(self.img_route)
             self.request_draw_rotation = True
-            self.pos_ship_after_rotation = (
-                self.rotated_image_rect.x, self.rotated_image_rect.y)
+
         else:
             self.rect = self.rotated_image_rect
             self.image = self.rotated_image
+            print(
+                f'El top left de self.image es {self.image.get_rect()} y el de rotated_image es {self.rotated_image.get_rect()}')
             self.request_draw_rotation = False
+            self.rotation_ended = True
 
         return self.request_draw_rotation
 
