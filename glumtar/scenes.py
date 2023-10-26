@@ -19,6 +19,21 @@ class Scene:
 class FrontPage(Scene):
     def __init__(self, screen):
         super().__init__(screen)
+        self.bg_index = 1
+        self.bg_front_route = os.path.join(
+            'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+        self.bg_front = pygame.image.load(self.bg_front_route)
+        self.bg_front_X = 0
+        self.bg_front_Y = 0
+
+        logo_route = os.path.join(
+            'glumtar', 'resources', 'images', 'glumtar_logo.png')
+        self.logo = pygame.image.load(logo_route)
+        self.logo_X = (WIDTH - self.logo.get_width())/2
+        self.logo_Y = TOP_MARGIN_LIMIT
+
+        self.activate_stars = pygame.USEREVENT + 5
+        pygame.time.set_timer(self.activate_stars, 1500)
 
     def mainLoop(self):
         super().mainLoop()
@@ -29,10 +44,29 @@ class FrontPage(Scene):
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
-            self.screen.fill(SPACE_CADET)
+                if event.type == pygame.USEREVENT + 5:
+                    self.animate_stars()
+                    # self.screen.blit(
+                    #    self.bg_front, (self.bg_front_X, self.bg_front_Y))
+
+            # self.screen.fill(SPACE_CADET)
+            self.bg_front_route = os.path.join(
+                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+            self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
+            self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             pygame.display.flip()
 
         return False
+
+    def animate_stars(self):
+        if self.bg_index == 1:
+            self.bg_index = 2
+            # return self.bg_index
+        elif self.bg_index == 2:
+            self.bg_index = 1
+        print(f'Esto es el bg index {self.bg_index}')
+        print(f'Esto es el bg route {self.bg_front_route}')
+        return self.bg_index
 
 
 class MatchLevel1(Scene):
@@ -45,14 +79,11 @@ class MatchLevel1(Scene):
         self.background_posY = 0
 
         self.scoreboard = scoreboard
-        # self.scoreboard = Scoreboard()
         self.lives_counter = livescounter
-        # self.lives_counter = LivesCounter()
 
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
         self.player = player
-        # self.player = Ship()
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
@@ -84,12 +115,10 @@ class MatchLevel1(Scene):
         super().mainLoop()
         exit = False
         # stop_bg_scroll = False
-        # trigger_ship = False
         countdown_active = True
         end_game = False
         activate_explosion = False
         initialize_ship_costume = False
-        # allow_ship_update = True
 
         while not exit:
             self.clock.tick(FPS)
@@ -145,6 +174,7 @@ class MatchLevel1(Scene):
                 self.countdown.add_countdown_title()
                 self.allow_collisions = False
                 self.allow_points = False
+                self.player.reset_ship_costume()
 
                 if self.countdown.counter < self.countdown.stop:
                     countdown_active = False
@@ -265,6 +295,7 @@ class ResolveLevel1(Scene):
         exit = False
         while not exit:
             self.clock.tick(FPS)
+            self.paint_background(self.background_posX, self.background_posY)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
