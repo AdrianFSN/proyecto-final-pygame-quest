@@ -9,7 +9,7 @@ class Glumtar:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Glumtar | The Quest")
-        self.player = Ship()
+        self.player = Ship(self.screen)
         self.scoreboard = Scoreboard()
         self.lives_counter = LivesCounter()
 

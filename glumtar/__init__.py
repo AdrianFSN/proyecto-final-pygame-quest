@@ -1,7 +1,7 @@
 # Animations
 ANIMATION_FRAMES = 61  # Animations should have 60 frames
 FRAMES_SPEED = 1
-BG_SCROLL_SPEED = 10  # Should be one. Increase only for testing purposes.
+BG_SCROLL_SPEED = 12  # Should be 1. Increase only for testing purposes.
 
 # Colors palette RGB
 COLUMBIA_BLUE = (192, 214, 223)
