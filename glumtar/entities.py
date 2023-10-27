@@ -102,7 +102,7 @@ class Ship(pygame.sprite.Sprite):
         rotation_center = self.rect.center
         original_image = pygame.image.load(self.img_route)
 
-        if self.rotation_angle < 180:
+        if self.rotation_angle <= 180:
             self.rotated_image = pygame.transform.rotate(
                 original_image, self.rotation_angle)
             self.rotated_image_rect = self.rotated_image.get_rect(

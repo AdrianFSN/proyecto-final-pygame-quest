@@ -19,9 +19,16 @@ class Scene:
 class FrontPage(Scene):
     def __init__(self, screen):
         super().__init__(screen)
+        self.available_bg = []
         self.bg_index = 1
-        self.bg_front_route = os.path.join(
-            'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+        self.bg_controller = 0
+        for bg in range(1, 3):
+            self.bg_front_route = os.path.join(
+                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+            self.available_bg.append(self.bg_front_route)
+            self.bg_index += 1
+            # tengo que cargarlo en una lista y correr desde ella. Si no, no cambia la variable bg_front
+
         self.bg_front = pygame.image.load(self.bg_front_route)
         self.bg_front_X = 0
         self.bg_front_Y = 0
@@ -46,12 +53,10 @@ class FrontPage(Scene):
                     exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
-                    # self.screen.blit(
-                    #    self.bg_front, (self.bg_front_X, self.bg_front_Y))
+                    print(
+                        f'El fondo es {self.bg_front} de {self.available_bg}')
 
-            # self.screen.fill(SPACE_CADET)
-            self.bg_front_route = os.path.join(
-                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+            self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             pygame.display.flip()
@@ -59,11 +64,13 @@ class FrontPage(Scene):
         return False
 
     def animate_stars(self):
-        if self.bg_index == 1:
-            self.bg_index = 2
-            # return self.bg_index
-        elif self.bg_index == 2:
-            self.bg_index = 1
+        self.bg_front = pygame.image.load(
+            self.available_bg[self.bg_controller])
+
+        if self.bg_controller == 0:
+            self.bg_controller = 1
+        elif self.bg_controller == 1:
+            self.bg_controller = 0
         print(f'Esto es el bg index {self.bg_index}')
         print(f'Esto es el bg route {self.bg_front_route}')
         return self.bg_index
@@ -295,15 +302,14 @@ class ResolveLevel1(Scene):
         exit = False
         while not exit:
             self.clock.tick(FPS)
-            self.paint_background(self.background_posX, self.background_posY)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
             self.screen.fill(CORAL_PINK)
-            self.paint_background(self.background_posX,
-                                  self.background_posY)
+            self.screen.blit(
+                self.background, (self.background_posX, self.background_posY))
             self.add_level_title()
 
             self.scoreboard.show_scoreboard(self.screen)
@@ -317,11 +323,6 @@ class ResolveLevel1(Scene):
             pygame.display.flip()
 
         return False
-
-    def paint_background(self, posX, posY):
-        posX = posX
-        posY = posY
-        self.screen.blit(self.background, (posX, posY))
 
     def add_level_title(self):
         self.title = "Level 1"
