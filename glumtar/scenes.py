@@ -62,7 +62,7 @@ class FrontPage(Scene):
             'glumtar', 'data', 'messages.txt')
         self.cursor = 0
 
-        self.instructions_texts = self.read_instructions()
+        # self.instructions_texts = self.read_instructions()
 
     def mainLoop(self):
         super().mainLoop()
@@ -81,6 +81,7 @@ class FrontPage(Scene):
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.add_escape_message()
             # self.draw_instructions(self.instructions_texts[0])
+            self.read_instructions()
             self.screen.blit(self.instructions_render, ((
                 self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
 
@@ -99,12 +100,11 @@ class FrontPage(Scene):
 
     def read_instructions(self):
         with open(self.instructions_file_path, mode='r', encoding='UTF-8', newline='\n') as instructions_file:
-            reader = instructions_file.readline()
-
-            self.instructions_render = self.font_style.render(
-                reader, True, COLUMBIA_BLUE)
-            pos_x = self.instructions_posX
-            pos_y = self.instructions_posY
+            reader = instructions_file.readlines()
+            if self.cursor < len(reader):
+                self.instructions_render = self.font_style.render(
+                    reader[self.cursor], True, COLUMBIA_BLUE)
+                self.cursor += 1
             """ i = 0
             for line in lines:
                 if i in range(0, 7):
