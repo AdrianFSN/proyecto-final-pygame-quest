@@ -1,7 +1,5 @@
 import os
-
 import pygame
-
 from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
@@ -17,6 +15,18 @@ class Scene:
 
 
 class FrontPage(Scene):
+    instructions_posX = WIDTH
+    init_instructions_posY = 250
+    instructions_posY = init_instructions_posY
+    paragraph1 = []
+    paragraph2 = []
+    render_paragraph1 = None
+    render_paragraph2 = None
+    rendered_paragraph1 = []
+    rendered_paragraph2 = []
+
+    instructions_render = None
+
     def __init__(self, screen):
         super().__init__(screen)
         self.available_bg = []
@@ -47,6 +57,13 @@ class FrontPage(Scene):
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
+        self.instructions_filename = 'messages.txt'
+        self.instructions_file_path = os.path.join(
+            'glumtar', 'data', 'messages.txt')
+        self.cursor = 0
+
+        self.instructions_texts = self.read_instructions()
+
     def mainLoop(self):
         super().mainLoop()
         exit = False
@@ -63,6 +80,9 @@ class FrontPage(Scene):
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.add_escape_message()
+            # self.draw_instructions(self.instructions_texts[0])
+            self.screen.blit(self.instructions_render, ((
+                self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
 
             pygame.display.flip()
 
@@ -77,14 +97,58 @@ class FrontPage(Scene):
         elif self.bg_controller == 1:
             self.bg_controller = 0
 
+    def read_instructions(self):
+        with open(self.instructions_file_path, mode='r', encoding='UTF-8', newline='\n') as instructions_file:
+            reader = instructions_file.readline()
+
+            self.instructions_render = self.font_style.render(
+                reader, True, COLUMBIA_BLUE)
+            pos_x = self.instructions_posX
+            pos_y = self.instructions_posY
+            """ i = 0
+            for line in lines:
+                if i in range(0, 7):
+                    self.paragraph1.append(lines[i])
+                    i += 1
+                    print(f'Este es el párrafo 1 {self.paragraph1}')
+                elif i in range(7, 12):
+                    self.paragraph2.append(lines[i])
+                    i += 1
+                    print(f'Este es el párrafo 2 {self.paragraph2}')
+            i = 0
+            print(f'Esto es el valor del i: {i}')
+
+            for item in self.paragraph1:
+                self.render_paragraph1 = self.font_style.render(
+                    self.paragraph1[i], True, COLUMBIA_BLUE)
+                self.rendered_paragraph1.append(self.paragraph1[i])
+
+                self.instructions_posY += 5
+                print(
+                    f'Esto es la y de las instrucciones: {self.instructions_posY}')
+                i += 1
+                print(f'Esto es el valor del i: {i}')
+            i = 0
+        return self.paragraph1, self.paragraph2 """
+
+    """ def draw_instructions(self, instruction):
+        instruction = instruction
+        self.instructions_posX = (WIDTH - self.render_paragraph1.get_width())/2
+        spacing = self.instructions_posY + FONT_SIZE + 5
+        i = 0
+        for line in instruction:
+            self.screen.blit(
+                self.rendered_paragraph1[i], (self.instructions_posX, spacing))
+            spacing += FONT_SIZE
+            i += 1 """
+
     def add_escape_message(self):
         escape_message = "Press <ESPACE> to start"
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
-        self.pos_X = (WIDTH - ((len(escape_message)*FONT_SIZE)))/2
-        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - FONT_SIZE
-
         title_render = self.font_style.render(
             escape_message, True, COLUMBIA_BLUE)
+        self.pos_X = (WIDTH - title_render.get_width())/2
+        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - title_render.get_height()
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
 
