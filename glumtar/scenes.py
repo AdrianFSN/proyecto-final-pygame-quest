@@ -82,8 +82,8 @@ class FrontPage(Scene):
             self.add_escape_message()
             # self.draw_instructions(self.instructions_texts[0])
             self.read_instructions()
-            self.screen.blit(self.instructions_render, ((
-                self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
+            # self.screen.blit(self.instructions_render, ((
+            #    self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
 
             pygame.display.flip()
 
@@ -105,6 +105,10 @@ class FrontPage(Scene):
                 self.instructions_render = self.font_style.render(
                     reader[self.cursor], True, COLUMBIA_BLUE)
                 self.cursor += 1
+                self.instructions_posY += FONT_SIZE
+            print(f"Este es el reader {reader}")
+            self.screen.blit(self.instructions_render, ((
+                self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
             """ i = 0
             for line in lines:
                 if i in range(0, 7):
