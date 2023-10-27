@@ -3,6 +3,7 @@ import pygame
 from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
+from .data.messages import Instruction
 
 
 class Scene:
@@ -24,6 +25,12 @@ class FrontPage(Scene):
     render_paragraph2 = None
     rendered_paragraph1 = []
     rendered_paragraph2 = []
+
+    reader_surfaces = []
+    lines_writer = 6
+    spacing = FONT_SIZE
+    visible_instruction = None
+    reader = None
 
     instructions_render = None
 
@@ -61,7 +68,8 @@ class FrontPage(Scene):
         self.instructions_file_path = os.path.join(
             'glumtar', 'data', 'messages.txt')
         self.cursor = 0
-
+        # self.writer = 0
+        self.read_instructions()
         # self.instructions_texts = self.read_instructions()
 
     def mainLoop(self):
@@ -80,8 +88,11 @@ class FrontPage(Scene):
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.add_escape_message()
+            # if self.writer < len(self.reader_surfaces):
+            #    self.screen.blit(self.reader_surfaces[self.writer], ((
+            #        self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
+            self.show_instructions()
             # self.draw_instructions(self.instructions_texts[0])
-            self.read_instructions()
             # self.screen.blit(self.instructions_render, ((
             #    self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
 
@@ -101,50 +112,40 @@ class FrontPage(Scene):
     def read_instructions(self):
         with open(self.instructions_file_path, mode='r', encoding='UTF-8', newline='\n') as instructions_file:
             reader = instructions_file.readlines()
-            if self.cursor < len(reader):
-                self.instructions_render = self.font_style.render(
-                    reader[self.cursor], True, COLUMBIA_BLUE)
-                self.cursor += 1
-                self.instructions_posY += FONT_SIZE
-            print(f"Este es el reader {reader}")
-            self.screen.blit(self.instructions_render, ((
-                self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
-            """ i = 0
-            for line in lines:
-                if i in range(0, 7):
-                    self.paragraph1.append(lines[i])
-                    i += 1
-                    print(f'Este es el párrafo 1 {self.paragraph1}')
-                elif i in range(7, 12):
-                    self.paragraph2.append(lines[i])
-                    i += 1
-                    print(f'Este es el párrafo 2 {self.paragraph2}')
-            i = 0
-            print(f'Esto es el valor del i: {i}')
 
-            for item in self.paragraph1:
-                self.render_paragraph1 = self.font_style.render(
-                    self.paragraph1[i], True, COLUMBIA_BLUE)
-                self.rendered_paragraph1.append(self.paragraph1[i])
+        for lines in reader:
+            # if self.cursor < len(reader):
+            self.instructions_render = self.font_style.render(
+                reader[self.cursor], True, COLUMBIA_BLUE)
+            self.reader_surfaces.append(self.instructions_render)
+            print(f"Este es el reader surfaces {self.reader_surfaces}")
+            self.cursor += 1
+            print(f"Este es el reader_text {lines}")
 
-                self.instructions_posY += 5
-                print(
-                    f'Esto es la y de las instrucciones: {self.instructions_posY}')
-                i += 1
-                print(f'Esto es el valor del i: {i}')
-            i = 0
-        return self.paragraph1, self.paragraph2 """
+        return len(self.reader_surfaces)
 
-    """ def draw_instructions(self, instruction):
-        instruction = instruction
-        self.instructions_posX = (WIDTH - self.render_paragraph1.get_width())/2
-        spacing = self.instructions_posY + FONT_SIZE + 5
-        i = 0
-        for line in instruction:
-            self.screen.blit(
-                self.rendered_paragraph1[i], (self.instructions_posX, spacing))
-            spacing += FONT_SIZE
-            i += 1 """
+    def show_instructions(self):
+        self.screen.blit(self.reader_surfaces[0], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, self.instructions_posY))
+        print(f"Surface es {self.reader_surfaces[0]}")
+        position_2 = self.instructions_posY + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[1], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_2))
+        position_3 = position_2 + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[2], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_3))
+        position_4 = position_3 + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[3], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_4))
+        position_5 = position_4 + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[4], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_5))
+        position_6 = position_5 + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[5], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_6))
+        position_7 = position_6 + self.instructions_render.get_height()
+        self.screen.blit(self.reader_surfaces[6], ((
+            self.instructions_posX - self.instructions_render.get_width())/2, position_7))
 
     def add_escape_message(self):
         escape_message = "Press <ESPACE> to start"
