@@ -2,7 +2,7 @@ import os
 
 import pygame
 
-from . import BLACK, BG_SCROLL_SPEED, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
+from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -27,9 +27,9 @@ class FrontPage(Scene):
                 'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
             self.available_bg.append(self.bg_front_route)
             self.bg_index += 1
-            # tengo que cargarlo en una lista y correr desde ella. Si no, no cambia la variable bg_front
 
-        self.bg_front = pygame.image.load(self.bg_front_route)
+        self.bg_front = pygame.image.load(
+            self.available_bg[self.bg_controller])
         self.bg_front_X = 0
         self.bg_front_Y = 0
 
@@ -42,6 +42,11 @@ class FrontPage(Scene):
         self.activate_stars = pygame.USEREVENT + 5
         pygame.time.set_timer(self.activate_stars, 1500)
 
+        self.font = FONT
+        self.font_route = os.path.join(
+            'glumtar', 'resources', 'fonts', self.font)
+        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+
     def mainLoop(self):
         super().mainLoop()
         exit = False
@@ -53,12 +58,12 @@ class FrontPage(Scene):
                     exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
-                    print(
-                        f'El fondo es {self.bg_front} de {self.available_bg}')
 
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
+            self.add_escape_message()
+
             pygame.display.flip()
 
         return False
@@ -71,9 +76,17 @@ class FrontPage(Scene):
             self.bg_controller = 1
         elif self.bg_controller == 1:
             self.bg_controller = 0
-        print(f'Esto es el bg index {self.bg_index}')
-        print(f'Esto es el bg route {self.bg_front_route}')
-        return self.bg_index
+
+    def add_escape_message(self):
+        escape_message = "Press <ESPACE> to start"
+        self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
+        self.pos_X = (WIDTH - ((len(escape_message)*FONT_SIZE)))/2
+        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - FONT_SIZE
+
+        title_render = self.font_style.render(
+            escape_message, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            title_render, (self.pos_X, self.pos_Y))
 
 
 class MatchLevel1(Scene):
@@ -189,7 +202,6 @@ class MatchLevel1(Scene):
                     self.allow_collisions = True
                     self.allow_points = True
                     self.screen.blit(self.player.image, self.player.rect)
-                    print(initialize_ship_costume)
 
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)

@@ -115,8 +115,6 @@ class Ship(pygame.sprite.Sprite):
         else:
             self.rect = self.rotated_image_rect
             self.image = self.rotated_image
-            print(
-                f'El top left de self.image es {self.image.get_rect()} y el de rotated_image es {self.rotated_image.get_rect()}')
             self.request_draw_rotation = False
             self.rotation_ended = True
 
