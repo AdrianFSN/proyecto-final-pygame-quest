@@ -1,7 +1,7 @@
 # Animations
 ANIMATION_FRAMES = 61  # Animations should have 60 frames
-FRAMES_SPEED = 1
 BG_SCROLL_SPEED = 12  # Should be 1. Increase only for testing purposes.
+FRAMES_SPEED = 1
 
 # Colors palette RGB
 COLUMBIA_BLUE = (192, 214, 223)
@@ -12,13 +12,14 @@ ROBIN_EGG_BLUE = (78, 205, 196)
 BLACK = (0, 0, 0)
 
 # Display settings
-TOP_MARGIN_LIMIT = 80
-WIDTH = 1280
-HEIGHT = 720
-FPS = 60
+BOTTOM_MARGIN_LIMIT = 80
 DEFAULT_BG_SCROLL = 7200
+FPS = 60
+HEIGHT = 720
 TIME_UNIT = FPS
 TITLE_MARGIN = 70
+TOP_MARGIN_LIMIT = 80
+WIDTH = 1280
 
 # Fonts
 FONT = 'PressStart2P-Regular.ttf'
