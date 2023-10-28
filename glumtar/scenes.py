@@ -41,13 +41,18 @@ class FrontPage(Scene):
 
         self.activate_stars = pygame.USEREVENT + 5
         pygame.time.set_timer(self.activate_stars, 1500)
+        self.change_page = pygame.USEREVENT + 6
+        pygame.time.set_timer(self.change_page, 500)
 
         self.font = FONT
         self.font_route = os.path.join(
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
-        self.paragraph1 = Reader('messages.txt', FONT, 6)
+        self.paragraph1 = Reader('messages.txt', FONT, (0, 7))
+        self.paragraph2 = Reader('messages.txt', FONT, (7, 13))
+        self.paragraph3 = Reader('messages.txt', FONT, (13, 16))
+
         self.paragraph1.renderize_lines(self.screen)
 
     def mainLoop(self):
@@ -61,6 +66,9 @@ class FrontPage(Scene):
                     exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
+                if event.type == pygame.USEREVENT + 6:
+                    if event.type == pygame.KEYDOWN and pygame.K_RIGHT:
+                        pass
 
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
