@@ -47,9 +47,9 @@ class FrontPage(Scene):
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
-        self.paragraph1 = Reader('messages.txt', FONT, (0, 7))
-        self.paragraph2 = Reader('messages.txt', FONT, (7, 12))
-        self.paragraph3 = Reader('messages.txt', FONT, (12, 16))
+        self.paragraph1 = Reader('front_messages.txt', FONT, (0, 7))
+        self.paragraph2 = Reader('front_messages.txt', FONT, (7, 12))
+        self.paragraph3 = Reader('front_messages.txt', FONT, (12, 16))
         self.available_messages = [self.paragraph1,
                                    self.paragraph2, self.paragraph3]
         self.paragraph1.renderize_lines(self.screen)

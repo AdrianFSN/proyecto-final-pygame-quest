@@ -8,7 +8,7 @@ Nobody knows...
 However, you will find it, won't you?
 Pilot the spacecraft across
 planets until landing on Glumtar.
-Use the arrow keys (Up and Down)
+Use the key arrows (Up and Down)
 on your keyboard to move the spaceship.
 This won't be a pleasure trip.
 Space is full of meteorite storms.
