@@ -5,17 +5,20 @@ from glumtar import COLUMBIA_BLUE, FONT_SIZE, WIDTH
 
 class Reader:
     init_text_posY = 250
+    font_size_correction = FONT_SIZE - 10
     spacing = FONT_SIZE + 5
 
-    def __init__(self, file, font, lines_number=1):
+    def __init__(self, file, font, lines_number=(0, 2)):
         # self.screen = screen
         self.file_name = file
         self.font = font
-        self.number_of_lines = lines_number
+        self.start_reading_point = lines_number[0]
+        self.stop_reading_point = lines_number[1]
 
         self.font_route = os.path.join(
             'glumtar', 'resources', 'fonts', self.font)
-        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.font_style = pygame.font.Font(
+            self.font_route, self.font_size_correction)
         self.text_file_path = os.path.join(
             'glumtar', 'data', f'{self.file_name}')
         self.text_posX = WIDTH
@@ -25,12 +28,12 @@ class Reader:
         self.rendered_line = None
 
     def renderize_lines(self, screen):
-        with open(self.text_file_path, mode='r', newline='\n') as message_file:
+        with open(self.text_file_path, mode='r', encoding='UTF-8', newline='\r') as message_file:
             lines = message_file.readlines()
             print(f'Estas son las líneas en lines {lines}')
         pointer = 0
         if pointer <= len(lines):
-            for row in lines:
+            for row in range(self.start_reading_point, self.stop_reading_point):
                 self.rendered_line = self.font_style.render(
                     lines[pointer], True, COLUMBIA_BLUE)
                 self.lines_container[self.rendered_line] = screen.blit(
@@ -41,21 +44,6 @@ class Reader:
             f'este es el diccionario de renders y blits {self.lines_container}')
 
     def draw_message(self, screen):
-        center = self.rendered_line.get_width()
         for rendered_text, text_rect in self.lines_container.items():
             screen.blit(
                 rendered_text, (text_rect.x, text_rect.y))
-
-
-class Instruction:
-    def __init__(self, text):
-        self.text = text
-        self.converted_text = ''
-
-    def turn_into_string(self):
-        for line in range(0, len(self.text)):
-            self.converted_text += f'{self.text[line]}' + '\n'
-            print(
-                f'Este es self text {self.text} y este es self converted text {self.converted_text}')
-
-        return self.converted_text
