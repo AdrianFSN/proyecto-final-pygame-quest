@@ -18,30 +18,33 @@ class Reader:
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.text_file_path = os.path.join(
             'glumtar', 'data', f'{self.file_name}')
-        self.text_posX = WIDTH/2
+        self.text_posX = WIDTH
         self.text_posY = self.init_text_posY
         self.lines_container = {}
         self.activate_pointer = True
+        self.rendered_line = None
 
     def renderize_lines(self, screen):
-        with open(self.text_file_path, mode='r', encoding='UTF-8', newline='\n') as message_file:
+        with open(self.text_file_path, mode='r', newline='\n') as message_file:
             lines = message_file.readlines()
             print(f'Estas son las líneas en lines {lines}')
         pointer = 0
         if pointer <= len(lines):
             for row in lines:
-                rendered_line = self.font_style.render(
+                self.rendered_line = self.font_style.render(
                     lines[pointer], True, COLUMBIA_BLUE)
-                self.lines_container[rendered_line] = screen.blit(
-                    rendered_line, ((self.text_posX - rendered_line.get_width())/2, self.text_posY))
+                self.lines_container[self.rendered_line] = screen.blit(
+                    self.rendered_line, ((self.text_posX - self.rendered_line.get_width())/2, self.text_posY))
                 pointer += 1
                 self.text_posY += self.spacing
         print(
             f'este es el diccionario de renders y blits {self.lines_container}')
 
     def draw_message(self, screen):
+        center = self.rendered_line.get_width()
         for rendered_text, text_rect in self.lines_container.items():
-            screen.blit(rendered_text, text_rect.center)
+            screen.blit(
+                rendered_text, (text_rect.x, text_rect.y))
 
 
 class Instruction:
