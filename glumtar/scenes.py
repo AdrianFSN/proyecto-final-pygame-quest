@@ -16,6 +16,8 @@ class Scene:
 
 
 class FrontPage(Scene):
+    read_more_bottom_margin = 150
+    font_size_correction = FONT_SIZE - 10
 
     def __init__(self, screen):
         super().__init__(screen)
@@ -83,6 +85,7 @@ class FrontPage(Scene):
             self.add_escape_message()
             self.available_messages[self.reader_pointer].draw_message(
                 self.screen)
+            self.add_read_more_message()
 
             pygame.display.flip()
 
@@ -106,6 +109,17 @@ class FrontPage(Scene):
         self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - title_render.get_height()
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
+
+    def add_read_more_message(self):
+        read_more_title = "Press L or R to read more"
+        self.font_style = pygame.font.Font(
+            self.font_route, self.font_size_correction)
+        read_more_render = self.font_style.render(
+            read_more_title, True, COLUMBIA_BLUE)
+        self.pos_X = (WIDTH - read_more_render.get_width())/2
+        self.pos_Y = HEIGHT - self.read_more_bottom_margin - read_more_render.get_height()
+        self.screen.blit(
+            read_more_render, (self.pos_X, self.pos_Y))
 
 
 class MatchLevel1(Scene):
