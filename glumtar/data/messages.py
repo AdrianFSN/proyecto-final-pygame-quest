@@ -31,10 +31,6 @@ class Reader:
     def renderize_lines(self, screen):
         with open(self.text_file_path, mode='r', encoding='UTF-8', newline='\n') as message_file:
             lines = message_file.readlines()
-            print(f'Estas son las líneas en lines {lines}')
-            print(f'Esta es la len de lines {len(lines)}')
-        # pointer = 0
-        print(f'Este es el pointer {self.pointer}')
         if self.pointer <= len(lines):
             for row in range(self.start_reading_point, self.stop_reading_point):
                 self.rendered_line = self.font_style.render(
@@ -43,8 +39,6 @@ class Reader:
                     self.rendered_line, ((self.text_posX - self.rendered_line.get_width())/2, self.text_posY))
                 self.pointer += 1
                 self.text_posY += self.spacing
-        print(
-            f'este es el diccionario de renders y blits {self.lines_container}')
 
     def draw_message(self, screen):
         for rendered_text, text_rect in self.lines_container.items():

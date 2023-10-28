@@ -41,8 +41,6 @@ class FrontPage(Scene):
 
         self.activate_stars = pygame.USEREVENT + 5
         pygame.time.set_timer(self.activate_stars, 1500)
-        self.change_page = pygame.USEREVENT + 6
-        pygame.time.set_timer(self.change_page, 500)
 
         self.font = FONT
         self.font_route = os.path.join(
@@ -50,10 +48,15 @@ class FrontPage(Scene):
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
         self.paragraph1 = Reader('messages.txt', FONT, (0, 7))
-        # self.paragraph2 = Reader('messages.txt', FONT, (7, 13))
-        # self.paragraph3 = Reader('messages.txt', FONT, (13, 15))
-        self.available_messages = []
+        self.paragraph2 = Reader('messages.txt', FONT, (7, 12))
+        self.paragraph3 = Reader('messages.txt', FONT, (12, 16))
+        self.available_messages = [self.paragraph1,
+                                   self.paragraph2, self.paragraph3]
         self.paragraph1.renderize_lines(self.screen)
+        self.paragraph2.renderize_lines(self.screen)
+        self.paragraph3.renderize_lines(self.screen)
+
+        self.reader_pointer = 0
 
     def mainLoop(self):
         super().mainLoop()
@@ -66,19 +69,20 @@ class FrontPage(Scene):
                     exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
-                if event.type == pygame.USEREVENT + 6:
-                    pass
-                    pointer = 0
-
-                    if event.type == pygame.KEYDOWN and pygame.K_RIGHT:
-                        if pointer <= len(self.available_messages):
-                            pointer += 1
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                    if self.reader_pointer < len(self.available_messages) - 1:
+                        self.reader_pointer += 1
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                    if self.reader_pointer <= len(self.available_messages)-1 and self.reader_pointer > 0:
+                        self.reader_pointer -= 1
 
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
-            self.paragraph1.draw_message(self.screen)
+            # self.paragraph3.draw_message(self.screen)
             self.add_escape_message()
+            self.available_messages[self.reader_pointer].draw_message(
+                self.screen)
 
             pygame.display.flip()
 
