@@ -16,7 +16,7 @@ class Scene:
 
 
 class FrontPage(Scene):
-    read_more_bottom_margin = 150
+    read_more_bottom_margin = 130
     font_size_correction = FONT_SIZE - 10
 
     def __init__(self, screen):
@@ -36,7 +36,7 @@ class FrontPage(Scene):
         self.bg_front_Y = 0
 
         logo_route = os.path.join(
-            'glumtar', 'resources', 'images', 'glumtar_logo.png')
+            'glumtar', 'resources', 'images', 'glumtar_logo2.png')
         self.logo = pygame.image.load(logo_route)
         self.logo_X = (WIDTH - self.logo.get_width())/2
         self.logo_Y = TOP_MARGIN_LIMIT

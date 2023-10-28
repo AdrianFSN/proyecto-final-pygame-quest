@@ -4,7 +4,7 @@ from glumtar import COLUMBIA_BLUE, FONT_SIZE, WIDTH
 
 
 class Reader:
-    init_text_posY = 250
+    init_text_posY = 300
     font_size_correction = FONT_SIZE - 10
     spacing = FONT_SIZE + 5
 
