@@ -332,9 +332,22 @@ class ResolveLevel1(Scene):
 
     def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
-        bg_route = os.path.join('glumtar', 'resources',
+        self.available_bg = []
+        # self.bg_index = 1
+        self.bg_controller = 0
+        for bg in range(1, 3):
+            self.bg_resolve_route = os.path.join(
+                'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
+            self.available_bg.append(self.bg_resolve_route)
+        print(f'La lista de avilable bg es {self.available_bg}')
+        # self.bg_index += 1
+
+        self.background = pygame.image.load(
+            self.available_bg[self.bg_controller])
+
+        """ bg_route = os.path.join('glumtar', 'resources',
                                 'images', 'planet1.jpg')
-        self.background = pygame.image.load(bg_route)
+        self.background = pygame.image.load(bg_route) """
         self.background_posX = 0
         self.background_posY = 0
 
