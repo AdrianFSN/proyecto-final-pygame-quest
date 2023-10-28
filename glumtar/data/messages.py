@@ -31,8 +31,8 @@ class Reader:
     def renderize_lines(self, screen):
         with open(self.text_file_path, mode='r', encoding='UTF-8', newline='\n') as message_file:
             lines = message_file.readlines()
-            print(f"Esto es loq ue hay en lines {lines}")
-            print(f"Esta es la len de lines {len(lines)}")
+            for sentence in range(len(lines)):
+                lines[sentence] = lines[sentence][:-1]
         if self.pointer <= len(lines):
             for row in range(self.start_reading_point, self.stop_reading_point):
                 self.rendered_line = self.font_style.render(
