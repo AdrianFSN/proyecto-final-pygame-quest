@@ -1,10 +1,9 @@
 import os
-
 import pygame
-
 from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
+from .data.messages import Reader
 
 
 class Scene:
@@ -17,6 +16,7 @@ class Scene:
 
 
 class FrontPage(Scene):
+
     def __init__(self, screen):
         super().__init__(screen)
         self.available_bg = []
@@ -47,6 +47,9 @@ class FrontPage(Scene):
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
+        self.paragraph1 = Reader('messages.txt', FONT, 6)
+        self.paragraph1.renderize_lines(self.screen)
+
     def mainLoop(self):
         super().mainLoop()
         exit = False
@@ -62,6 +65,7 @@ class FrontPage(Scene):
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
+            self.paragraph1.draw_message(self.screen)
             self.add_escape_message()
 
             pygame.display.flip()
@@ -80,11 +84,10 @@ class FrontPage(Scene):
     def add_escape_message(self):
         escape_message = "Press <ESPACE> to start"
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
-        self.pos_X = (WIDTH - ((len(escape_message)*FONT_SIZE)))/2
-        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - FONT_SIZE
-
         title_render = self.font_style.render(
             escape_message, True, COLUMBIA_BLUE)
+        self.pos_X = (WIDTH - title_render.get_width())/2
+        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - title_render.get_height()
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))
 
