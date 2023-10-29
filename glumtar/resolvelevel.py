@@ -28,12 +28,16 @@ class ResolveLevel(PlayLevel):
         self.bg_fade_in = pygame.USEREVENT + 6
         pygame.time.set_timer(self.bg_fade_in, 100)
 
+        self.advance_level = pygame.USEREVENT + 7
+        pygame.time.set_timer(self.advance_level, 3000)
+
         self.background_posX = 0
         self.background_posY = 0
 
         self.player = player
         self.scoreboard = scoreboard
         self.lives_counter = livescounter
+        self.go_to_exit = False
         self.exit = False
 
     def mainLoop(self):
@@ -50,6 +54,9 @@ class ResolveLevel(PlayLevel):
                         self.alpha += self.fade_in_speed
                     elif self.alpha > 255:
                         self.alpha = 255
+                if event.type == self.advance_level:
+                    if self.player.rect.bottom >= self.player.stop_landing:
+                        self.go_to_exit = True
 
             self.screen.fill(CORAL_PINK)
             self.screen.blit(
@@ -67,6 +74,8 @@ class ResolveLevel(PlayLevel):
             self.player.update()
             if not self.player.request_draw_rotation:
                 self.screen.blit(self.player.image, self.player.rect)
+            if self.go_to_exit:
+                self.exit = True
 
             pygame.display.flip()
 

@@ -1,5 +1,5 @@
 import pygame
-from . import FPS, GO_TO_RECORDS_DELAY, HEIGHT, WIDTH
+from . import FPS, HEIGHT, LIVES, WIDTH
 from . playlevel import PlayLevel
 from . resolvelevel import ResolveLevel
 from . frontpage import FrontPage
@@ -13,76 +13,77 @@ class Glumtar:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Glumtar | The Quest")
         self.clock = pygame.time.Clock()
-        self.player = Ship(self.screen)
-        self.scoreboard = Scoreboard()
-        self.lives_counter = LivesCounter()
-        # self.front_page_exit = False
-        self.front_page = FrontPage(self.screen)
         self.records_page = BestPlayers(self.screen)
-        self.info_scenes = [self.front_page, self.records_page]
         self.available_play_levels = 3
+        self.play_scenes = []
         self.play = None
         self.resolve = None
         self.level = 1
 
-        self.play_scenes = []
-        for levels in range(self.level, self.available_play_levels):
-            self.play = PlayLevel(
-                self.screen, self.player, self.scoreboard, self.lives_counter, levels)
-            self.resolve = ResolveLevel(
-                self.play.screen, self.play.player, self.play.scoreboard, self.play.lives_counter, self.play.level)
-            self.play_scenes.append([self.play, self.resolve])
-
-        self.info_switches_list = []
-        self.info_scene_switch = None
-        for switch in range(len(self.info_scenes)):
-            self.info_scene_switch = switch
-            self.info_switches_list.append([self.info_scene_switch, False])
-
-        self.play_switches_list = []
-        self.play_scene_switch = None
-        for switch in range(len(self.play_scenes)):
-            self.play_scene_switch = switch
-            self.play_switches_list.append([self.play_scene_switch, False])
-
-        self.info_switches_list[0][1] = True
-        # print(f'Esta es la lista de switches {self.info_switches_list}')
-        self.game_over = False
+        self.set_up_elements = True
 
     def mainLoop(self):
         exit = False
         while not exit:
             self.clock.tick(FPS)
-            # bucle principal (o main loop)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
-                    print("Alguien ha decidido salir de la aplicación por la X")
                     exit = True
                     break
+            if self.set_up_elements:
+                scoreboard = Scoreboard(self.screen)
+                player = Ship(self.screen)
+                lives_counter = LivesCounter()
+                front_page = FrontPage(self.screen)
+                play_level1 = PlayLevel(
+                    self.screen, player, scoreboard, lives_counter, 1)
+                resolve_level1 = ResolveLevel(
+                    self.screen, play_level1.player, play_level1.scoreboard, play_level1.lives_counter, 1)
+                play_level2 = PlayLevel(
+                    self.screen, player, scoreboard, lives_counter, 1)
+                resolve_level2 = ResolveLevel(
+                    self.screen, play_level2.player, play_level2.scoreboard, play_level2.lives_counter, 2)
+                scenes_list = [front_page, play_level1, resolve_level1,
+                               play_level2, resolve_level2, self.records_page]
+                self.set_up_elements = False
 
-            if self.info_switches_list[0][1]:
-                self.front_page.mainLoop()
-
-                if self.front_page.exit:
-                    if not self.play_switches_list[0][1]:
-                        self.play_scenes[0][0].mainLoop()
-                        if not self.play_scenes[0][0].execute_game_over:
-                            if self.play_scenes[0][0].exit:
-                                self.play_scenes[0][1].mainLoop()
-                        else:
-                            self.game_over = True
-                            self.play_switches_list[0][1] = True
+            for stage in scenes_list:
+                if not front_page.exit:
+                    front_page.mainLoop()
+                    if front_page.exit:
+                        if play_level1.execute_game_over:
                             self.records_page.mainLoop()
                             if self.records_page.exit:
-                                self.info_switches_list[0][1] = True
-                                self.front_page.exit = False
-
-            pygame.display.flip()
+                                self.restart_game()
+                        else:
+                            play_level1.mainLoop()
+                            if play_level1.exit:
+                                resolve_level1.mainLoop()
+                                if resolve_level1.exit:
+                                    if play_level2.execute_game_over:
+                                        self.records_page.mainLoop()
+                                        if self.records_page.exit:
+                                            self.restart_game()
+                                        else:
+                                            play_level2.mainLoop()
+                                            if play_level2.exit:
+                                                resolve_level2.mainLoop()
+                                                if resolve_level1.exit:
+                                                    self.records_page.mainLoop()
+                                                    if self.records_page.exit:
+                                                        self.restart_game()
 
         pygame.quit()
+
+    def restart_game(self):
+        # Preguntar si quiere continuar
+        # Si quiere, setup elements pasa a True
+        # Si no quiere, QUIT
+        self.set_up_elements = True
+        return self.set_up_elements
 
 
 if __name__ == '__main__':
     print('Arrancamos desde el archivo game.py')
-    juego = Glumtar()
-    juego.play()
+    the_game = Glumtar()
+    the_game.mainLoop()

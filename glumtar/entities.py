@@ -172,7 +172,8 @@ class Scoreboard:
     margin_title = 50
     font_title_adjust = 20
 
-    def __init__(self, points=0):
+    def __init__(self, screen, points=0):
+        self.screen = screen
         self.scoreboard_value = points
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
