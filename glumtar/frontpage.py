@@ -4,15 +4,14 @@ from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, TOP_M
 # from .entities import LivesCounter, Meteorite, Ship, Scoreboard
 # from tools.timers_and_countdowns import Countdown, ScrollBG
 from .data.messages import Reader
-from game import Glumtar
 
 
-class FrontPage(Glumtar):
+class FrontPage:
     read_more_bottom_margin = 130
     font_size_correction = FONT_SIZE - 10
 
     def __init__(self, screen):
-        super().__init__(screen)
+        self.screen = screen
         self.available_bg = []
         self.bg_index = 1
         self.bg_controller = 0
@@ -53,7 +52,6 @@ class FrontPage(Glumtar):
         self.reader_pointer = 0
 
     def mainLoop(self):
-        super().mainLoop()
         exit = False
         while not exit:
             for event in pygame.event.get():

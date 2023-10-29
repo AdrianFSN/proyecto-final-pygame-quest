@@ -1,15 +1,16 @@
 import os
 import pygame
-from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
-# from .entities import LivesCounter, Meteorite, Ship, Scoreboard
+from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
+from .entities import  Meteorite
 from tools.timers_and_countdowns import Countdown, ScrollBG
 # from .data.messages import Reader
-from game import Glumtar
+# from .game import Glumtar
 
 
-class PlayLevel(Glumtar):
+class PlayLevel:
     def __init__(self, screen, player, scoreboard, livescounter):
-        super().__init__(screen)
+        self.clock = pygame.time.Clock()
+        self.screen = screen
         bg_route = os.path.join('glumtar', 'resources',
                                 'images', 'BG_level2.jpg')
         self.background = pygame.image.load(bg_route)
@@ -50,7 +51,6 @@ class PlayLevel(Glumtar):
         # self.end_game = False
 
     def mainLoop(self):
-        super().mainLoop()
         exit = False
         # stop_bg_scroll = False
         countdown_active = True

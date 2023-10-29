@@ -1,15 +1,15 @@
 import os
 import pygame
 from . import COLUMBIA_BLUE, CORAL_PINK, FONT, FPS, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
-from game import Glumtar
+from .playlevel import PlayLevel
 
 
-class ResolveLevel(Glumtar):
+class ResolveLevel(PlayLevel):
     alpha = 0
     fade_in_speed = 7
 
     def __init__(self, screen, player, scoreboard, livescounter):
-        super().__init__(screen)
+        super().__init__(screen, player, scoreboard, livescounter)
         self.available_bg = []
         self.bg_A_controller = 2
         self.bg_B_controller = 3
@@ -36,7 +36,6 @@ class ResolveLevel(Glumtar):
         self.lives_counter = livescounter
 
     def mainLoop(self):
-        super().mainLoop()
         exit = False
         while not exit:
             self.clock.tick(FPS)

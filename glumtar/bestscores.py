@@ -4,15 +4,13 @@ from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_
 from .entities import LivesCounter, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
 from .data.messages import Reader
-from game import Glumtar
 
 
-class BestPlayers(Glumtar):
+class BestPlayers:
     def __init__(self, screen):
-        super().__init__(screen)
+        self.screen = screen
 
     def mainLoop(self):
-        super().mainLoop()
         exit = False
         while not exit:
             for event in pygame.event.get():

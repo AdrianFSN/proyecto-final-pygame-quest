@@ -1,7 +1,6 @@
 import pygame
 from . import FPS, HEIGHT, WIDTH
-from playlevel import PlayLevel
-from .scenes import FrontPage, MatchLevel2, ResolveLevel, ResolveLevel2, BestPlayers
+from .playlevel import PlayLevel
 from .entities import LivesCounter, Scoreboard, Ship
 
 
@@ -40,6 +39,7 @@ class Glumtar:
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT or (evento.type == pygame.KEYUP and evento.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
+                    exit = True
                     break
 
             # Bloque 2: renderizar nuestros objetos (aunque no se enseñan todavía)
