@@ -171,7 +171,7 @@ class MatchLevel1(Scene):
         countdown_active = True
         end_game = False
         activate_explosion = False
-        initialize_ship_costume = False
+        # initialize_ship_costume = False
 
         while not exit:
             self.clock.tick(FPS)

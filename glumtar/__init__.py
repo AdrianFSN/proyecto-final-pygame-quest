@@ -13,7 +13,7 @@ BLACK = (0, 0, 0)
 
 # Display settings
 BOTTOM_MARGIN_LIMIT = 80
-DEFAULT_BG_SCROLL = 7200
+DEFAULT_BG_SCROLL = 5920  # Related to the bg_image width. Currently, it must be 5920
 FPS = 60
 HEIGHT = 720
 TIME_UNIT = FPS
