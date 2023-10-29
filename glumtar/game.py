@@ -1,7 +1,9 @@
 import pygame
 from . import FPS, HEIGHT, WIDTH
-from .playlevel import PlayLevel
-from .entities import LivesCounter, Scoreboard, Ship
+from . playlevel import PlayLevel
+from . frontpage import FrontPage
+from . bestscores import BestPlayers
+from . entities import LivesCounter, Scoreboard, Ship
 
 
 class Glumtar:
@@ -13,21 +15,19 @@ class Glumtar:
         self.player = Ship(self.screen)
         self.scoreboard = Scoreboard()
         self.lives_counter = LivesCounter()
-
-        self.info_scenes = []
-        self.play_scenes = [PlayLevel(self.screen, self.player,
-                                      self.scoreboard, self.lives_counter)]
-        # for info in range(2):
-
-        """ self.scenes = [FrontPage(self.screen),
-                       PlayLevel(self.screen, self.player,
-                                 self.scoreboard, self.lives_counter),
-                       ResolveLevel(self.screen, self.player,
-                                    self.scoreboard, self.lives_counter),
-                       MatchLevel2(self.screen),
-                       ResolveLevel2(self.screen),
-                       BestPlayers(self.screen),
-                       ] """
+        self.front_page = FrontPage(self.screen)
+        self.records_page = BestPlayers(self.screen)
+        self.info_scenes = [self.front_page, self.records_page]
+        self.available_play_levels = 3
+        self.play = None
+        # self.resolve = None
+        self.level = 1
+        self.play_scenes = []
+        for levels in range(self.level, self.available_play_levels):
+            print(f'Levels es {levels}')
+            self.play = PlayLevel(
+                self.screen, self.player, self.scoreboard, self.lives_counter, levels)
+            self.play_scenes.append(self.play)
 
     def mainLoop(self):
         exit = False
@@ -46,14 +46,6 @@ class Glumtar:
 
             # Bloque 3: mostrar los cambios en la pantalla
             pygame.display.flip()
-
-        pygame.quit()
-
-        for scene in self.scenes:
-            quit_game = scene.mainLoop()
-            if quit_game:
-                print("Alguien ha decidido salir de la aplicación por la X")
-                break
 
         pygame.quit()
 
