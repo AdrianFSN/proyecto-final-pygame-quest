@@ -1,6 +1,6 @@
 # Animations
 ANIMATION_FRAMES = 61  # Animations should have 60 frames
-BG_SCROLL_SPEED = 12  # Should be 1. Increase only for testing purposes.
+BG_SCROLL_SPEED = 1  # Should be 1. Increase only for testing purposes.
 FRAMES_SPEED = 1
 
 # Colors palette RGB

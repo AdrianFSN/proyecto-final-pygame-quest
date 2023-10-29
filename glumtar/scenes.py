@@ -329,25 +329,28 @@ class MatchLevel1(Scene):
 
 
 class ResolveLevel1(Scene):
+    alpha = 0
+    fade_in_speed = 7
 
     def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
         self.available_bg = []
-        # self.bg_index = 1
-        self.bg_controller = 0
+        self.bg_A_controller = 0
+        self.bg_B_controller = 1
         for bg in range(1, 3):
             self.bg_resolve_route = os.path.join(
                 'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
             self.available_bg.append(self.bg_resolve_route)
-        print(f'La lista de avilable bg es {self.available_bg}')
-        # self.bg_index += 1
 
-        self.background = pygame.image.load(
-            self.available_bg[self.bg_controller])
+        self.background_A = pygame.image.load(
+            self.available_bg[self.bg_A_controller])
+        self.background_B = pygame.image.load(
+            self.available_bg[self.bg_B_controller])
+        self.background_B.set_alpha(self.alpha)
 
-        """ bg_route = os.path.join('glumtar', 'resources',
-                                'images', 'planet1.jpg')
-        self.background = pygame.image.load(bg_route) """
+        self.bg_fade_in = pygame.USEREVENT + 6
+        pygame.time.set_timer(self.bg_fade_in, 100)
+
         self.background_posX = 0
         self.background_posY = 0
 
@@ -365,9 +368,20 @@ class ResolveLevel1(Scene):
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     exit = True
+                if event.type == self.bg_fade_in:
+                    if self.player.rect.center[0] <= WIDTH/2 and self.alpha < 255:
+                        self.alpha += self.fade_in_speed
+                    elif self.alpha > 255:
+                        self.alpha = 255
+                    print(f"El self alpha es {self.alpha}")
+
             self.screen.fill(CORAL_PINK)
             self.screen.blit(
-                self.background, (self.background_posX, self.background_posY))
+                self.background_A, (self.background_posX, self.background_posY))
+            self.screen.blit(
+                self.background_B, (self.background_posX, self.background_posY))
+            self.background_B.set_alpha(self.alpha)
+
             self.add_level_title()
 
             self.scoreboard.show_scoreboard(self.screen)
