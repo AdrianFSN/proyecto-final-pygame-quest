@@ -9,16 +9,18 @@ from .data.messages import Reader
 class BestPlayers:
     def __init__(self, screen):
         self.screen = screen
+        self.exit = False
 
     def mainLoop(self):
-        exit = False
-        while not exit:
+        print("Estoy en Best Scores")
+
+        while not self.exit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    exit = True
-            self.screen.fill(BLACK)
+                    self.exit = True
+            self.screen.fill(CORAL_PINK)
             pygame.display.flip()
 
         return False

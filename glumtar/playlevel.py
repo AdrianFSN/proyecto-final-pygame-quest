@@ -50,10 +50,10 @@ class PlayLevel:
         self.execute_game_over = False
         self.stop_bg_scroll = False
         self.exit = False
+        # self.end_game = False
 
     def mainLoop(self):
         countdown_active = True
-        end_game = False
         activate_explosion = False
         # initialize_ship_costume = False
 
@@ -85,9 +85,8 @@ class PlayLevel:
                                 countdown_active = True
 
                 if event.type == self.request_go_to_records:
-                    if end_game:
-                        self.go_to_records()
-                        break
+                    if self.execute_game_over:
+                        return self.execute_game_over
 
             if not self.stop_bg_scroll:
                 self.set_bg_scroll -= BG_SCROLL_SPEED
@@ -95,16 +94,14 @@ class PlayLevel:
                     self.stop_bg_scroll = True
                     print(f'Este esl scroll stop {self.stop_bg_scroll}')
                     self.exit = True
-                elif end_game:
+                """ elif self.end_game:
                     self.stop_bg_scroll = True
                     print(
-                        f'Este esl scroll stop desde end game {self.stop_bg_scroll}')
-
-            end_game = self.execute_game_over
+                        f'Este esl scroll stop desde end game {self.stop_bg_scroll}') """
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
-            # print(f"End game está en {end_game}")
+            print(f"Execute game over está en {self.execute_game_over}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
@@ -148,7 +145,7 @@ class PlayLevel:
 
             pygame.display.flip()
 
-        return self.exit
+        return self.exit, self.execute_game_over
 
     def generate_meteorites(self):
         self.random_meteorite = Meteorite()
@@ -203,10 +200,5 @@ class PlayLevel:
             game_over_title, True, COLUMBIA_BLUE)
         self.screen.blit(
             game_over_title_render, (self.pos_X, self.pos_Y))
-        return self.execute_game_over
 
-    def go_to_records(self):
-        return
-        go_to_scene = MatchLevel2(self.screen)
-
-        return go_to_scene.mainLoop()
+        # return self.execute_game_over
