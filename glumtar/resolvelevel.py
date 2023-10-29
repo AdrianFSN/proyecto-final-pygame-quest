@@ -8,8 +8,8 @@ class ResolveLevel(PlayLevel):
     alpha = 0
     fade_in_speed = 7
 
-    def __init__(self, screen, player, scoreboard, livescounter):
-        super().__init__(screen, player, scoreboard, livescounter)
+    def __init__(self, screen, player, scoreboard, livescounter, level):
+        super().__init__(screen, player, scoreboard, livescounter, level)
         self.available_bg = []
         self.bg_A_controller = 2
         self.bg_B_controller = 3
@@ -17,7 +17,7 @@ class ResolveLevel(PlayLevel):
             self.bg_resolve_route = os.path.join(
                 'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
             self.available_bg.append(self.bg_resolve_route)
-            print(f'Estos son los fondos disponibles {self.available_bg}')
+            # print(f'Estos son los fondos disponibles {self.available_bg}')
 
         self.background_A = pygame.image.load(
             self.available_bg[self.bg_A_controller])
