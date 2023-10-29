@@ -40,8 +40,9 @@ class ResolveLevel(PlayLevel):
         while not self.exit:
             self.clock.tick(FPS)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return True
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+                    print("Alguien ha decidido salir de la aplicación por la X")
+                    break
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
                 if event.type == self.bg_fade_in:

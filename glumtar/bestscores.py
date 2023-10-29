@@ -16,11 +16,12 @@ class BestPlayers:
 
         while not self.exit:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return True
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+                    print("Alguien ha decidido salir de la aplicación por la X")
+                    break
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
             self.screen.fill(CORAL_PINK)
             pygame.display.flip()
 
-        return False
+        return self.exit

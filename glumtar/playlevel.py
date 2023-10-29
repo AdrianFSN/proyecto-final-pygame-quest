@@ -64,8 +64,9 @@ class PlayLevel:
                                   self.background_posY, self.set_bg_scroll)
             self.add_level_title()
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    return True
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+                    print("Alguien ha decidido salir de la aplicación por la X")
+                    break
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
