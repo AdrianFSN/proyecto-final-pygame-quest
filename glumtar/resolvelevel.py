@@ -34,22 +34,21 @@ class ResolveLevel(PlayLevel):
         self.player = player
         self.scoreboard = scoreboard
         self.lives_counter = livescounter
+        self.exit = False
 
     def mainLoop(self):
-        exit = False
-        while not exit:
+        while not self.exit:
             self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    exit = True
+                    self.exit = True
                 if event.type == self.bg_fade_in:
                     if self.player.rect.center[0] <= WIDTH/2 and self.alpha < 255:
                         self.alpha += self.fade_in_speed
                     elif self.alpha > 255:
                         self.alpha = 255
-                    print(f"El self alpha es {self.alpha}")
 
             self.screen.fill(CORAL_PINK)
             self.screen.blit(
@@ -70,7 +69,7 @@ class ResolveLevel(PlayLevel):
 
             pygame.display.flip()
 
-        return False
+        return self.exit
 
     def add_level_title(self):
         self.title = "Level 1"

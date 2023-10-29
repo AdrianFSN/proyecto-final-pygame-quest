@@ -30,18 +30,36 @@ class Glumtar:
                 self.screen, self.player, self.scoreboard, self.lives_counter, levels)
             self.resolve = ResolveLevel(
                 self.play.screen, self.play.player, self.play.scoreboard, self.play.lives_counter, self.play.level)
-            self.play_scenes.append((self.play, self.resolve))
-        print(f'Así ha quedado self play scenes {self.play_scenes}')
-        print(
-            f'este es el nivel de la primera partida {self.play_scenes[0][0].level} y el de su resolve {self.play_scenes[0][1].level}')
-        print(
-            f'este es el nivel de la segunda partida {self.play_scenes[1][0].level} y el de su resolve {self.play_scenes[1][1].level}')
+            self.play_scenes.append([self.play, self.resolve])
+
+        self.info_switches_list = []
+        self.info_scene_switch = None
+        for switch in range(len(self.info_scenes)):
+            self.info_scene_switch = switch
+            self.info_switches_list.append([self.info_scene_switch, False])
+
+        self.play_switches_list = []
+        self.play_scene_switch = None
+        for switch in range(len(self.play_scenes)):
+            self.play_scene_switch = switch
+            self.play_switches_list.append([self.play_scene_switch, False])
+
+        self.info_switches_list[0][1] = True
+        # print(f'Esta es la lista de switches {self.info_switches_list}')
 
     def mainLoop(self):
         exit = False
         while not exit:
             self.clock.tick(FPS)
             # bucle principal (o main loop)
+            if self.info_switches_list[0]:
+                self.front_page.mainLoop()
+                print(f'Así ha quedado self play scenes {self.play_scenes}')
+
+                if self.front_page.exit:
+                    self.play_scenes[0][0].mainLoop()
+                    if self.play_scenes[0][0].exit:
+                        self.play_scenes[0][1].mainLoop()
 
             # Bloque 1: captura de eventos
             for evento in pygame.event.get():

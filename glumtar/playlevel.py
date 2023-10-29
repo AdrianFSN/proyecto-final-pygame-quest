@@ -49,17 +49,15 @@ class PlayLevel:
         self.allow_points = True
         self.execute_game_over = False
         self.stop_bg_scroll = False
-        # self.end_game = False
+        self.exit = False
 
     def mainLoop(self):
-        exit = False
-        # stop_bg_scroll = False
         countdown_active = True
         end_game = False
         activate_explosion = False
         # initialize_ship_costume = False
 
-        while not exit:
+        while not self.exit:
             self.clock.tick(FPS)
             self.screen.fill(ROBIN_EGG_BLUE)
             self.paint_background(self.background_posX,
@@ -96,7 +94,7 @@ class PlayLevel:
                 if self.set_bg_scroll <= 0:
                     self.stop_bg_scroll = True
                     print(f'Este esl scroll stop {self.stop_bg_scroll}')
-                    exit = True
+                    self.exit = True
                 elif end_game:
                     self.stop_bg_scroll = True
                     print(
@@ -150,7 +148,7 @@ class PlayLevel:
 
             pygame.display.flip()
 
-        return False
+        return self.exit
 
     def generate_meteorites(self):
         self.random_meteorite = Meteorite()

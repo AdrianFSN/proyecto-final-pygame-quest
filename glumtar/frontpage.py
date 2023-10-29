@@ -50,15 +50,15 @@ class FrontPage:
         self.paragraph3.renderize_lines(self.screen)
 
         self.reader_pointer = 0
+        self.exit = False
 
     def mainLoop(self):
-        exit = False
-        while not exit:
+        while not self.exit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    exit = True
+                    self.exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
@@ -79,7 +79,7 @@ class FrontPage:
 
             pygame.display.flip()
 
-        return False
+        return self.exit
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(
@@ -101,7 +101,7 @@ class FrontPage:
             title_render, (self.pos_X, self.pos_Y))
 
     def add_read_more_message(self):
-        read_more_title = "Press L or R to read more"
+        read_more_title = "Press arrow keys < > to read more"
         self.font_style = pygame.font.Font(
             self.font_route, self.font_size_correction)
         read_more_render = self.font_style.render(
