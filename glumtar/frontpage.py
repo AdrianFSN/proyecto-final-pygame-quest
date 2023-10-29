@@ -1,0 +1,114 @@
+import os
+import pygame
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+# from .entities import LivesCounter, Meteorite, Ship, Scoreboard
+# from tools.timers_and_countdowns import Countdown, ScrollBG
+from .data.messages import Reader
+from game import Glumtar
+
+
+class FrontPage(Glumtar):
+    read_more_bottom_margin = 130
+    font_size_correction = FONT_SIZE - 10
+
+    def __init__(self, screen):
+        super().__init__(screen)
+        self.available_bg = []
+        self.bg_index = 1
+        self.bg_controller = 0
+        for bg in range(1, 3):
+            self.bg_front_route = os.path.join(
+                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+            self.available_bg.append(self.bg_front_route)
+            self.bg_index += 1
+
+        self.bg_front = pygame.image.load(
+            self.available_bg[self.bg_controller])
+        self.bg_front_X = 0
+        self.bg_front_Y = 0
+
+        logo_route = os.path.join(
+            'glumtar', 'resources', 'images', 'glumtar_logo2.png')
+        self.logo = pygame.image.load(logo_route)
+        self.logo_X = (WIDTH - self.logo.get_width())/2
+        self.logo_Y = TOP_MARGIN_LIMIT
+
+        self.activate_stars = pygame.USEREVENT + 5
+        pygame.time.set_timer(self.activate_stars, 1500)
+
+        self.font = FONT
+        self.font_route = os.path.join(
+            'glumtar', 'resources', 'fonts', self.font)
+        self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+
+        self.paragraph1 = Reader('front_messages.txt', FONT, (0, 7))
+        self.paragraph2 = Reader('front_messages.txt', FONT, (7, 12))
+        self.paragraph3 = Reader('front_messages.txt', FONT, (12, 16))
+        self.available_messages = [self.paragraph1,
+                                   self.paragraph2, self.paragraph3]
+        self.paragraph1.renderize_lines(self.screen)
+        self.paragraph2.renderize_lines(self.screen)
+        self.paragraph3.renderize_lines(self.screen)
+
+        self.reader_pointer = 0
+
+    def mainLoop(self):
+        super().mainLoop()
+        exit = False
+        while not exit:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return True
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    exit = True
+                if event.type == pygame.USEREVENT + 5:
+                    self.animate_stars()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                    if self.reader_pointer < len(self.available_messages) - 1:
+                        self.reader_pointer += 1
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                    if self.reader_pointer <= len(self.available_messages)-1 and self.reader_pointer > 0:
+                        self.reader_pointer -= 1
+
+            self.screen.fill(SPACE_CADET)
+            self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
+            self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
+            # self.paragraph3.draw_message(self.screen)
+            self.add_escape_message()
+            self.available_messages[self.reader_pointer].draw_message(
+                self.screen)
+            self.add_read_more_message()
+
+            pygame.display.flip()
+
+        return False
+
+    def animate_stars(self):
+        self.bg_front = pygame.image.load(
+            self.available_bg[self.bg_controller])
+
+        if self.bg_controller == 0:
+            self.bg_controller = 1
+        elif self.bg_controller == 1:
+            self.bg_controller = 0
+
+    def add_escape_message(self):
+        escape_message = "Press <ESPACE> to start"
+        self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
+        title_render = self.font_style.render(
+            escape_message, True, COLUMBIA_BLUE)
+        self.pos_X = (WIDTH - title_render.get_width())/2
+        self.pos_Y = HEIGHT - BOTTOM_MARGIN_LIMIT - title_render.get_height()
+        self.screen.blit(
+            title_render, (self.pos_X, self.pos_Y))
+
+    def add_read_more_message(self):
+        read_more_title = "Press L or R to read more"
+        self.font_style = pygame.font.Font(
+            self.font_route, self.font_size_correction)
+        read_more_render = self.font_style.render(
+            read_more_title, True, COLUMBIA_BLUE)
+        self.pos_X = (WIDTH - read_more_render.get_width())/2
+        self.pos_Y = HEIGHT - self.read_more_bottom_margin - read_more_render.get_height()
+        self.screen.blit(
+            read_more_render, (self.pos_X, self.pos_Y))
