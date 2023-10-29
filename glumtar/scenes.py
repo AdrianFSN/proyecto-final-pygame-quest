@@ -126,7 +126,7 @@ class MatchLevel1(Scene):
     def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
         bg_route = os.path.join('glumtar', 'resources',
-                                'images', 'BG_level1.jpg')
+                                'images', 'BG_level2.jpg')
         self.background = pygame.image.load(bg_route)
         self.background_posX = 0
         self.background_posY = 0
@@ -335,12 +335,13 @@ class ResolveLevel1(Scene):
     def __init__(self, screen, player, scoreboard, livescounter):
         super().__init__(screen)
         self.available_bg = []
-        self.bg_A_controller = 0
-        self.bg_B_controller = 1
-        for bg in range(1, 3):
+        self.bg_A_controller = 2
+        self.bg_B_controller = 3
+        for bg in range(1, 5):
             self.bg_resolve_route = os.path.join(
                 'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
             self.available_bg.append(self.bg_resolve_route)
+            print(f'Estos son los fondos disponibles {self.available_bg}')
 
         self.background_A = pygame.image.load(
             self.available_bg[self.bg_A_controller])
