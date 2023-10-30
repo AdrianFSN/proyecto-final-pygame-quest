@@ -14,7 +14,7 @@ class PlayLevel:
         self.player = Ship(self.screen)
         self.level = level
         bg_route = os.path.join('glumtar', 'resources',
-                                'images', 'BG_level2.jpg')
+                                'images', f'BG_level{self.level}.jpg')
         self.background = pygame.image.load(bg_route)
         self.background_posX = 0
         self.background_posY = 0
@@ -66,8 +66,8 @@ class PlayLevel:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    close_game = pygame.quit()
-                    return close_game
+                    # close_game = pygame.quit()
+                    return True
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
@@ -176,7 +176,7 @@ class PlayLevel:
         pygame.mixer.Sound(boom_route).play()
 
     def add_level_title(self):
-        self.title = "Level 1"
+        self.title = f"Level {self.level}"
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)

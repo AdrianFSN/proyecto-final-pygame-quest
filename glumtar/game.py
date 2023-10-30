@@ -1,4 +1,5 @@
 import os
+import sys
 import pygame
 from . import FONT, FONT_SIZE, FPS, HEIGHT, LIVES, WIDTH, SPACE_CADET
 from . playlevel import PlayLevel
@@ -39,8 +40,6 @@ class Glumtar:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
-                    self.activate_play_pointer = False
-                    self.set_a_match = False
                     exit = True
                     break
             if self.set_a_match:

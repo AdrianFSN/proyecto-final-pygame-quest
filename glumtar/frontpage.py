@@ -58,8 +58,8 @@ class FrontPage:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    close_game = pygame.quit()
-                    return close_game
+                    # close_game = pygame.quit()
+                    return True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.activate_play_pointer = False
                     self.exit = True
