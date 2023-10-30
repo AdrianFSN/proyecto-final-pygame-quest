@@ -13,14 +13,14 @@ class Glumtar:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Glumtar | The Quest")
         self.clock = pygame.time.Clock()
+        self.front_page = FrontPage(self.screen)
         self.records_page = BestPlayers(self.screen)
+        self.score_board = Scoreboard(self.screen)
+        self.lives_counter = LivesCounter()
         self.available_play_levels = 3
-        self.play_scenes = []
-        self.play = None
-        self.resolve = None
-        self.level = 1
+        # self.play_scenes = []
 
-        self.set_up_elements = True
+        self.set_a_match = True
 
     def mainLoop(self):
         exit = False
@@ -30,50 +30,32 @@ class Glumtar:
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     exit = True
                     break
-            if self.set_up_elements:
-                scoreboard = Scoreboard(self.screen)
-                player = Ship(self.screen)
-                lives_counter = LivesCounter()
-                front_page = FrontPage(self.screen)
-                play_level1 = PlayLevel(
-                    self.screen, player, scoreboard, lives_counter, 1)
-                resolve_level1 = ResolveLevel(
-                    self.screen, play_level1.player, play_level1.scoreboard, play_level1.lives_counter, 1)
-                play_level2 = PlayLevel(
-                    self.screen, player, scoreboard, lives_counter, 1)
-                resolve_level2 = ResolveLevel(
-                    self.screen, play_level2.player, play_level2.scoreboard, play_level2.lives_counter, 2)
-                scenes_list = [front_page, play_level1, resolve_level1,
-                               play_level2, resolve_level2, self.records_page]
-                self.set_up_elements = False
-
-            for stage in scenes_list:
-                if not front_page.exit:
-                    front_page.mainLoop()
-                    if front_page.exit:
-                        if play_level1.execute_game_over:
-                            self.records_page.mainLoop()
-                            if self.records_page.exit:
-                                self.restart_game()
-                        else:
-                            play_level1.mainLoop()
-                            if play_level1.exit:
-                                resolve_level1.mainLoop()
-                                if resolve_level1.exit:
-                                    if play_level2.execute_game_over:
-                                        self.records_page.mainLoop()
-                                        if self.records_page.exit:
-                                            self.restart_game()
-                                        else:
-                                            play_level2.mainLoop()
-                                            if play_level2.exit:
-                                                resolve_level2.mainLoop()
-                                                if resolve_level1.exit:
-                                                    self.records_page.mainLoop()
-                                                    if self.records_page.exit:
-                                                        self.restart_game()
+            if self.set_a_match:
+                self.set_up_play()
 
         pygame.quit()
+
+    def set_up_play(self):
+        play_scenes = []
+        player = Ship(self.screen)
+        for scene in range(1, self.available_play_levels):
+            scenario = PlayLevel(self.screen, player,
+                                 self.score_board, self.lives_counter, scene)
+            resolution = ResolveLevel(scenario.screen, scenario.player,
+                                      scenario.scoreboard, scenario.lives_counter, scenario.level)
+            play_scenes.append(scenario)
+            play_scenes.append(resolution)
+            self.set_a_match = False
+        """ print(f'Esta es la lista de escenarios disponible {play_scenes}')
+        print(
+            f'El escenario 1, {play_scenes[0]} es de nivel {play_scenes[0].level}.')
+        print(
+            f'El escenario 2, {play_scenes[1]} es de nivel {play_scenes[1].level}.')
+        print(
+            f'El escenario 3, {play_scenes[2]} es de nivel {play_scenes[2].level}.')
+        print(
+            f'El escenario 4, {play_scenes[3]} es de nivel {play_scenes[3].level}.')
+        return self.set_a_match """
 
     def restart_game(self):
         # Preguntar si quiere continuar
