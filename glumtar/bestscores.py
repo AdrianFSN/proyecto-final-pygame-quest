@@ -15,13 +15,14 @@ class BestPlayers:
         print("Estoy en Best Scores")
 
         while not self.exit:
+            self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    break
+                    close_game = pygame.quit()
+                    return close_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
-            self.screen.fill(CORAL_PINK)
             pygame.display.flip()
 
         return self.exit

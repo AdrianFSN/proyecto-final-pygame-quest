@@ -37,6 +37,7 @@ class ResolveLevel(PlayLevel):
         self.player = player
         self.scoreboard = scoreboard
         self.lives_counter = livescounter
+        self.level = level
         self.go_to_exit = False
         self.exit = False
 
@@ -46,8 +47,8 @@ class ResolveLevel(PlayLevel):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    self.exit = True
-                    break
+                    close_game = pygame.quit()
+                    return close_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
                 if event.type == self.bg_fade_in:

@@ -15,7 +15,6 @@ class FrontPage:
         self.available_bg = []
         self.bg_index = 1
         self.bg_controller = 0
-        self.exit = exit
         for bg in range(1, 3):
             self.bg_front_route = os.path.join(
                 'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
@@ -59,8 +58,10 @@ class FrontPage:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    break
+                    close_game = pygame.quit()
+                    return close_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    self.activate_play_pointer = False
                     self.exit = True
                     return self.exit
                 if event.type == pygame.USEREVENT + 5:
@@ -83,7 +84,7 @@ class FrontPage:
 
             pygame.display.flip()
 
-        return False
+        # return False
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(

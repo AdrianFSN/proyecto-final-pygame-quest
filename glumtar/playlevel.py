@@ -66,8 +66,8 @@ class PlayLevel:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    self.exit = True
-                    break
+                    close_game = pygame.quit()
+                    return close_game
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
