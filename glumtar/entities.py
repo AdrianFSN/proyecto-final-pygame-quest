@@ -211,6 +211,13 @@ class Scoreboard:
         pointsY = TOP_MARGIN_LIMIT - FONT_SIZE
         screen.blit(scoreboard_text, (pointsX, pointsY))
 
+        score_title = 'Score'
+        score_title_text = self.font_style.render(
+            score_title, True, COLUMBIA_BLUE)
+        title_X = SCOREBOARD_MARGIN + scoreboard_text.get_rect().right + 30
+        title_Y = TOP_MARGIN_LIMIT - score_title_text.get_height()
+        screen.blit(score_title_text, (title_X, title_Y))
+
 
 class LivesCounter:
     def __init__(self, lives=LIVES):

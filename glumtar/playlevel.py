@@ -90,12 +90,12 @@ class PlayLevel:
                     if self.execute_game_over:
                         return self.execute_game_over
 
-            if not self.stop_bg_scroll:
-                self.set_bg_scroll -= BG_SCROLL_SPEED
-                if self.set_bg_scroll <= 0:
-                    self.stop_bg_scroll = True
-                    print(f'Este esl scroll stop {self.stop_bg_scroll}')
-                    self.exit = True
+                # if not self.stop_bg_scroll:
+            self.set_bg_scroll -= BG_SCROLL_SPEED
+            if self.set_bg_scroll <= 0:
+                # self.stop_bg_scroll = True
+                print(f'Este esl scroll stop {self.stop_bg_scroll}')
+                self.exit = True
                 """ elif self.end_game:
                     self.stop_bg_scroll = True
                     print(
@@ -144,7 +144,7 @@ class PlayLevel:
                     self.generated_meteorites.remove(meteorite)
                     if self.allow_points:
                         self.scoreboard.increase_score(meteorite.points)
-            print(f'Este es el time scroll {self.set_bg_scroll}')
+            # print(f'Este es el time scroll {self.set_bg_scroll}')
 
             pygame.display.flip()
 
@@ -163,8 +163,9 @@ class PlayLevel:
         posY = posY
         timer = timer
         self.screen.blit(self.background, (posX, posY))
-        if self.set_bg_scroll != 0:  # Esto es lo que realmente para el scroll.
-            self.background_posX -= 1
+        if not self.execute_game_over:
+            if self.set_bg_scroll != 0:  # Esto es lo que realmente para el scroll.
+                self.background_posX -= 1
 
     def check_collision(self):
         if pygame.sprite.spritecollide(
