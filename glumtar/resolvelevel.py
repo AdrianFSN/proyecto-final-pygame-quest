@@ -1,6 +1,6 @@
 import os
 import pygame
-from . import COLUMBIA_BLUE, CORAL_PINK, FONT, FPS, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
+from . import AVAILABLE_BG, COLUMBIA_BLUE, CORAL_PINK, FONT, FPS, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
 from .playlevel import PlayLevel
 
 
@@ -10,19 +10,32 @@ class ResolveLevel(PlayLevel):
 
     def __init__(self, screen, player, scoreboard, livescounter, level):
         super().__init__(screen, scoreboard, livescounter, level)
+        self.player = player
+        self.scoreboard = scoreboard
+        self.lives_counter = livescounter
+        self.level = level
+
         self.available_bg = []
-        self.bg_A_controller = 2
-        self.bg_B_controller = 3
-        for bg in range(1, 5):
-            self.bg_resolve_route = os.path.join(
-                'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
-            self.available_bg.append(self.bg_resolve_route)
-            # print(f'Estos son los fondos disponibles {self.available_bg}')
+        self.selected_bg = []
+        self.bg_controller = self.level - 1
+        self.bg_resolve_route_A = None
+        self.bg_resolve_route_B = None
+        for bg in range(1, AVAILABLE_BG):
+            if not bg % 2 == 0:
+                self.bg_resolve_route_A = os.path.join(
+                    'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
+            else:
+                self.bg_resolve_route_B = os.path.join(
+                    'glumtar', 'resources', 'images', f'BG_planet{bg}.jpg')
+                self.available_bg.append(
+                    (self.bg_resolve_route_A, self.bg_resolve_route_B))
+        for bg_pairs in range(len(self.available_bg)):
+            self.selected_bg.append(self.available_bg[bg_pairs])
 
         self.background_A = pygame.image.load(
-            self.available_bg[self.bg_A_controller])
+            self.available_bg[self.bg_controller][0])
         self.background_B = pygame.image.load(
-            self.available_bg[self.bg_B_controller])
+            self.available_bg[self.bg_controller][1])
         self.background_B.set_alpha(self.alpha)
 
         self.bg_fade_in = pygame.USEREVENT + 6
@@ -34,10 +47,6 @@ class ResolveLevel(PlayLevel):
         self.background_posX = 0
         self.background_posY = 0
 
-        self.player = player
-        self.scoreboard = scoreboard
-        self.lives_counter = livescounter
-        self.level = level
         self.go_to_exit = False
         self.exit = False
 
@@ -84,7 +93,7 @@ class ResolveLevel(PlayLevel):
         return self.exit
 
     def add_level_title(self):
-        self.title = "Level 1"
+        self.title = f"Level {self.level}"
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
