@@ -351,4 +351,10 @@ class Scoreboard:
         pointsY = TOP_MARGIN_LIMIT - FONT_SIZE
         screen.blit(scoreboard_text, (pointsX, pointsY))
 
-
+if not scene.execute_game_over:
+                            scene.mainLoop()
+                        else:
+                            print("Ha habido un game over")
+                            self.activate_play_pointer = False
+                            self.scene.exit = True
+                            self.play_pointer += 1

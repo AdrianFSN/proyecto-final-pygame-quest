@@ -66,6 +66,7 @@ class PlayLevel:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
+                    self.exit = True
                     break
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
@@ -102,7 +103,7 @@ class PlayLevel:
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
-            print(f"Execute game over está en {self.execute_game_over}")
+            # print(f"Execute game over está en {self.execute_game_over}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
