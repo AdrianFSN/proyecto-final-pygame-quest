@@ -1,6 +1,6 @@
 import os
 import pygame
-from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
+from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, METEO_OUTER_MARGIN, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
 from .entities import Meteorite, Ship
 from tools.timers_and_countdowns import Countdown, ScrollBG
 # from .data.messages import Reader
@@ -144,17 +144,19 @@ class PlayLevel:
                     self.generated_meteorites.remove(meteorite)
                     if self.allow_points:
                         self.scoreboard.increase_score(meteorite.points)
+            print(f'Este es el time scroll {self.set_bg_scroll}')
 
             pygame.display.flip()
 
         return self.exit, self.execute_game_over
 
     def generate_meteorites(self):
-        self.random_meteorite = Meteorite()
-        self.generated_meteorites.add(
-            self.random_meteorite)
-        self.screen.blit(self.random_meteorite.image,
-                         self.random_meteorite.rect)
+        if self.set_bg_scroll >= METEO_OUTER_MARGIN:
+            self.random_meteorite = Meteorite(self.level)
+            self.generated_meteorites.add(
+                self.random_meteorite)
+            self.screen.blit(self.random_meteorite.image,
+                             self.random_meteorite.rect)
 
     def paint_background(self, posX, posY, timer):
         posX = posX

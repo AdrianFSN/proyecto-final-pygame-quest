@@ -41,6 +41,7 @@ class Glumtar:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     exit = True
+                    print(f'Exit está en {exit}')
                     break
             if self.set_a_match:
                 self.set_up_play()
@@ -67,6 +68,7 @@ class Glumtar:
                 self.records_page.exit = False
 
             pygame.display.flip()
+            print(f'Al final del todo, Exit está en {exit}')
 
         pygame.quit()
 

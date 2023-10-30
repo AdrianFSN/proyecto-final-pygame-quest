@@ -122,20 +122,29 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Meteorite(pygame.sprite.Sprite):
-    default_speed = 7
+    default_speed = 8
     default_points = 1
     outer_margin = WIDTH + METEO_OUTER_MARGIN
     meteorite_img = ['meteorite0_0.png',
                      'meteorite1_0.png', 'meteorite2_0.png']
+    level_1_meteorite_img = ['meteorite0_0.png',
+                             'meteorite1_0.png', 'meteorite2_0.png']
+    level_2_meteorite_img = ['meteorite0_0.png',
+                             'meteorite1_0.png', 'meteorite2_0.png', 'meteorite3_0.png', 'meteorite4_0.png']
     speed_family_0 = default_speed
     speed_family_1 = default_speed + 2.5
     speed_family_2 = default_speed + 5.5
+    speed_family_3 = default_speed + 7
+    speed_family_4 = default_speed + 10
     points_family_0 = default_points
     points_family_1 = default_points * 2
     points_family_2 = default_points * 3
+    points_family_3 = default_points * 5
+    points_family_4 = default_points * 6
 
-    def __init__(self, speed=default_speed, points=default_points, posX=outer_margin):
+    def __init__(self, level, speed=default_speed, points=default_points, posX=outer_margin):
         super().__init__()
+        self.level = level
         self.speed = speed
         self.points = points
         self.positionX = posX
@@ -143,18 +152,30 @@ class Meteorite(pygame.sprite.Sprite):
         self.assing_family()
 
     def assing_family(self):
-        index = random.randint(0, len(self.meteorite_img)-1)
-        for image in self.meteorite_img:
-            img_route = os.path.join(
-                'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
+        if self.level == 1:
+            index = random.randint(0, len(self.level_1_meteorite_img)-1)
+            for image in self.level_1_meteorite_img:
+                img_route = os.path.join(
+                    'glumtar', 'resources', 'images', f'meteorite{index}_0.png')
+        elif self.level == 2:
+            index2 = random.randint(0, len(self.level_2_meteorite_img)-1)
+            for image in self.level_2_meteorite_img:
+                img_route = os.path.join(
+                    'glumtar', 'resources', 'images', f'meteorite{index2}_0.png')
 
         if 'meteorite1_' in img_route:
             self.speed = self.speed_family_1
             self.points = self.points_family_1
 
-        elif 'meteorite2_' in img_route:
+        if 'meteorite2_' in img_route:
             self.speed = self.speed_family_2
             self.points = self.points_family_2
+        if 'meteorite3_' in img_route:
+            self.speed = self.speed_family_3
+            self.points = self.points_family_3
+        if 'meteorite4_' in img_route:
+            self.speed = self.speed_family_4
+            self.points = self.points_family_4
 
         self.image = pygame.image.load(img_route)
         self.rect = self.image.get_rect(
