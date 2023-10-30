@@ -1,16 +1,17 @@
 import os
 import pygame
 from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
-from .entities import Meteorite
+from .entities import Meteorite, Ship
 from tools.timers_and_countdowns import Countdown, ScrollBG
 # from .data.messages import Reader
 # from .game import Glumtar
 
 
 class PlayLevel:
-    def __init__(self, screen, player, scoreboard, livescounter, level):
+    def __init__(self, screen, scoreboard, livescounter, level):
         self.clock = pygame.time.Clock()
         self.screen = screen
+        self.player = Ship(self.screen)
         self.level = level
         bg_route = os.path.join('glumtar', 'resources',
                                 'images', 'BG_level2.jpg')
@@ -23,7 +24,6 @@ class PlayLevel:
 
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
-        self.player = player
 
         self.trigger_meteorite = pygame.USEREVENT + 1
         pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)

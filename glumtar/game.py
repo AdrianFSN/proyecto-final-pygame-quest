@@ -52,6 +52,7 @@ class Glumtar:
                             print("Ha habido un game over")
                             self.activate_play_pointer = False
                             scene.exit = True
+                            self.records_page.mainLoop()
                     print(
                         f'He pasado por self.pointer {self.play_pointer} veces')
 
@@ -61,9 +62,9 @@ class Glumtar:
 
     def set_up_play(self):
         self.play_scenes = []
-        player = Ship(self.screen)
+        # player = Ship(self.screen)
         for scene in range(1, self.available_play_levels):
-            scenario = PlayLevel(self.screen, player,
+            scenario = PlayLevel(self.screen,
                                  self.score_board, self.lives_counter, scene)
             resolution = ResolveLevel(scenario.screen, scenario.player,
                                       scenario.scoreboard, scenario.lives_counter, scenario.level)

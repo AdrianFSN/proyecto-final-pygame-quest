@@ -9,7 +9,7 @@ class ResolveLevel(PlayLevel):
     fade_in_speed = 7
 
     def __init__(self, screen, player, scoreboard, livescounter, level):
-        super().__init__(screen, player, scoreboard, livescounter, level)
+        super().__init__(screen, scoreboard, livescounter, level)
         self.available_bg = []
         self.bg_A_controller = 2
         self.bg_B_controller = 3
