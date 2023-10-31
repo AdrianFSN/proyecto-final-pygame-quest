@@ -13,6 +13,8 @@ class BestPlayers:
     init_text_posY = 300
     row_posY = init_text_posY
     row_posX = WIDTH
+    column_X = WIDTH/3
+    cell_pos_Y = init_text_posY
 
     def __init__(self, screen):
         self.screen = screen
@@ -75,6 +77,7 @@ class BestPlayers:
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
+            self.draw_ranking()
             self.add_user_choice_message()
 
             # self.records_page_scenes = [self.get_best_scores()]
@@ -97,38 +100,24 @@ class BestPlayers:
         self.table_container = {}
         rows_x = 300
         rows_y = 300
-        for headers in records:
-            rendered_header = self.font_style.render(
-                headers, True, COLUMBIA_BLUE)
-            self.screen.blit(rendered_header, (rows_x, rows_y))
-            rows_x += 50
-            self.table_container[rendered_header] = self.screen.blit(rendered_header, (rows_x, rows_y))
-        print(f'LOs headers son {self.table_container}')
+        header_spacing = 50
+        index = 0
+        if index <= len(self.table_container):
+            for headers in records:
+                rendered_header = self.font_style.render(
+                    headers, True, COLUMBIA_BLUE)
+                self.screen.blit(rendered_header, (rows_x, rows_y))
+                self.table_container[rendered_header] = self.screen.blit(
+                    rendered_header, (rows_x, rows_y))
+                rows_x += rendered_header.get_width() + header_spacing
+            print(f'LOs headers son {self.table_container}')
+            print(
+                f'Los rects incluidos en table container tienen estas x {self.table_container.items()}')
 
-        """ rows_x = 300
-        rows_y = 300
-        self.pointer = 0
-        for row in self.table_container:
-            rendered_row = self.font_style.render(
-                row[self.pointer], True, COLUMBIA_BLUE)
-            self.screen.blit(rendered_row, (rows_x, rows_y))
-            rows_x += 50
-        self.pointer += 1 """
-        # print(f'LOs headers son {self.table_container}')
-
-        # header_line is
-        """ for rows in range(len(records)):
-                records[rows] = records[rows][:-1] """  # Creo que no va a hacer falta
-        """ if self.pointer < len(records):
-            for row in range(len(records)): """
-        # print(f'La primera línea de records es{records[self.pointer]}')
-        """ rendered_row = self.font_style.render(
-                    records[self.pointer], True, COLUMBIA_BLUE)
-                self.table_container[rendered_row] = screen.blit(
-                    rendered_row, ((self.row_posX - rendered_row.get_width())/2, self.row_posY))
-                self.pointer += 1
-                self.row_posY += self.spacing """
-        # print(f'La lista de parejas record/renders es {self.best_players}')
+    def draw_ranking(self):
+        for rendered_text, text_rect in self.table_container.items():
+            self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
+        # text_rect.x += 50
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(
