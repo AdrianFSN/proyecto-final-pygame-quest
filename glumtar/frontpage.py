@@ -52,7 +52,6 @@ class FrontPage:
 
         self.reader_pointer = 0
         self.exit = False
-        print(f"Este es el estado de self exit en Front Page {self.exit}")
 
     def mainLoop(self):
         while not self.exit:
@@ -60,8 +59,7 @@ class FrontPage:
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
                     self.kill_game = True
-                    print(f'Kill game de front page está en {self.kill_game}')
-                    return self.kill_game, print(f'He mandado un kill desde front page)')
+                    return self.kill_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
                     return self.exit
@@ -77,7 +75,6 @@ class FrontPage:
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
-            # self.paragraph3.draw_message(self.screen)
             self.add_escape_message()
             self.available_messages[self.reader_pointer].draw_message(
                 self.screen)
