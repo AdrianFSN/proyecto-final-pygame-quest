@@ -24,16 +24,16 @@ class DBManager:
 
         # 4.2 Los guardo localmente
         self.recorded_best_scores = []
-        column_names = []
+        self.column_names = []
         # Esto me va a dar una tupla con los nombres de la columna de la base de datos.
         for column in cursor.description:
-            column_names.append(column[0])
+            self.column_names.append(column[0])
 
         for data_in_recorded_row in returned_data:  # Esto me va a venir en una tupla con todos los datos del record
             # Diccionario vacío que tendrá los nombres de las columnas como key y los datos de cada columna como value.
             record = {}
             value = 0
-            for name in column_names:
+            for name in self.column_names:
                 record[name] = data_in_recorded_row[value]
                 value += 1
                 self.recorded_best_scores.append(record)

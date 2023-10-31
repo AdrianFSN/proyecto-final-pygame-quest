@@ -3,13 +3,22 @@ import pygame
 from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
-from .data.messages import Reader
+from . data.messages import Reader
+from . data.db_manager import DBManager
 
 
 class BestPlayers:
+    font_size_correction = FONT_SIZE - 10
+    spacing = FONT_SIZE + 5
+    init_text_posY = 300
+    row_posY = init_text_posY
+    row_posX = WIDTH
+
     def __init__(self, screen):
         self.screen = screen
         self.kill_game = False
+        self.db_file_path = os.path.join(
+            'glumtar', 'data', 'best_players.db')
 
         self.available_bg = []
         self.bg_index = 1
@@ -39,12 +48,16 @@ class BestPlayers:
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
-        self.read_table = Reader('front_messages.txt', FONT, (0, 7))
+        """ self.read_table = Reader('front_messages.txt', FONT, (0, 7))
         self.available_messages = [self.read_table]
         self.read_table.renderize_lines(self.screen)
 
-        self.reader_pointer = 0
+        self.reader_pointer = 0 """
         self.exit = False
+        self.pointer = 0
+        # self.records_page_scenes = [self.get_best_scores()]
+        self.get_best_scores()
+        self.renderize_best_scores(self.screen)
 
     def mainLoop(self):
         print("Estoy en Best Scores")
@@ -63,11 +76,59 @@ class BestPlayers:
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.add_user_choice_message()
-            self.available_messages[self.reader_pointer].draw_message(
-                self.screen)
+
+            # self.records_page_scenes = [self.get_best_scores()]
+
+            """ self.available_messages[self.reader_pointer].draw_message(
+                self.screen) """
             pygame.display.flip()
 
         return self.exit
+
+    def get_best_scores(self):
+        self.db = DBManager(self.db_file_path)
+        self.sql = 'SELECT Position, Name, Score FROM glumtar_best_players;'
+        self.db.consultSQL(self.sql)
+        self.best_players = self.db.consultSQL(self.sql)
+        # print(f'La lista de records que tengo es {self.best_players}')
+
+    def renderize_best_scores(self, screen):
+        records = self.db.column_names
+        self.table_container = {}
+        rows_x = 300
+        rows_y = 300
+        for headers in records:
+            rendered_header = self.font_style.render(
+                headers, True, COLUMBIA_BLUE)
+            self.screen.blit(rendered_header, (rows_x, rows_y))
+            rows_x += 50
+            self.table_container[rendered_header] = self.screen.blit(rendered_header, (rows_x, rows_y))
+        print(f'LOs headers son {self.table_container}')
+
+        """ rows_x = 300
+        rows_y = 300
+        self.pointer = 0
+        for row in self.table_container:
+            rendered_row = self.font_style.render(
+                row[self.pointer], True, COLUMBIA_BLUE)
+            self.screen.blit(rendered_row, (rows_x, rows_y))
+            rows_x += 50
+        self.pointer += 1 """
+        # print(f'LOs headers son {self.table_container}')
+
+        # header_line is
+        """ for rows in range(len(records)):
+                records[rows] = records[rows][:-1] """  # Creo que no va a hacer falta
+        """ if self.pointer < len(records):
+            for row in range(len(records)): """
+        # print(f'La primera línea de records es{records[self.pointer]}')
+        """ rendered_row = self.font_style.render(
+                    records[self.pointer], True, COLUMBIA_BLUE)
+                self.table_container[rendered_row] = screen.blit(
+                    rendered_row, ((self.row_posX - rendered_row.get_width())/2, self.row_posY))
+                self.pointer += 1
+                self.row_posY += self.spacing """
+        # print(f'La lista de parejas record/renders es {self.best_players}')
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(
