@@ -12,6 +12,7 @@ class FrontPage:
 
     def __init__(self, screen):
         self.screen = screen
+        self.kill_game = False
         self.available_bg = []
         self.bg_index = 1
         self.bg_controller = 0
@@ -58,9 +59,10 @@ class FrontPage:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    return True
+                    self.kill_game = True
+                    print(f'Kill game de front page está en {self.kill_game}')
+                    return self.kill_game, print(f'He mandado un kill desde front page)')
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    self.activate_play_pointer = False
                     self.exit = True
                     return self.exit
                 if event.type == pygame.USEREVENT + 5:
@@ -82,8 +84,6 @@ class FrontPage:
             self.add_read_more_message()
 
             pygame.display.flip()
-
-        # return False
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(

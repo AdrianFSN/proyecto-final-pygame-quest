@@ -21,6 +21,7 @@ class Glumtar:
         pygame.display.set_caption("Glumtar | The Quest")
         self.clock = pygame.time.Clock()
 
+        self.kill_game = False
         self.front_page = FrontPage(self.screen)
         self.records_page = BestPlayers(
             self.screen)
@@ -30,7 +31,6 @@ class Glumtar:
         self.play_scenes = []
         self.play_pointer = 0
         self.activate_play_pointer = True
-
         self.set_a_match = True
 
     def mainLoop(self):
@@ -38,38 +38,46 @@ class Glumtar:
         while not exit:
             self.clock.tick(FPS)
             self.screen.fill(SPACE_CADET)
-            for event in pygame.event.get():
+            """ for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
+                    print("He pasado por el quit key de game")
                     exit = True
                     print(f'Exit está en {exit}')
-                    break
+                    # break """
             if self.set_a_match:
                 self.set_up_play()
 
             if not self.front_page.exit:
                 self.front_page.mainLoop()
+                self.kill_game = self.front_page.kill_game
             else:
                 if self.play_pointer in range(len(self.play_scenes)) and self.activate_play_pointer:
                     scene = self.play_scenes[self.play_pointer]
                     if not scene.exit:
                         if not scene.execute_game_over:
                             scene.mainLoop()
+                            self.kill_game = scene.kill_game
+                            print(
+                                f'Kill game de game está en {self.kill_game}')
                             if scene.exit:
                                 self.play_pointer += 1
                         else:
                             self.activate_play_pointer = False
                             scene.exit = True
                             self.records_page.mainLoop()
+                            self.kill_game = self.records_page.kill_game
                 else:
                     self.activate_play_pointer = False
                     self.records_page.mainLoop()
+                    self.kill_game = self.records_page.kill_game
             if self.records_page.exit:
                 self.reset_game()
                 self.records_page.exit = False
-
             pygame.display.flip()
-            print(f'Al final del todo, Exit está en {exit}')
 
+            if self.kill_game:
+                exit = True
+                print(f'ahora, Exit está en {exit}')
         pygame.quit()
 
     def set_up_play(self):

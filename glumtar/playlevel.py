@@ -11,6 +11,7 @@ class PlayLevel:
     def __init__(self, screen, scoreboard, livescounter, level):
         self.clock = pygame.time.Clock()
         self.screen = screen
+        self.kill_game = False
         self.player = Ship(self.screen)
         self.level = level
         bg_route = os.path.join('glumtar', 'resources',
@@ -66,8 +67,8 @@ class PlayLevel:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    # close_game = pygame.quit()
-                    return True
+                    self.kill_game = True
+                    return self.kill_game
                 if event.type == self.trigger_meteorite:
                     if not countdown_active:
                         self.generate_meteorites()
@@ -94,7 +95,7 @@ class PlayLevel:
             self.set_bg_scroll -= BG_SCROLL_SPEED
             if self.set_bg_scroll <= 0:
                 # self.stop_bg_scroll = True
-                print(f'Este esl scroll stop {self.stop_bg_scroll}')
+                # print(f'Este esl scroll stop {self.stop_bg_scroll}')
                 self.exit = True
                 """ elif self.end_game:
                     self.stop_bg_scroll = True

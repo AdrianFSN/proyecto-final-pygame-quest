@@ -9,6 +9,7 @@ from .data.messages import Reader
 class BestPlayers:
     def __init__(self, screen):
         self.screen = screen
+        self.kill_game = False
         self.exit = False
 
     def mainLoop(self):
@@ -19,8 +20,8 @@ class BestPlayers:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")
-                    # close_game = pygame.quit()
-                    return True
+                    self.kill_game = True
+                    return self.kill_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
             pygame.display.flip()
