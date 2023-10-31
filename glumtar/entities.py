@@ -41,8 +41,11 @@ class Ship(pygame.sprite.Sprite):
     def explode_the_ship(self, amount):
         amount = amount
         if amount < ANIMATION_FRAMES:
-            self.image = pygame.image.load(
-                self.explosion_frames.get(amount))
+            original_center = self.rect.center
+            new_image = pygame.image.load(self.explosion_frames.get(amount))
+            self.image = new_image
+            self.rect = new_image.get_rect()
+            self.rect.center = original_center
 
     def reset_ship_costume(self):
         self.img_route = os.path.join(
