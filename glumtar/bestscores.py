@@ -49,6 +49,11 @@ class BestPlayers:
         self.new_name = 'TTT'
         self.new_record = 0
         self.activate_insert_record = False
+        self.db = DBManager(self.db_file_path)
+
+        self.table_container = {}
+        self.get_best_scores()
+        self.renderize_best_scores(self.screen)
 
     def mainLoop(self):
         while not self.exit:
@@ -66,27 +71,32 @@ class BestPlayers:
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.score_board.show_scoreboard(self.screen)
             self.new_record = self.score_board.scoreboard_value
-            print(f'self new record es {self.new_record}')
-            self.draw_ranking()
-            self.add_user_choice_message()
-            self.confirm_new_record()
+            # print(f'self new record es {self.new_record}')
+            # print(
+            # f'activate insert new record está en {self.activate_insert_record}')
 
             if not self.activate_insert_record:
-                self.get_best_scores()
-                print(f'Self best players es {self.best_players}')
-                self.renderize_best_scores(self.screen)
+                self.draw_ranking()
+            else:
+                self.insert_new_record()
+                print(f'He pasado por la peticion de insertar record')
+
+            self.add_user_choice_message()
+            self.confirm_new_record()
+            self.insert_new_record()
 
             pygame.display.flip()
 
         return self.exit
 
     def get_best_scores(self):
-        self.db = DBManager(self.db_file_path)
+        # self.db = DBManager(self.db_file_path)
         self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC LIMIT 5;'
         self.best_players = self.db.consultSQL(self.sql)
 
     def renderize_best_scores(self, screen):
         headers_records = self.db.column_names
+        # print(f'self.db column names es {self.db.column_names} ')
         data_records = self.best_players
         self.table_container = {}
         rows_y = 300
@@ -141,17 +151,21 @@ class BestPlayers:
                 registered_scores = self.best_players[pointer].get('Score')
                 confirmation_list.append(registered_scores)
                 pointer += 1
-        print(f'confirmation list es {confirmation_list}')
+        # print(f'confirmation list es {confirmation_list}')
         minor_record = min(confirmation_list)
+        # print(f'Minor record es {minor_record}')
         if self.new_record > minor_record:
             print(f'Tenemos nuevo record = {self.new_record}')
             self.activate_insert_record = True
             return self.activate_insert_record
 
     def insert_new_record(self):
-        self.db = DBManager(self.db_file_path)
-        self.sql = f"INSERT INTO glumtar_best_players (Name, Score) VALUES ('{self.new_name}', {self.new_record});"
+        self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES ("dhl", "80" );'
+        # values = (self.new_name, self.new_record)
+        self.insertion = self.db.insertSQL(self.sql)
         self.new_record = 0
+        self.activate_insert_record = False
+        return self.activate_insert_record
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():

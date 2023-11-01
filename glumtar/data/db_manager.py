@@ -6,6 +6,7 @@ import sqlite3
 class DBManager:
     def __init__(self, db_route):
         self.db_route = db_route
+        self.column_names = []
 
     def consultSQL(self, consult):
         # 1. Conectar a la base de datos
@@ -57,7 +58,7 @@ class DBManager:
         # 4. Tratar los datos
         # 4.1 Obtener los datos
         # Da una lista. Hay un fetchone también.
-       # inserted_record = cursor.fetchone()
+        inserted_record = cursor.fetchall()
 
         # 4.2 Los guardo localmente
         # self.recorded_best_scores = []  # Creo que aquí debería hacer un append?
@@ -68,7 +69,9 @@ class DBManager:
 
         # 5. Cerrar la conexión
         connection.commit()
+        print(f'Debería haber insertado el dato')
+
         connection.close()
 
         # 6. Devolver los resultados
-        return  # éxito o no éxito
+        return inserted_record, f'He terminado de pasar por el insert'
