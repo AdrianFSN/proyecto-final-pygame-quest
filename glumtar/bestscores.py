@@ -8,13 +8,7 @@ from . data.db_manager import DBManager
 
 
 class BestPlayers:
-    font_size_correction = FONT_SIZE - 10
-    spacing = FONT_SIZE + 5
-    init_text_posY = 300
-    row_posY = init_text_posY
-    row_posX = WIDTH
-    column_X = WIDTH/3
-    cell_pos_Y = init_text_posY
+    # font_size_correction = FONT_SIZE - 10
 
     def __init__(self, screen):
         self.screen = screen
@@ -23,13 +17,12 @@ class BestPlayers:
             'glumtar', 'data', 'best_players.db')
 
         self.available_bg = []
-        self.bg_index = 1
         self.bg_controller = 0
         for bg in range(1, 3):
             self.bg_front_route = os.path.join(
-                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+                'glumtar', 'resources', 'images', f'BG_front_page{bg}.jpg')
             self.available_bg.append(self.bg_front_route)
-            self.bg_index += 1
+            bg += 1
 
         self.bg_front = pygame.image.load(
             self.available_bg[self.bg_controller])
@@ -86,11 +79,9 @@ class BestPlayers:
         headers_records = self.db.column_names
         data_records = self.best_players
         self.table_container = {}
-        rows_x = 500
         rows_y = 300
-        alignment_right = 830
-        alignment_left = 500
-        cells_spacing = 50
+        alignment_right = 850
+        alignment_left = 450
         cell_height = FONT_SIZE + 20
         data_index = 0
         header_index = 0
@@ -101,13 +92,13 @@ class BestPlayers:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 self.table_container[rendered_header] = self.screen.blit(
-                    rendered_header, (rows_x, rows_y))
+                    rendered_header, (alignment_left, rows_y))
                 header_index += 1
             else:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 rendered_header_rect = self.screen.blit(
-                    rendered_header, (rows_x, rows_y))
+                    rendered_header, (alignment_left, rows_y))
                 rendered_header_rect.right = alignment_right
                 self.table_container[rendered_header] = rendered_header_rect
 
@@ -118,13 +109,13 @@ class BestPlayers:
                 rendered_player = self.font_style.render(
                     player, True, COLUMBIA_BLUE)
                 player_rect = self.screen.blit(
-                    rendered_player, (rows_x, rows_y + cell_height))
+                    rendered_player, (alignment_left, rows_y + cell_height))
                 player_rect.left = alignment_left
 
                 rendered_points = self.font_style.render(
                     points, True, COLUMBIA_BLUE)
                 points_rect = self.screen.blit(
-                    rendered_points, (rows_x, rows_y + cell_height))
+                    rendered_points, (alignment_left, rows_y + cell_height))
                 points_rect.right = alignment_right
 
                 self.table_container[rendered_player] = player_rect
