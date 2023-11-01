@@ -8,7 +8,7 @@ from . data.db_manager import DBManager
 
 
 class BestPlayers:
-    MAX_RECORDS_IN_LIST = 4
+    MAX_RECORDS_IN_LIST = 10
 
     def __init__(self, screen, scoreboard):
         self.screen = screen
@@ -48,12 +48,9 @@ class BestPlayers:
         self.pointer = 0
         self.new_name = 'TTT'
         self.new_record = 0
+        self.activate_insert_record = False
 
     def mainLoop(self):
-        self.get_best_scores()
-        print(f'Self best players es {self.best_players}')
-        self.renderize_best_scores(self.screen)
-
         while not self.exit:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
@@ -73,6 +70,11 @@ class BestPlayers:
             self.draw_ranking()
             self.add_user_choice_message()
             self.confirm_new_record()
+
+            if not self.activate_insert_record:
+                self.get_best_scores()
+                print(f'Self best players es {self.best_players}')
+                self.renderize_best_scores(self.screen)
 
             pygame.display.flip()
 
@@ -139,12 +141,17 @@ class BestPlayers:
                 registered_scores = self.best_players[pointer].get('Score')
                 confirmation_list.append(registered_scores)
                 pointer += 1
-        print(f'registered scores es {registered_scores}')
         print(f'confirmation list es {confirmation_list}')
+        minor_record = min(confirmation_list)
+        if self.new_record > minor_record:
+            print(f'Tenemos nuevo record = {self.new_record}')
+            self.activate_insert_record = True
+            return self.activate_insert_record
 
     def insert_new_record(self):
         self.db = DBManager(self.db_file_path)
         self.sql = f"INSERT INTO glumtar_best_players (Name, Score) VALUES ('{self.new_name}', {self.new_record});"
+        self.new_record = 0
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():
