@@ -50,11 +50,6 @@ class BestPlayers:
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
-        """ self.read_table = Reader('front_messages.txt', FONT, (0, 7))
-        self.available_messages = [self.read_table]
-        self.read_table.renderize_lines(self.screen)
-
-        self.reader_pointer = 0 """
         self.exit = False
         self.pointer = 0
         # self.records_page_scenes = [self.get_best_scores()]
@@ -80,39 +75,58 @@ class BestPlayers:
             self.draw_ranking()
             self.add_user_choice_message()
 
-            # self.records_page_scenes = [self.get_best_scores()]
-
-            """ self.available_messages[self.reader_pointer].draw_message(
-                self.screen) """
             pygame.display.flip()
 
         return self.exit
 
     def get_best_scores(self):
         self.db = DBManager(self.db_file_path)
-        self.sql = 'SELECT Position, Name, Score FROM glumtar_best_players;'
+        self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC;'
         self.db.consultSQL(self.sql)
         self.best_players = self.db.consultSQL(self.sql)
         # print(f'La lista de records que tengo es {self.best_players}')
 
     def renderize_best_scores(self, screen):
-        records = self.db.column_names
+        headers_records = self.db.column_names
+        data_records = self.best_players
         self.table_container = {}
-        rows_x = 300
+        rows_x = 500
         rows_y = 300
-        header_spacing = 50
-        index = 0
-        if index <= len(self.table_container):
-            for headers in records:
-                rendered_header = self.font_style.render(
-                    headers, True, COLUMBIA_BLUE)
-                self.screen.blit(rendered_header, (rows_x, rows_y))
-                self.table_container[rendered_header] = self.screen.blit(
-                    rendered_header, (rows_x, rows_y))
-                rows_x += rendered_header.get_width() + header_spacing
-            print(f'LOs headers son {self.table_container}')
-            print(
-                f'Los rects incluidos en table container tienen estas x {self.table_container.items()}')
+        number_columns = 2
+        cells_spacing = 50
+        cell_height = FONT_SIZE + 20
+        data_index = 0
+        for headers in headers_records:
+            rendered_header = self.font_style.render(
+                headers, True, COLUMBIA_BLUE)
+            self.table_container[rendered_header] = self.screen.blit(
+                rendered_header, (rows_x, rows_y))
+            rows_x += rendered_header.get_width() + cells_spacing
+
+        rows_x = 500
+        if data_index <= len(self.table_container):
+            for name, score in data_records:
+                player = self.best_players[data_index].get(name)
+                points = self.best_players[data_index].get(score)
+                points_str = f'{points}'
+                rendered_player = self.font_style.render(
+                    player, True, COLUMBIA_BLUE)
+                rendered_points = self.font_style.render(
+                    points_str, True, COLUMBIA_BLUE)
+                self.table_container[rendered_player] = self.screen.blit(
+                    rendered_player, (rows_x, rows_y + cell_height))
+                self.table_container[rendered_points] = self.screen.blit(
+                    rendered_points, (rows_x + rendered_player.get_rect().width + cells_spacing, rows_y + cell_height))
+
+        print(f'Esto es lo que hay en points {points}')
+        print(f'Esto es lo que hay en pointsstr {points_str}')
+        # print(f'Esto es lo que hay en points {points}')
+        # print(
+        #    f'Los rects incluidos en table container tienen estas x {self.table_container.items()}')
+        # print(f'Esto es lo que hay en self.best_players {self.best_players}')
+        # print(f'Esto es lo que hay en data records {data_records}')
+        # ladrillo.rect.x = ladrillo.rect.width * col + margen_izquierdo
+        #    ladrillo.rect.y = ladrillo.rect.height * fila + margen_superior
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():
