@@ -54,7 +54,6 @@ class BestPlayers:
         self.pointer = 0
 
     def mainLoop(self):
-        print("Estoy en Best Scores")
         self.get_best_scores()
         self.renderize_best_scores(self.screen)
 
@@ -83,12 +82,8 @@ class BestPlayers:
         self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC;'
         self.best_players = self.db.consultSQL(self.sql)
 
-        print(f'Esto es la llamada a sql{self.db.consultSQL(self.sql)}')
-        print(f'Esto es self best players {self.best_players}')
-
     def renderize_best_scores(self, screen):
         headers_records = self.db.column_names
-        print(f"headers records es {headers_records}")
         data_records = self.best_players
         self.table_container = {}
         rows_x = 500
@@ -125,15 +120,11 @@ class BestPlayers:
                 self.table_container[rendered_player] = player_rect
                 self.table_container[rendered_points] = points_rect
                 data_index += 1
-                # print(f'Data index es {data_index}')
                 rows_y += cell_height
-            """ if data_index >= 5:
-                    break """
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():
             self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
-        # text_rect.x += 50
 
     def animate_stars(self):
         self.bg_front = pygame.image.load(
