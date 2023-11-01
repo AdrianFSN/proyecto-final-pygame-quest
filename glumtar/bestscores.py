@@ -93,13 +93,23 @@ class BestPlayers:
         cells_spacing = 50
         cell_height = FONT_SIZE + 20
         data_index = 0
+        header_index = 0
         records_length = 5
+
         for headers in headers_records:
-            rendered_header = self.font_style.render(
-                headers, True, COLUMBIA_BLUE)
-            self.table_container[rendered_header] = self.screen.blit(
-                rendered_header, (rows_x, rows_y))
-            rows_x += rendered_header.get_width() + cells_spacing
+            if header_index == 0:
+                rendered_header = self.font_style.render(
+                    headers, True, COLUMBIA_BLUE)
+                self.table_container[rendered_header] = self.screen.blit(
+                    rendered_header, (rows_x, rows_y))
+                header_index += 1
+            else:
+                rendered_header = self.font_style.render(
+                    headers, True, COLUMBIA_BLUE)
+                rendered_header_rect = self.screen.blit(
+                    rendered_header, (rows_x, rows_y))
+                rendered_header_rect.right = alignment_right
+                self.table_container[rendered_header] = rendered_header_rect
 
         if data_index < records_length:
             for name, score in data_records:
