@@ -21,6 +21,7 @@ class DBManager:
         # 4.1 Obtener los datos
         # Da una lista. Hay un fetchone también.
         returned_data = cursor.fetchall()
+        print(f'Esto es returned data{returned_data}')
 
         # 4.2 Los guardo localmente
         self.recorded_best_scores = []
@@ -36,7 +37,11 @@ class DBManager:
             for name in self.column_names:
                 record[name] = data_in_recorded_row[value]
                 value += 1
-                self.recorded_best_scores.append(record)
+            self.recorded_best_scores.append(record)
+            print(
+                f'Esto es record durante su creación en el db Manager{record}')
+            print(
+                f'Esto es self.recorded_best_scores después de crear cada record{self.recorded_best_scores}')
 
         # 5. Cerrar la conexión
         connection.close()

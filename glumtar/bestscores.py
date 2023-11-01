@@ -52,12 +52,11 @@ class BestPlayers:
 
         self.exit = False
         self.pointer = 0
-        # self.records_page_scenes = [self.get_best_scores()]
-        self.get_best_scores()
-        self.renderize_best_scores(self.screen)
 
     def mainLoop(self):
         print("Estoy en Best Scores")
+        self.get_best_scores()
+        self.renderize_best_scores(self.screen)
 
         while not self.exit:
             self.screen.fill(SPACE_CADET)
@@ -82,20 +81,24 @@ class BestPlayers:
     def get_best_scores(self):
         self.db = DBManager(self.db_file_path)
         self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC;'
-        self.db.consultSQL(self.sql)
         self.best_players = self.db.consultSQL(self.sql)
-        # print(f'La lista de records que tengo es {self.best_players}')
+
+        print(f'Esto es la llamada a sql{self.db.consultSQL(self.sql)}')
+        print(f'Esto es self best players {self.best_players}')
 
     def renderize_best_scores(self, screen):
         headers_records = self.db.column_names
+        print(f"headers records es {headers_records}")
         data_records = self.best_players
         self.table_container = {}
         rows_x = 500
         rows_y = 300
-        number_columns = 2
+        alignment_right = 830
+        alignment_left = 500
         cells_spacing = 50
         cell_height = FONT_SIZE + 20
         data_index = 0
+        records_length = 5
         for headers in headers_records:
             rendered_header = self.font_style.render(
                 headers, True, COLUMBIA_BLUE)
@@ -103,30 +106,29 @@ class BestPlayers:
                 rendered_header, (rows_x, rows_y))
             rows_x += rendered_header.get_width() + cells_spacing
 
-        rows_x = 500
-        if data_index <= len(self.table_container):
+        if data_index < records_length:
             for name, score in data_records:
-                player = self.best_players[data_index].get(name)
-                points = self.best_players[data_index].get(score)
-                points_str = f'{points}'
+                player = data_records[data_index].get(name)
+                points = str(self.best_players[data_index].get(score))
                 rendered_player = self.font_style.render(
                     player, True, COLUMBIA_BLUE)
-                rendered_points = self.font_style.render(
-                    points_str, True, COLUMBIA_BLUE)
-                self.table_container[rendered_player] = self.screen.blit(
+                player_rect = self.screen.blit(
                     rendered_player, (rows_x, rows_y + cell_height))
-                self.table_container[rendered_points] = self.screen.blit(
-                    rendered_points, (rows_x + rendered_player.get_rect().width + cells_spacing, rows_y + cell_height))
+                player_rect.left = alignment_left
 
-        print(f'Esto es lo que hay en points {points}')
-        print(f'Esto es lo que hay en pointsstr {points_str}')
-        # print(f'Esto es lo que hay en points {points}')
-        # print(
-        #    f'Los rects incluidos en table container tienen estas x {self.table_container.items()}')
-        # print(f'Esto es lo que hay en self.best_players {self.best_players}')
-        # print(f'Esto es lo que hay en data records {data_records}')
-        # ladrillo.rect.x = ladrillo.rect.width * col + margen_izquierdo
-        #    ladrillo.rect.y = ladrillo.rect.height * fila + margen_superior
+                rendered_points = self.font_style.render(
+                    points, True, COLUMBIA_BLUE)
+                points_rect = self.screen.blit(
+                    rendered_points, (rows_x, rows_y + cell_height))
+                points_rect.right = alignment_right
+
+                self.table_container[rendered_player] = player_rect
+                self.table_container[rendered_points] = points_rect
+                data_index += 1
+                # print(f'Data index es {data_index}')
+                rows_y += cell_height
+            """ if data_index >= 5:
+                    break """
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():
