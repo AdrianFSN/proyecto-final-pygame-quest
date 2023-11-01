@@ -43,3 +43,32 @@ class DBManager:
 
         # 6. Devolver los resultados
         return self.recorded_best_scores
+
+    def insertSQL(self, insert):
+        # 1. Conectar a la base de datos
+        connection = sqlite3.connect(self.db_route)
+
+        # 2. Abrir cursor
+        cursor = connection.cursor()
+
+        # 3. Ejecutar la consulta
+        cursor.execute(insert)
+
+        # 4. Tratar los datos
+        # 4.1 Obtener los datos
+        # Da una lista. Hay un fetchone también.
+       # inserted_record = cursor.fetchone()
+
+        # 4.2 Los guardo localmente
+        # self.recorded_best_scores = []  # Creo que aquí debería hacer un append?
+
+        # Esto me va a dar una tupla con los nombres de la columna de la base de datos.
+        # for column in cursor.description:
+        #    self.column_names.append(column[0])
+
+        # 5. Cerrar la conexión
+        connection.commit()
+        connection.close()
+
+        # 6. Devolver los resultados
+        return  # éxito o no éxito

@@ -97,10 +97,6 @@ class PlayLevel:
                 # self.stop_bg_scroll = True
                 # print(f'Este esl scroll stop {self.stop_bg_scroll}')
                 self.exit = True
-                """ elif self.end_game:
-                    self.stop_bg_scroll = True
-                    print(
-                        f'Este esl scroll stop desde end game {self.stop_bg_scroll}') """
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)

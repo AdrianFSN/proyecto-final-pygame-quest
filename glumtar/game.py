@@ -23,10 +23,10 @@ class Glumtar:
 
         self.kill_game = False
         self.front_page = FrontPage(self.screen)
-        self.records_page = BestPlayers(
-            self.screen)
         self.score_board = Scoreboard(self.screen)
         self.lives_counter = LivesCounter(LIVES)
+        self.records_page = BestPlayers(
+            self.screen, self.score_board)
         self.available_play_levels = 3
         self.play_scenes = []
         self.play_pointer = 0
@@ -38,12 +38,7 @@ class Glumtar:
         while not exit:
             self.clock.tick(FPS)
             self.screen.fill(SPACE_CADET)
-            """ for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
-                    print("He pasado por el quit key de game")
-                    exit = True
-                    print(f'Exit está en {exit}')
-                    # break """
+
             if self.set_a_match:
                 self.set_up_play()
 
