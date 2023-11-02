@@ -52,20 +52,27 @@ class BestPlayers:
         self.activate_insert_record = False
         self.db = DBManager(self.db_file_path)
         self.table_container = {}
+        self.new_record_insert_container = {}
         self.get_best_scores()
 
     def mainLoop(self):
         self.new_record = self.score_board.scoreboard_value
-        self.renderize_best_scores(self.screen)
+        self.render_best_scores(self.screen)
         catch_record = True
+        draw_no_ranking = False
         while not self.exit:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_q)):
                     self.kill_game = True
                     return self.kill_game
-
-                self.write_name(event)
+                if self.activate_insert_record:
+                    self.write_name(event)
+                    self.render_name_and_score()
+                    self.draw_new_name_and_score()
+                    """ self.get_best_scores()
+                    self.render_best_scores(self.screen)
+                    self.draw_ranking """
 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
@@ -76,18 +83,13 @@ class BestPlayers:
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.score_board.show_scoreboard(self.screen)
 
-            if not self.activate_insert_record:
+            if not draw_no_ranking:
                 self.draw_ranking()
 
             if catch_record:
                 if self.confirm_new_record():
-                    self.activate_insert_record = True
+                    draw_no_ranking = True
                     catch_record = False
-            if self.activate_insert_record:
-                self.insert_new_record()
-                self.get_best_scores()
-                self.renderize_best_scores(self.screen)
-                self.activate_insert_record = False
 
             self.add_user_choice_message()
             pygame.display.flip()
@@ -99,7 +101,7 @@ class BestPlayers:
         self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC LIMIT 5;'
         self.best_players = self.db.consultSQL(self.sql)
 
-    def renderize_best_scores(self, screen):
+    def render_best_scores(self, screen):
         headers_records = self.db.column_names
         # print(f'self.db column names es {self.db.column_names} ')
         data_records = self.best_players
@@ -160,20 +162,42 @@ class BestPlayers:
         if self.new_record > minor_record:
             print(f'Tenemos nuevo record = {self.new_record}')
             return True
+        else:
+            return False
 
     def write_name(self, event):
         text_length = 3
-        text_pos_X = 0
-        text_pos_Y = 0
-
         if event.type == KEYDOWN:
             if event.unicode.isalpha() and len(self.new_name) < text_length:
                 self.new_name += event.unicode
             elif event.key == K_BACKSPACE:
                 self.new_name = self.new_name[:-1]
+            elif event.key == K_RETURN or K_KP_ENTER:
+                pass
         print(f'sel new name es {self.new_name}')
 
         return self.new_name
+
+    def render_name_and_score(self):
+        alignment_right = 850
+        alignment_left = 450
+        posy = 300
+        self.rendered_record_name = self.font_style.render(
+            self.new_name, True, COLUMBIA_BLUE)
+        self.rendered_record_name_rect = self.screen.blit(self.rendered_record_name, (
+            alignment_left, posy))
+        self.new_record_insert_container[self.rendered_record_name] = self.rendered_record_name_rect
+
+        self.rendered_record_score = self.font_style.render(
+            str(self.new_record), True, COLUMBIA_BLUE)
+        self.rendered_record_score_rect = self.screen.blit(self.rendered_record_score, (
+            alignment_right, posy))
+        self.new_record_insert_container[self.rendered_record_score] = self.rendered_record_score_rect
+
+    def draw_new_name_and_score(self):
+        for rendered_text, text_rect in self.new_record_insert_container.items():
+            self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
+        # self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
 
     def insert_new_record(self):
         self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'
