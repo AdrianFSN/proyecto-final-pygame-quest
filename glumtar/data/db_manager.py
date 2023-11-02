@@ -45,7 +45,7 @@ class DBManager:
         # 6. Devolver los resultados
         return self.recorded_best_scores
 
-    def insertSQL(self, insert):
+    def insertSQL(self, insert, values):
         # 1. Conectar a la base de datos
         connection = sqlite3.connect(self.db_route)
 
@@ -53,7 +53,7 @@ class DBManager:
         cursor = connection.cursor()
 
         # 3. Ejecutar la consulta
-        cursor.execute(insert)
+        cursor.execute(insert, values)
 
         # 4. Tratar los datos
         # 4.1 Obtener los datos

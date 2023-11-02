@@ -46,7 +46,7 @@ class BestPlayers:
 
         self.exit = False
         self.pointer = 0
-        self.new_name = 'TTT'
+        self.new_name = 'EXITO'
         self.new_record = 0
         self.activate_insert_record = False
         self.db = DBManager(self.db_file_path)
@@ -160,9 +160,9 @@ class BestPlayers:
             return self.activate_insert_record
 
     def insert_new_record(self):
-        self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES ("dhl", "80" );'
-        # values = (self.new_name, self.new_record)
-        self.insertion = self.db.insertSQL(self.sql)
+        self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'
+        values = (self.new_name, self.new_record)
+        self.insertion = self.db.insertSQL(self.sql, values)
         self.new_record = 0
         self.activate_insert_record = False
         return self.activate_insert_record
