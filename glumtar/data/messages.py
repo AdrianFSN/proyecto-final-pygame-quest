@@ -1,5 +1,6 @@
 import os
 import pygame
+from pygame.locals import *
 from glumtar import COLUMBIA_BLUE, FONT_SIZE, WIDTH
 
 
@@ -9,7 +10,6 @@ class Reader:
     spacing = FONT_SIZE + 5
 
     def __init__(self, file, font, lines_number=(0, 2)):
-        # self.screen = screen
         self.file_name = file
         self.font = font
         self.start_reading_point = lines_number[0]

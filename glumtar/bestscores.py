@@ -1,5 +1,6 @@
 import os
 import pygame
+from pygame.locals import *
 from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
 from .entities import LivesCounter, Scoreboard
 from tools.timers_and_countdowns import Countdown, ScrollBG
@@ -46,7 +47,7 @@ class BestPlayers:
 
         self.exit = False
         self.pointer = 0
-        self.new_name = 'JESUSITO'
+        self.new_name = ''
         self.new_record = 0
         self.activate_insert_record = False
         self.db = DBManager(self.db_file_path)
@@ -63,6 +64,9 @@ class BestPlayers:
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_q)):
                     self.kill_game = True
                     return self.kill_game
+
+                self.write_name(event)
+
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
                 if event.type == pygame.USEREVENT + 5:
@@ -80,16 +84,9 @@ class BestPlayers:
                     self.activate_insert_record = True
                     catch_record = False
             if self.activate_insert_record:
-                # print(
-                #    f'Antes de insertar, activate insert está en {self.activate_insert_record}')
                 self.insert_new_record()
-                # print(f'He pasado por el else para ir a insert record')
                 self.get_best_scores()
-                # print(f'He pasado por el else para ir a get best scores')
                 self.renderize_best_scores(self.screen)
-                # print(f'He pasado por el else para ir a renderize best scores')
-                self.draw_ranking()
-                # print(f'He pasado por el else para ir a draw ranking')
                 self.activate_insert_record = False
 
             self.add_user_choice_message()
@@ -163,6 +160,20 @@ class BestPlayers:
         if self.new_record > minor_record:
             print(f'Tenemos nuevo record = {self.new_record}')
             return True
+
+    def write_name(self, event):
+        text_length = 3
+        text_pos_X = 0
+        text_pos_Y = 0
+
+        if event.type == KEYDOWN:
+            if event.unicode.isalpha() and len(self.new_name) < text_length:
+                self.new_name += event.unicode
+            elif event.key == K_BACKSPACE:
+                self.new_name = self.new_name[:-1]
+        print(f'sel new name es {self.new_name}')
+
+        return self.new_name
 
     def insert_new_record(self):
         self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'
