@@ -53,10 +53,10 @@ class BestPlayers:
         self.db = DBManager(self.db_file_path)
         self.table_container = {}
         self.get_best_scores()
-        self.renderize_best_scores(self.screen)
 
     def mainLoop(self):
         self.new_record = self.score_board.scoreboard_value
+        self.renderize_best_scores(self.screen)
         catch_record = True
         while not self.exit:
             self.screen.fill(SPACE_CADET)
