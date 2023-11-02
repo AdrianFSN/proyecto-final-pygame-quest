@@ -97,6 +97,8 @@ class Glumtar:
         self.front_page.exit = False
         self.score_board = Scoreboard(self.screen)
         self.lives_counter = LivesCounter(LIVES)
+        self.records_page = BestPlayers(
+            self.screen, self.score_board)
         self.play_pointer = 0
         self.activate_play_pointer = True
         self.set_a_match = True

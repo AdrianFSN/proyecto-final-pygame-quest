@@ -46,16 +46,17 @@ class BestPlayers:
 
         self.exit = False
         self.pointer = 0
-        self.new_name = 'EXITO'
+        self.new_name = 'JESUSITO'
         self.new_record = 0
         self.activate_insert_record = False
         self.db = DBManager(self.db_file_path)
-
         self.table_container = {}
         self.get_best_scores()
         self.renderize_best_scores(self.screen)
 
     def mainLoop(self):
+        self.new_record = self.score_board.scoreboard_value
+        # catch_record = True
         while not self.exit:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
@@ -70,21 +71,22 @@ class BestPlayers:
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.score_board.show_scoreboard(self.screen)
-            self.new_record = self.score_board.scoreboard_value
-            # print(f'self new record es {self.new_record}')
-            # print(
-            # f'activate insert new record está en {self.activate_insert_record}')
 
-            if not self.activate_insert_record:
-                self.draw_ranking()
-            else:
+            if self.confirm_new_record():
+                print(f'He pasado por confirm new record')
                 self.insert_new_record()
-                print(f'He pasado por la peticion de insertar record')
+                print(f'He pasado por el else para ir a insert record')
+                self.get_best_scores()
+                print(f'He pasado por el else para ir a get best scores')
+                self.renderize_best_scores(self.screen)
+                print(f'He pasado por el else para ir a renderize best scores')
+                self.draw_ranking()
+                print(f'He pasado por el else para ir a draw ranking')
+
+            else:
+                self.draw_ranking()
 
             self.add_user_choice_message()
-            self.confirm_new_record()
-            self.insert_new_record()
-
             pygame.display.flip()
 
         return self.exit
@@ -157,15 +159,15 @@ class BestPlayers:
         if self.new_record > minor_record:
             print(f'Tenemos nuevo record = {self.new_record}')
             self.activate_insert_record = True
-            return self.activate_insert_record
+            return True, self.activate_insert_record
 
     def insert_new_record(self):
         self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'
         values = (self.new_name, self.new_record)
         self.insertion = self.db.insertSQL(self.sql, values)
-        self.new_record = 0
-        self.activate_insert_record = False
-        return self.activate_insert_record
+        # ├self.new_record = 0
+        # self.activate_insert_record = False
+        # return self.new_record
 
     def draw_ranking(self):
         for rendered_text, text_rect in self.table_container.items():

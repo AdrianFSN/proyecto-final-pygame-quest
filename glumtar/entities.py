@@ -202,9 +202,12 @@ class Scoreboard:
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.final_score = 0
 
     def increase_score(self, score_up):
         self.scoreboard_value += score_up
+        self.final_score = self.scoreboard_value
+        return self.final_score
 
     def show_scoreboard(self, screen):
         score_string = str(self.scoreboard_value)
