@@ -58,7 +58,7 @@ class DBManager:
         # 4. Tratar los datos
         # 4.1 Obtener los datos
         # Da una lista. Hay un fetchone también.
-        inserted_record = cursor.fetchall()
+        inserted_record = cursor.fetchone()
 
         # 4.2 Los guardo localmente
         # self.recorded_best_scores = []  # Creo que aquí debería hacer un append?
@@ -74,4 +74,4 @@ class DBManager:
         connection.close()
 
         # 6. Devolver los resultados
-        return inserted_record, f'He terminado de pasar por el insert'
+        return True, f'He terminado de pasar por el insert'
