@@ -39,6 +39,8 @@ class BestPlayers:
 
         self.activate_stars = pygame.USEREVENT + 5
         pygame.time.set_timer(self.activate_stars, 1500)
+        self.activate_cursor = pygame.USEREVENT + 8
+        pygame.time.set_timer(self.activate_cursor, 500)
 
         self.font = FONT
         self.font_route = os.path.join(
@@ -53,6 +55,7 @@ class BestPlayers:
         self.db = DBManager(self.db_file_path)
         self.table_container = {}
         self.new_record_insert_container = {}
+        self.activate_box_cursor = False
         self.get_best_scores()
 
     def mainLoop(self):
@@ -73,6 +76,11 @@ class BestPlayers:
                     self.exit = True
                 if event.type == pygame.USEREVENT + 5:
                     self.animate_stars()
+                if event.type == pygame.USEREVENT + 8:
+                    if not self.activate_box_cursor:
+                        self.activate_box_cursor = True
+                    elif self.activate_box_cursor:
+                        self.activate_box_cursor = False
             self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
@@ -95,13 +103,11 @@ class BestPlayers:
         return self.exit
 
     def get_best_scores(self):
-        # self.db = DBManager(self.db_file_path)
         self.sql = 'SELECT Name, Score FROM glumtar_best_players ORDER BY Score DESC LIMIT 5;'
         self.best_players = self.db.consultSQL(self.sql)
 
     def render_best_scores(self, screen):
         headers_records = self.db.column_names
-        # print(f'self.db column names es {self.db.column_names} ')
         data_records = self.best_players
         self.table_container = {}
         rows_y = 300
@@ -172,31 +178,57 @@ class BestPlayers:
             elif event.key == K_BACKSPACE:
                 self.new_name = self.new_name[:-1]
             elif event.key == K_RETURN or K_KP_ENTER:
-                pass
+                self.insert_new_record()
         print(f'sel new name es {self.new_name}')
 
-        return self.new_name
+        return True
 
     def render_name_and_score(self):
         alignment_right = 850
         alignment_left = 450
+        cell_height = FONT_SIZE + 20
         posy = 300
-        self.rendered_record_name = self.font_style.render(
-            self.new_name, True, COLUMBIA_BLUE)
-        self.rendered_record_name_rect = self.screen.blit(self.rendered_record_name, (
-            alignment_left, posy))
-        self.new_record_insert_container[self.rendered_record_name] = self.rendered_record_name_rect
+        height_even = posy
+        height_odd = posy
+        cursor_box_alignmentL = alignment_left
+        cursor_box_alignmentY = posy - 5
+        list_of_requests = ['Your name', 'Score', self.new_name.upper(), str(
+            self.new_record)]
 
-        self.rendered_record_score = self.font_style.render(
-            str(self.new_record), True, COLUMBIA_BLUE)
-        self.rendered_record_score_rect = self.screen.blit(self.rendered_record_score, (
-            alignment_right, posy))
-        self.new_record_insert_container[self.rendered_record_score] = self.rendered_record_score_rect
+        self.illuminate_box_cursor(
+            cell_height, cursor_box_alignmentL, cursor_box_alignmentY)
 
-    """ def draw_new_name_and_score(self):
-        for rendered_text, text_rect in self.new_record_insert_container.items():
-            self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
-        # self.screen.blit(rendered_text, (text_rect.x, text_rect.y)) """  # No es necesaria
+        for index in range(len(list_of_requests)):
+            render = self.font_style.render(
+                list_of_requests[index], True, COLUMBIA_BLUE)
+            if index % 2 == 0:
+                render_rect = self.screen.blit(render, (
+                    alignment_left, height_even))
+                render_rect.left = alignment_left
+                height_even += cell_height
+            elif index % 2 != 0:
+                render_rect = self.screen.blit(render, (
+                    alignment_right, height_odd))
+                render_rect.right = alignment_right
+                height_odd += cell_height
+            index += 1
+            self.new_record_insert_container[render] = render_rect
+
+    def illuminate_box_cursor(self, cell_height, cursor_box_alignmentL, cursor_box_alignmentY):
+        if self.activate_box_cursor:
+            text_box_rect1 = pygame.Rect(
+                cursor_box_alignmentL, cursor_box_alignmentY + cell_height, FONT_SIZE, FONT_SIZE)
+            text_box_rect2 = pygame.Rect(
+                cursor_box_alignmentL + FONT_SIZE, cursor_box_alignmentY + cell_height, FONT_SIZE, FONT_SIZE)
+            text_box_rect3 = pygame.Rect(
+                cursor_box_alignmentL + FONT_SIZE*2, cursor_box_alignmentY + cell_height, FONT_SIZE, FONT_SIZE)
+
+            if len(self.new_name) == 0:
+                pygame.draw.rect(self.screen, COLUMBIA_BLUE, text_box_rect1)
+            elif len(self.new_name) == 1:
+                pygame.draw.rect(self.screen, COLUMBIA_BLUE, text_box_rect2)
+            elif len(self.new_name) == 2:
+                pygame.draw.rect(self.screen, COLUMBIA_BLUE, text_box_rect3)
 
     def insert_new_record(self):
         self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'

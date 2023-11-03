@@ -90,9 +90,6 @@ class Glumtar:
 
     def reset_game(self):
         pygame.font.init()
-        """ self.font = FONT
-        self.font_route = os.path.join(
-            'glumtar', 'resources', 'fonts', self.font) """
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.front_page.exit = False
         self.score_board = Scoreboard(self.screen)
