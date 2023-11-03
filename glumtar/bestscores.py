@@ -56,21 +56,25 @@ class BestPlayers:
         self.table_container = {}
         self.new_record_insert_container = {}
         self.activate_box_cursor = False
+        self.render_new_record = False
+        self.draw_no_ranking = False
+        self.redraw_ranking = False
+        self.start_rendering = True
         self.get_best_scores()
 
     def mainLoop(self):
+        # self.render_best_scores(self.screen)
         self.new_record = self.score_board.scoreboard_value
-        self.render_best_scores(self.screen)
         catch_record = True
-        draw_no_ranking = False
         while not self.exit:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_q)):
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_0)):
                     self.kill_game = True
                     return self.kill_game
 
-                self.write_name(event)
+                if self.activate_insert_record:
+                    self.write_name(event)
 
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     self.exit = True
@@ -86,15 +90,22 @@ class BestPlayers:
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.score_board.show_scoreboard(self.screen)
 
-            """ if not draw_no_ranking:
-                self.draw_ranking() """
-
             if catch_record:
                 if self.confirm_new_record():
-                    draw_no_ranking = True
+                    self.draw_no_ranking = True
+                    self.render_new_record = True
+                    self.start_rendering = False
                     catch_record = False
-            self.render_name_and_score()
-            if not draw_no_ranking:
+
+            if self.render_new_record:
+                self.render_name_and_score()
+
+            if self.redraw_ranking:
+                self.get_best_scores()
+                self.draw_no_ranking = False
+
+            if not self.draw_no_ranking:
+                self.render_best_scores(self.screen)
                 self.draw_ranking()
 
             self.add_user_choice_message()
@@ -111,8 +122,8 @@ class BestPlayers:
         data_records = self.best_players
         self.table_container = {}
         rows_y = 300
-        alignment_right = 850
-        alignment_left = 450
+        best_sc_alignment_right = 850
+        best_sc_alignment_left = 450
         cell_height = FONT_SIZE + 20
         data_index = 0
         header_index = 0
@@ -123,14 +134,13 @@ class BestPlayers:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 self.table_container[rendered_header] = self.screen.blit(
-                    rendered_header, (alignment_left, rows_y))
+                    rendered_header, (best_sc_alignment_left, rows_y))
                 header_index += 1
             else:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 rendered_header_rect = self.screen.blit(
-                    rendered_header, (alignment_left, rows_y))
-                rendered_header_rect.right = alignment_right
+                    rendered_header, (best_sc_alignment_right, rows_y))
                 self.table_container[rendered_header] = rendered_header_rect
 
         if data_index < records_length:
@@ -140,14 +150,12 @@ class BestPlayers:
                 rendered_player = self.font_style.render(
                     player, True, COLUMBIA_BLUE)
                 player_rect = self.screen.blit(
-                    rendered_player, (alignment_left, rows_y + cell_height))
-                player_rect.left = alignment_left
+                    rendered_player, (best_sc_alignment_left, rows_y + cell_height))
 
                 rendered_points = self.font_style.render(
                     points, True, COLUMBIA_BLUE)
                 points_rect = self.screen.blit(
-                    rendered_points, (alignment_left, rows_y + cell_height))
-                points_rect.right = alignment_right
+                    rendered_points, (best_sc_alignment_right, rows_y + cell_height))
 
                 self.table_container[rendered_player] = player_rect
                 self.table_container[rendered_points] = points_rect
@@ -179,9 +187,12 @@ class BestPlayers:
                 self.new_name = self.new_name[:-1]
             elif event.key == K_RETURN or K_KP_ENTER:
                 self.insert_new_record()
+                self.activate_insert_record = False
+                self.render_new_record = False
+                self.redraw_ranking = True
         print(f'sel new name es {self.new_name}')
 
-        return True
+        return True, self.activate_insert_record, self.render_new_record, self.redraw_ranking
 
     def render_name_and_score(self):
         alignment_right = 850
@@ -232,7 +243,7 @@ class BestPlayers:
 
     def insert_new_record(self):
         self.sql = 'INSERT INTO glumtar_best_players (Name, Score) VALUES (?, ?);'
-        values = (self.new_name, self.new_record)
+        values = (self.new_name.upper(), self.new_record)
         self.insertion = self.db.insertSQL(self.sql, values)
         return f'He pasado por la función de insertar de best players'
 
