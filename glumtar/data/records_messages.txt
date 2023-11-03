@@ -1,0 +1,3 @@
+New record alert:
+New best score!
+Press Enter to save

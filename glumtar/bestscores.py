@@ -9,7 +9,13 @@ from . data.db_manager import DBManager
 
 
 class BestPlayers:
-    MAX_RECORDS_IN_LIST = 10
+    MAX_RECORDS_IN_LIST = 5
+    NEW_RECORD_ALERT_Y = 250
+    NEW_RECORD_ALERT_X = WIDTH / 2
+    NEW_RECORD_INSTRUCTION_X = WIDTH / 2
+    NEW_RECORD_INSTRUCTION_Y = 450
+    RECORD_TABLE_X = 300
+    RECORD_TABLE_Y = 350
 
     def __init__(self, screen, scoreboard):
         self.screen = screen
@@ -122,7 +128,7 @@ class BestPlayers:
         data_records = self.best_players
         self.table_container = {}
         rows_y = 300
-        best_sc_alignment_right = 850
+        best_sc_alignment_right = 750
         best_sc_alignment_left = 450
         cell_height = FONT_SIZE + 20
         data_index = 0
@@ -142,7 +148,6 @@ class BestPlayers:
                 rendered_header_rect = self.screen.blit(
                     rendered_header, (best_sc_alignment_right, rows_y))
                 self.table_container[rendered_header] = rendered_header_rect
-
         if data_index < records_length:
             for name, score in data_records:
                 player = data_records[data_index].get(name)
@@ -199,11 +204,23 @@ class BestPlayers:
         alignment_right = 850
         alignment_left = 450
         cell_height = FONT_SIZE + 20
-        posy = 300
+        posy = self.RECORD_TABLE_Y
         height_even = posy
         height_odd = posy
         cursor_box_alignmentL = alignment_left
         cursor_box_alignmentY = posy - 5
+        correction_y = 50
+
+        alert = 'New best score!'
+        alert_render = self.font_style.render(alert, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            alert_render, (self.NEW_RECORD_ALERT_X - alert_render.get_width()/2, self.NEW_RECORD_ALERT_Y + correction_y))
+        instruction = 'Pres Enter to save'
+        instruction_render = self.font_style.render(
+            instruction, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            instruction_render, (self.NEW_RECORD_INSTRUCTION_X - instruction_render.get_width()/2, self.NEW_RECORD_INSTRUCTION_Y + correction_y))
+
         list_of_requests = ['Your name', 'Score', self.new_name.upper(), str(
             self.new_record)]
 
@@ -216,12 +233,12 @@ class BestPlayers:
             if index % 2 == 0:
                 render_rect = self.screen.blit(render, (
                     alignment_left, height_even))
-                render_rect.left = alignment_left
+                # render_rect.left = alignment_left
                 height_even += cell_height
             elif index % 2 != 0:
                 render_rect = self.screen.blit(render, (
                     alignment_right, height_odd))
-                render_rect.right = alignment_right
+                # render_rect.right = alignment_right
                 height_odd += cell_height
             index += 1
             self.new_record_insert_container[render] = render_rect
