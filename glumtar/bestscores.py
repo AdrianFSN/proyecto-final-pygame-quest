@@ -28,7 +28,7 @@ class BestPlayers:
         self.bg_controller = 0
         for bg in range(1, 3):
             self.bg_front_route = os.path.join(
-                'glumtar', 'resources', 'images', f'BG_front_page{bg}.jpg')
+                'glumtar', 'resources', 'images', f'BG_records{bg}.jpg')
             self.available_bg.append(self.bg_front_route)
             bg += 1
 
@@ -209,17 +209,7 @@ class BestPlayers:
         height_odd = posy
         cursor_box_alignmentL = alignment_left
         cursor_box_alignmentY = posy - 5
-        correction_y = 50
-
-        alert = 'New best score!'
-        alert_render = self.font_style.render(alert, True, COLUMBIA_BLUE)
-        self.screen.blit(
-            alert_render, (self.NEW_RECORD_ALERT_X - alert_render.get_width()/2, self.NEW_RECORD_ALERT_Y + correction_y))
-        instruction = 'Pres Enter to save'
-        instruction_render = self.font_style.render(
-            instruction, True, COLUMBIA_BLUE)
-        self.screen.blit(
-            instruction_render, (self.NEW_RECORD_INSTRUCTION_X - instruction_render.get_width()/2, self.NEW_RECORD_INSTRUCTION_Y + correction_y))
+        self.alert_best_record()
 
         list_of_requests = ['Your name', 'Score', self.new_name.upper(), str(
             self.new_record)]
@@ -242,6 +232,19 @@ class BestPlayers:
                 height_odd += cell_height
             index += 1
             self.new_record_insert_container[render] = render_rect
+
+    def alert_best_record(self):
+        correction_y = 50
+
+        alert = 'New best score!'
+        alert_render = self.font_style.render(alert, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            alert_render, (self.NEW_RECORD_ALERT_X - alert_render.get_width()/2, self.NEW_RECORD_ALERT_Y + correction_y))
+        instruction = 'Press Enter to save'
+        instruction_render = self.font_style.render(
+            instruction, True, COLUMBIA_BLUE)
+        self.screen.blit(
+            instruction_render, (self.NEW_RECORD_INSTRUCTION_X - instruction_render.get_width()/2, self.NEW_RECORD_INSTRUCTION_Y + correction_y))
 
     def illuminate_box_cursor(self, cell_height, cursor_box_alignmentL, cursor_box_alignmentY):
         if self.activate_box_cursor:

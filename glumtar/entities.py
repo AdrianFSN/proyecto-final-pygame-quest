@@ -142,8 +142,8 @@ class Meteorite(pygame.sprite.Sprite):
     points_family_0 = default_points
     points_family_1 = default_points * 2
     points_family_2 = default_points * 3
-    points_family_3 = default_points * 5
-    points_family_4 = default_points * 6
+    points_family_3 = default_points * 6
+    points_family_4 = default_points * 5
 
     def __init__(self, level, speed=default_speed, points=default_points, posX=outer_margin):
         super().__init__()

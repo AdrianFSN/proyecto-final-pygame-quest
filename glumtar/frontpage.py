@@ -78,6 +78,8 @@ class FrontPage:
             self.add_escape_message()
             self.available_messages[self.reader_pointer].draw_message(
                 self.screen)
+            if self.reader_pointer == 2:
+                self.add_meteo_list()
             self.add_read_more_message()
 
             pygame.display.flip()
@@ -111,3 +113,11 @@ class FrontPage:
         self.pos_Y = HEIGHT - self.read_more_bottom_margin - read_more_render.get_height()
         self.screen.blit(
             read_more_render, (self.pos_X, self.pos_Y))
+
+    def add_meteo_list(self):
+        meteo_list_route = os.path.join(
+            'glumtar', 'resources', 'images', f'meteo_list.png')
+        meteo_list = pygame.image.load(meteo_list_route)
+        pos_X = 0
+        pos_Y = 0
+        self.screen.blit(meteo_list, (pos_X, pos_Y))
