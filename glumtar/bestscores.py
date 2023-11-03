@@ -69,7 +69,7 @@ class BestPlayers:
         while not self.exit:
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_0)):
+                if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_0)) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_KP0)):
                     self.kill_game = True
                     return self.kill_game
 
@@ -181,18 +181,19 @@ class BestPlayers:
     def write_name(self, event):
         text_length = 3
         if event.type == KEYDOWN:
-            if event.unicode.isalpha() and len(self.new_name) < text_length:
-                self.new_name += event.unicode
-            elif event.key == K_BACKSPACE:
-                self.new_name = self.new_name[:-1]
-            elif event.key == K_RETURN or K_KP_ENTER:
+            if event.key == K_RETURN or event.key == K_KP_ENTER:
                 self.insert_new_record()
                 self.activate_insert_record = False
                 self.render_new_record = False
                 self.redraw_ranking = True
-        print(f'sel new name es {self.new_name}')
-
-        return True, self.activate_insert_record, self.render_new_record, self.redraw_ranking
+                return True, self.activate_insert_record, self.render_new_record, self.redraw_ranking
+            else:
+                if event.unicode.isalpha() and len(self.new_name) < text_length:
+                    self.new_name += event.unicode
+                    print(f'Esta es la len de self new name {self.new_name}')
+                if event.key == K_BACKSPACE:
+                    self.new_name = self.new_name[:-1]
+                    # return False
 
     def render_name_and_score(self):
         alignment_right = 850
@@ -261,7 +262,7 @@ class BestPlayers:
             self.bg_controller = 0
 
     def add_user_choice_message(self):
-        escape_message = "Press <ESPACE> to start or Q to quit game"
+        escape_message = "Press <ESPACE> to start or 0 to quit game"
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
         title_render = self.font_style.render(
             escape_message, True, COLUMBIA_BLUE)
