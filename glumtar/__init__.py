@@ -21,12 +21,14 @@ TIME_UNIT = FPS
 TITLE_MARGIN = 70
 TOP_MARGIN_LIMIT = 80
 WIDTH = 1280
+DEFAULT_POS_Y = 300     # Used as reference point to show messages
 
 # Fonts
 FONT = 'PressStart2P-Regular.ttf'
 FONT_SIZE = 30
 TITLE_FONT_SIZE = 25
 FONT_SIZE_CONTROLLER = 10
+DEFAULT_LINES_SPACING = 10
 
 # Entities settings
 METEO_OUTER_MARGIN = 150

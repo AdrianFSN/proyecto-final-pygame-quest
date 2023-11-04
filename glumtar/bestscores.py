@@ -66,7 +66,8 @@ class BestPlayers:
         self.draw_no_ranking = False
         self.redraw_ranking = False
         self.start_rendering = True
-        self.good_news = Reader('records_messages.txt', self.font, (1, 2))
+        self.good_news = Reader(
+            'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH/2, 300), (1, 2))
         self.good_news.renderize_lines(self.screen)
         self.get_best_scores()
 

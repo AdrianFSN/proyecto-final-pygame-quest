@@ -1,12 +1,12 @@
 import os
 import pygame
-from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from .data.messages import Reader
 
 
 class FrontPage:
     read_more_bottom_margin = 130
-    font_size_correction = FONT_SIZE - 10
+    INSTRUCTION_LINES_FONT_SIZE = FONT_SIZE - 10
 
     def __init__(self, screen):
         self.screen = screen
@@ -38,9 +38,12 @@ class FrontPage:
             'glumtar', 'resources', 'fonts', self.font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
 
-        self.paragraph1 = Reader('front_messages.txt', FONT, (0, 7))
-        self.paragraph2 = Reader('front_messages.txt', FONT, (7, 12))
-        self.paragraph3 = Reader('front_messages.txt', FONT, (12, 16))
+        self.paragraph1 = Reader(
+            'front_messages.txt', FONT, self.INSTRUCTION_LINES_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (0, 7))
+        self.paragraph2 = Reader(
+            'front_messages.txt', FONT, self.INSTRUCTION_LINES_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (7, 12))
+        self.paragraph3 = Reader(
+            'front_messages.txt', FONT, self.INSTRUCTION_LINES_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (12, 16))
         self.available_messages = [self.paragraph1,
                                    self.paragraph2, self.paragraph3]
         self.paragraph1.renderize_lines(self.screen)
@@ -103,7 +106,7 @@ class FrontPage:
     def add_read_more_message(self):
         read_more_title = "Press arrow keys < > to read more"
         self.font_style = pygame.font.Font(
-            self.font_route, self.font_size_correction)
+            self.font_route, self.INSTRUCTION_LINES_FONT_SIZE)
         read_more_render = self.font_style.render(
             read_more_title, True, COLUMBIA_BLUE)
         self.pos_X = (WIDTH - read_more_render.get_width())/2
