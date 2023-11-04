@@ -1,7 +1,7 @@
 import os
 import sys
 import pygame
-from . import FONT, FONT_SIZE, FPS, HEIGHT, LIVES, WIDTH, SPACE_CADET
+from . import COLUMBIA_BLUE, FONT, FONT_SIZE, FPS, HEIGHT, LIVES, WIDTH, SPACE_CADET
 from . playlevel import PlayLevel
 from . resolvelevel import ResolveLevel
 from . frontpage import FrontPage
@@ -23,8 +23,8 @@ class Glumtar:
 
         self.kill_game = False
         self.front_page = FrontPage(self.screen)
-        self.score_board = Scoreboard(self.screen)
-        self.lives_counter = LivesCounter(LIVES)
+        self.score_board = Scoreboard(self.screen, COLUMBIA_BLUE)
+        self.lives_counter = LivesCounter(COLUMBIA_BLUE, LIVES)
         self.records_page = BestPlayers(
             self.screen, self.score_board)
         self.available_play_levels = 3
@@ -32,8 +32,14 @@ class Glumtar:
         self.play_pointer = 0
         self.activate_play_pointer = True
         self.set_a_match = True
+        self.music_route = os.path.join(
+            'glumtar', 'resources', 'sounds', 'Master _Computer_Games.mp3')
 
     def mainLoop(self):
+        pygame.mixer.init()
+        pygame.mixer.music.load(self.music_route)
+        pygame.mixer.music.play(loops=-1)
+        # pygame.mixer.Sound(boom_route).play()
         exit = False
         while not exit:
             self.clock.tick(FPS)
@@ -92,8 +98,8 @@ class Glumtar:
         pygame.font.init()
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.front_page.exit = False
-        self.score_board = Scoreboard(self.screen)
-        self.lives_counter = LivesCounter(LIVES)
+        self.score_board = Scoreboard(self.screen, COLUMBIA_BLUE)
+        self.lives_counter = LivesCounter(COLUMBIA_BLUE, LIVES)
         self.records_page = BestPlayers(
             self.screen, self.score_board)
         self.play_pointer = 0

@@ -1,6 +1,6 @@
 import os
 import pygame
-from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from .data.messages import Reader
 
 
@@ -9,6 +9,7 @@ class FrontPage:
     INSTRUCTION_LINES_FONT_SIZE = FONT_SIZE - 10
 
     def __init__(self, screen):
+        self.clock = pygame.time.Clock()
         self.screen = screen
         self.kill_game = False
         self.available_bg = []
@@ -55,6 +56,7 @@ class FrontPage:
 
     def mainLoop(self):
         while not self.exit:
+            self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                     print("Alguien ha decidido salir de la aplicación por la X")

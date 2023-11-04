@@ -14,11 +14,14 @@ class ResolveLevel(PlayLevel):
 
     def __init__(self, screen, player, scoreboard, livescounter, level):
         super().__init__(screen, scoreboard, livescounter, level)
+        pygame.font.init()
+        self.clock = pygame.time.Clock()
         self.kill_game = False
         self.player = player
         self.scoreboard = scoreboard
         self.lives_counter = livescounter
         self.level = level
+        self.texts_font_color = COLUMBIA_BLUE
 
         self.available_bg = []
         self.selected_bg = []
@@ -60,14 +63,10 @@ class ResolveLevel(PlayLevel):
             'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PLANET_NAME_Y), (2, 5))
         self.available_planets_texts = [
             self.planet_level_1, self.planet_level_2]
-        if self.level == 2:
-            self.landing_ahead_message.font_color = SPACE_CADET
-            self.planet_level_2.font_color = SPACE_CADET
 
         self.landing_ahead_message.render_lines(self.screen)
         self.planet_level_1.render_lines(self.screen)
         self.planet_level_2.render_lines(self.screen)
-
         self.go_to_exit = False
         self.exit = False
 
@@ -99,6 +98,7 @@ class ResolveLevel(PlayLevel):
             print(f'Estoy en el nivel {self.level}')
             self.add_level_title()
             self.landing_ahead_message.draw_message(self.screen)
+
             if self.alpha == 255:
                 if self.level == 1:
                     self.planet_level_1.draw_message(self.screen)
@@ -129,6 +129,6 @@ class ResolveLevel(PlayLevel):
         self.pos_Y = TOP_MARGIN_LIMIT - TITLE_FONT_SIZE
 
         title_render = self.font_style.render(
-            self.title, True, COLUMBIA_BLUE)
+            self.title, True, self.texts_font_color)
         self.screen.blit(
             title_render, (self.pos_X, self.pos_Y))

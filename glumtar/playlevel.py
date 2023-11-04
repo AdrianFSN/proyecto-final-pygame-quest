@@ -3,8 +3,6 @@ import pygame
 from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, METEO_OUTER_MARGIN, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
 from .entities import Meteorite, Ship
 from tools.timers_and_countdowns import Countdown, ScrollBG
-# from .data.messages import Reader
-# from .game import Glumtar
 
 
 class PlayLevel:
@@ -51,12 +49,10 @@ class PlayLevel:
         self.execute_game_over = False
         self.stop_bg_scroll = False
         self.exit = False
-        # self.end_game = False
 
     def mainLoop(self):
         countdown_active = True
         activate_explosion = False
-        # initialize_ship_costume = False
 
         while not self.exit:
             self.clock.tick(FPS)
@@ -91,16 +87,12 @@ class PlayLevel:
                     if self.execute_game_over:
                         return self.execute_game_over
 
-                # if not self.stop_bg_scroll:
             self.set_bg_scroll -= BG_SCROLL_SPEED
             if self.set_bg_scroll <= 0:
-                # self.stop_bg_scroll = True
-                # print(f'Este esl scroll stop {self.stop_bg_scroll}')
                 self.exit = True
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
-            # print(f"Execute game over está en {self.execute_game_over}")
 
             if countdown_active:
                 self.countdown.draw_countdown()
@@ -115,6 +107,7 @@ class PlayLevel:
                     self.allow_collisions = True
                     self.allow_points = True
                     self.screen.blit(self.player.image, self.player.rect)
+                    self.play_ship_ignition()
 
             self.player.update()
             self.screen.blit(self.player.image, self.player.rect)
@@ -141,7 +134,7 @@ class PlayLevel:
                     self.generated_meteorites.remove(meteorite)
                     if self.allow_points:
                         self.scoreboard.increase_score(meteorite.points)
-            # print(f'Este es el time scroll {self.set_bg_scroll}')
+                        self.play_meteorite_sound()
 
             pygame.display.flip()
 
@@ -161,7 +154,7 @@ class PlayLevel:
         timer = timer
         self.screen.blit(self.background, (posX, posY))
         if not self.execute_game_over:
-            if self.set_bg_scroll != 0:  # Esto es lo que realmente para el scroll.
+            if self.set_bg_scroll != 0:
                 self.background_posX -= 1
 
     def check_collision(self):
@@ -172,8 +165,17 @@ class PlayLevel:
     def play_ship_explosion_sound(self):
         boom_route = os.path.join(
             'glumtar', 'resources', 'sounds', 'Boom1.wav')
-        pygame.mixer.init()
         pygame.mixer.Sound(boom_route).play()
+
+    def play_meteorite_sound(self):
+        meteorite_route = os.path.join(
+            'glumtar', 'resources', 'sounds', 'cactus_gain.wav')
+        pygame.mixer.Sound(meteorite_route).play()
+
+    def play_ship_ignition(self):
+        ignition_route = os.path.join(
+            'glumtar', 'resources', 'sounds', 'bomb_destroy3.wav')
+        pygame.mixer.Sound(ignition_route).play()
 
     def add_level_title(self):
         self.title = f"Level {self.level}"

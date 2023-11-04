@@ -196,12 +196,13 @@ class Scoreboard:
     margin_title = 50
     font_title_adjust = 20
 
-    def __init__(self, screen, points=0):
+    def __init__(self, screen, font_color=COLUMBIA_BLUE, points=0):
         self.screen = screen
         self.scoreboard_value = points
         font = FONT
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
+        self.font_color = font_color
         self.final_score = 0
 
     def increase_score(self, score_up):
@@ -212,23 +213,24 @@ class Scoreboard:
     def show_scoreboard(self, screen):
         score_string = str(self.scoreboard_value)
         scoreboard_text = self.font_style.render(
-            score_string, True, COLUMBIA_BLUE)
+            score_string, True, self.font_color)
         pointsX = SCOREBOARD_MARGIN
         pointsY = TOP_MARGIN_LIMIT - FONT_SIZE
         screen.blit(scoreboard_text, (pointsX, pointsY))
 
         score_title = 'Score'
         score_title_text = self.font_style.render(
-            score_title, True, COLUMBIA_BLUE)
+            score_title, True, self.font_color)
         title_X = SCOREBOARD_MARGIN + scoreboard_text.get_rect().right + 30
         title_Y = TOP_MARGIN_LIMIT - score_title_text.get_height()
         screen.blit(score_title_text, (title_X, title_Y))
 
 
 class LivesCounter:
-    def __init__(self, lives=LIVES):
+    def __init__(self, font_color=COLUMBIA_BLUE, lives=LIVES):
         self.lives_value = lives
         font = FONT
+        self.font_color = font_color
         self.font_route = os.path.join('glumtar', 'resources', 'fonts', font)
         self.font_style = pygame.font.Font(self.font_route, FONT_SIZE)
         self.available_lives = {}
@@ -256,7 +258,7 @@ class LivesCounter:
                 self.available_lives.get(self.lives_value))
             lives_string = str(self.lives_value)
             lives_text = self.font_style.render(
-                lives_string, True, COLUMBIA_BLUE)
+                lives_string, True, self.font_color)
             screen.blit(lives_text, (self.livesX, self.livesY))
             screen.blit(self.hearts_image, self.rect)
             return False

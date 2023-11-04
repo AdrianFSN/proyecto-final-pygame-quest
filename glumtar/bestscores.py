@@ -1,7 +1,7 @@
 import os
 import pygame
 from pygame.locals import *
-from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from . data.messages import Reader
 from . data.db_manager import DBManager
 
@@ -19,6 +19,7 @@ class BestPlayers:
     TITLE_Y = DEFAULT_POS_Y - CELL_HEIGHT
 
     def __init__(self, screen, scoreboard):
+        self.clock = pygame.time.Clock()
         self.screen = screen
         self.score_board = scoreboard
         self.kill_game = False
@@ -79,6 +80,7 @@ class BestPlayers:
         self.new_record = self.score_board.scoreboard_value
         catch_record = True
         while not self.exit:
+            self.clock.tick(FPS)
             self.screen.fill(SPACE_CADET)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_0)) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_KP0)):
