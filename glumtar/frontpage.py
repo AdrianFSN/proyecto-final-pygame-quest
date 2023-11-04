@@ -1,8 +1,6 @@
 import os
 import pygame
 from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
-# from .entities import LivesCounter, Meteorite, Ship, Scoreboard
-# from tools.timers_and_countdowns import Countdown, ScrollBG
 from .data.messages import Reader
 
 
@@ -14,13 +12,12 @@ class FrontPage:
         self.screen = screen
         self.kill_game = False
         self.available_bg = []
-        self.bg_index = 1
+
         self.bg_controller = 0
         for bg in range(1, 3):
             self.bg_front_route = os.path.join(
-                'glumtar', 'resources', 'images', f'BG_front_page{self.bg_index}.jpg')
+                'glumtar', 'resources', 'images', f'BG_front_page{bg}.jpg')
             self.available_bg.append(self.bg_front_route)
-            self.bg_index += 1
 
         self.bg_front = pygame.image.load(
             self.available_bg[self.bg_controller])

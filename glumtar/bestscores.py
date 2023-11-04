@@ -66,10 +66,11 @@ class BestPlayers:
         self.draw_no_ranking = False
         self.redraw_ranking = False
         self.start_rendering = True
+        self.good_news = Reader('records_messages.txt', self.font, (1, 2))
+        self.good_news.renderize_lines(self.screen)
         self.get_best_scores()
 
     def mainLoop(self):
-        # self.render_best_scores(self.screen)
         self.new_record = self.score_board.scoreboard_value
         catch_record = True
         while not self.exit:
@@ -105,6 +106,7 @@ class BestPlayers:
 
             if self.render_new_record:
                 self.render_name_and_score()
+                self.good_news.draw_message(self.screen)
 
             if self.redraw_ranking:
                 self.get_best_scores()

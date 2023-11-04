@@ -33,7 +33,8 @@ class Reader:
             lines = message_file.readlines()
             for sentence in range(len(lines)):
                 lines[sentence] = lines[sentence][:-1]
-        if self.pointer <= len(lines):
+
+        if self.pointer in range(self.start_reading_point, self.stop_reading_point):
             for row in range(self.start_reading_point, self.stop_reading_point):
                 self.rendered_line = self.font_style.render(
                     lines[self.pointer], True, COLUMBIA_BLUE)
