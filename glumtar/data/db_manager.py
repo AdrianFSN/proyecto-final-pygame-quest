@@ -53,12 +53,20 @@ class DBManager:
         cursor = connection.cursor()
 
         # 3. Ejecutar la consulta
-        cursor.execute(insert, values)
+        result = False
+
+        try:
+            cursor.execute(insert, values)
+            connection.commit()
+            print(f'Debería haber insertado el dato')
+            result = True
+        except Exception as ex:
+            print(ex)
+            connection.rollback()
 
         # 4. Tratar los datos
         # 4.1 Obtener los datos
         # Da una lista. Hay un fetchone también.
-        inserted_record = cursor.fetchone()
 
         # 4.2 Los guardo localmente
         # self.recorded_best_scores = []  # Creo que aquí debería hacer un append?
@@ -68,10 +76,8 @@ class DBManager:
         #    self.column_names.append(column[0])
 
         # 5. Cerrar la conexión
-        connection.commit()
-        print(f'Debería haber insertado el dato')
 
         connection.close()
 
         # 6. Devolver los resultados
-        return True, f'He terminado de pasar por el insert'
+        return result

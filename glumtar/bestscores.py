@@ -183,7 +183,6 @@ class BestPlayers:
                 pointer += 1
         minor_record = min(confirmation_list)
         if self.new_record > minor_record:
-            print(f'Tenemos nuevo record = {self.new_record}')
             self.activate_insert_record = True
             return True, self.activate_insert_record
         else:

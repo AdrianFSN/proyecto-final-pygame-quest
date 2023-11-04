@@ -58,8 +58,6 @@ class Glumtar:
                         if not scene.execute_game_over:
                             scene.mainLoop()
                             self.kill_game = scene.kill_game
-                            print(
-                                f'Kill game de game está en {self.kill_game}')
                             if scene.exit:
                                 self.play_pointer += 1
                         else:
@@ -78,7 +76,6 @@ class Glumtar:
 
             if self.kill_game:
                 exit = True
-                print(f'ahora, Exit está en {exit}')
         pygame.quit()
 
     def set_up_play(self):
@@ -110,6 +107,5 @@ class Glumtar:
 
 
 if __name__ == '__main__':
-    print('Arrancamos desde el archivo game.py')
     the_game = Glumtar()
     the_game.mainLoop()

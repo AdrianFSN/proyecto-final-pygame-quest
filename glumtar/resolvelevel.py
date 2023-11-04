@@ -95,7 +95,6 @@ class ResolveLevel(PlayLevel):
             self.screen.blit(
                 self.background_B, (self.background_posX, self.background_posY))
             self.background_B.set_alpha(self.alpha)
-            print(f'Estoy en el nivel {self.level}')
             self.add_level_title()
             self.landing_ahead_message.draw_message(self.screen)
 
@@ -104,7 +103,6 @@ class ResolveLevel(PlayLevel):
                     self.planet_level_1.draw_message(self.screen)
                 elif self.level == 2:
                     self.planet_level_2.draw_message(self.screen)
-                    print(f'Debería haber pintado el mensaje para el planeta 2')
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
