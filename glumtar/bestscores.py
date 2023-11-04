@@ -1,7 +1,7 @@
 import os
 import pygame
 from pygame.locals import *
-from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_LINES_SPACING, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from . data.messages import Reader
 from . data.db_manager import DBManager
 
@@ -9,8 +9,13 @@ from . data.db_manager import DBManager
 class BestPlayers:
     MAX_RECORDS_IN_LIST = 5
     PRESS_ENTER_Y = 450
-    RECORD_TABLE_X = 300
+    RECORD_TABLE_X = WIDTH/2
     RECORD_TABLE_Y = 350
+    CELL_HEIGHT = FONT_SIZE + 20
+    BEST_SC_ALIGNMENT_LEFT = RECORD_TABLE_X - len('Name') * FONT_SIZE
+    BEST_SC_ALIGNMENT_RIGHT = RECORD_TABLE_X + len('Score') * FONT_SIZE
+    ROWS_Y = 300
+    RECORDS_LENGTH = 5
 
     def __init__(self, screen, scoreboard):
         self.screen = screen
@@ -125,45 +130,42 @@ class BestPlayers:
         headers_records = self.db.column_names
         data_records = self.best_players
         self.table_container = {}
-        rows_y = 300
-        best_sc_alignment_right = 750
-        best_sc_alignment_left = 450
-        cell_height = FONT_SIZE + 20
+        rows_y = self.ROWS_Y
         data_index = 0
         header_index = 0
-        records_length = 5
+        # records_length = 5
 
         for headers in headers_records:
             if header_index == 0:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 self.table_container[rendered_header] = self.screen.blit(
-                    rendered_header, (best_sc_alignment_left, rows_y))
+                    rendered_header, (self.BEST_SC_ALIGNMENT_LEFT, rows_y))
                 header_index += 1
             else:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 rendered_header_rect = self.screen.blit(
-                    rendered_header, (best_sc_alignment_right, rows_y))
+                    rendered_header, (self.BEST_SC_ALIGNMENT_RIGHT, rows_y))
                 self.table_container[rendered_header] = rendered_header_rect
-        if data_index < records_length:
+        if data_index < self.RECORDS_LENGTH:
             for name, score in data_records:
                 player = data_records[data_index].get(name)
                 points = str(self.best_players[data_index].get(score))
                 rendered_player = self.font_style.render(
                     player, True, COLUMBIA_BLUE)
                 player_rect = self.screen.blit(
-                    rendered_player, (best_sc_alignment_left, rows_y + cell_height))
+                    rendered_player, (self.BEST_SC_ALIGNMENT_LEFT, rows_y + self.CELL_HEIGHT))
 
                 rendered_points = self.font_style.render(
                     points, True, COLUMBIA_BLUE)
                 points_rect = self.screen.blit(
-                    rendered_points, (best_sc_alignment_right, rows_y + cell_height))
+                    rendered_points, (self.BEST_SC_ALIGNMENT_RIGHT, rows_y + self.CELL_HEIGHT))
 
                 self.table_container[rendered_player] = player_rect
                 self.table_container[rendered_points] = points_rect
                 data_index += 1
-                rows_y += cell_height
+                rows_y += self.CELL_HEIGHT
 
     def confirm_new_record(self):
         confirmation_list = []
@@ -199,20 +201,23 @@ class BestPlayers:
                     # return False
 
     def render_name_and_score(self):
-        alignment_right = 850
-        alignment_left = 450
-        cell_height = FONT_SIZE + 20
         posy = self.RECORD_TABLE_Y
         height_even = posy
         height_odd = posy
+
+        list_of_requests = ['Your name', 'New record', self.new_name.upper(), str(
+            self.new_record)]
+
+        # self.good_news.text_posX
+        alignment_left = self.RECORD_TABLE_X - \
+            len(list_of_requests[0]) * FONT_SIZE
+        alignment_right = alignment_left + \
+            len(list_of_requests[0]) * FONT_SIZE
         cursor_box_alignmentL = alignment_left
         cursor_box_alignmentY = posy - 5
 
-        list_of_requests = ['Your name', 'Score', self.new_name.upper(), str(
-            self.new_record)]
-
         self.illuminate_box_cursor(
-            cell_height, cursor_box_alignmentL, cursor_box_alignmentY)
+            self.CELL_HEIGHT, cursor_box_alignmentL, cursor_box_alignmentY)
 
         for index in range(len(list_of_requests)):
             render = self.font_style.render(
@@ -220,13 +225,14 @@ class BestPlayers:
             if index % 2 == 0:
                 render_rect = self.screen.blit(render, (
                     alignment_left, height_even))
-                height_even += cell_height
+                height_even += self.CELL_HEIGHT
             elif index % 2 != 0:
                 render_rect = self.screen.blit(render, (
                     alignment_right, height_odd))
-                height_odd += cell_height
+                height_odd += self.CELL_HEIGHT
             index += 1
             self.new_record_insert_container[render] = render_rect
+
         self.good_news.render_lines(self.screen)
         self.press_enter.render_lines(self.screen)
         self.good_news.draw_message(self.screen)
