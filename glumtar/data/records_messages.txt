@@ -1,3 +1,4 @@
 New record alert:
 New best Score!
-Press Enter to save$
+Press Enter to save
+Ranking$

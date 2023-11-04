@@ -16,6 +16,7 @@ class BestPlayers:
     BEST_SC_ALIGNMENT_RIGHT = RECORD_TABLE_X + len('Score') * FONT_SIZE
     ROWS_Y = 300
     RECORDS_LENGTH = 5
+    TITLE_Y = DEFAULT_POS_Y - CELL_HEIGHT
 
     def __init__(self, screen, scoreboard):
         self.screen = screen
@@ -70,6 +71,8 @@ class BestPlayers:
             'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (1, 2))
         self.press_enter = Reader(
             'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PRESS_ENTER_Y), (2, 3))
+        self.best_records_title = Reader(
+            'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.TITLE_Y), (3, 4))
         self.get_best_scores()
 
     def mainLoop(self):
@@ -133,14 +136,14 @@ class BestPlayers:
         rows_y = self.ROWS_Y
         data_index = 0
         header_index = 0
-        # records_length = 5
+        alignment_left = self.best_records_title.text_posX
 
         for headers in headers_records:
             if header_index == 0:
                 rendered_header = self.font_style.render(
                     headers, True, COLUMBIA_BLUE)
                 self.table_container[rendered_header] = self.screen.blit(
-                    rendered_header, (self.BEST_SC_ALIGNMENT_LEFT, rows_y))
+                    rendered_header, (alignment_left, rows_y))
                 header_index += 1
             else:
                 rendered_header = self.font_style.render(
@@ -155,7 +158,7 @@ class BestPlayers:
                 rendered_player = self.font_style.render(
                     player, True, COLUMBIA_BLUE)
                 player_rect = self.screen.blit(
-                    rendered_player, (self.BEST_SC_ALIGNMENT_LEFT, rows_y + self.CELL_HEIGHT))
+                    rendered_player, (alignment_left, rows_y + self.CELL_HEIGHT))
 
                 rendered_points = self.font_style.render(
                     points, True, COLUMBIA_BLUE)
@@ -166,6 +169,7 @@ class BestPlayers:
                 self.table_container[rendered_points] = points_rect
                 data_index += 1
                 rows_y += self.CELL_HEIGHT
+        self.best_records_title.render_lines(self.screen)
 
     def confirm_new_record(self):
         confirmation_list = []
@@ -207,8 +211,6 @@ class BestPlayers:
 
         list_of_requests = ['Your name', 'New record', self.new_name.upper(), str(
             self.new_record)]
-
-        # self.good_news.text_posX
         alignment_left = self.RECORD_TABLE_X - \
             len(list_of_requests[0]) * FONT_SIZE
         alignment_right = alignment_left + \
@@ -261,6 +263,7 @@ class BestPlayers:
         return f'He pasado por la función de insertar de best players'
 
     def draw_ranking(self):
+        self.best_records_title.draw_message(self.screen)
         for rendered_text, text_rect in self.table_container.items():
             self.screen.blit(rendered_text, (text_rect.x, text_rect.y))
 
