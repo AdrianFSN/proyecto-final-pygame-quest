@@ -1,12 +1,16 @@
 import os
 import pygame
-from . import AVAILABLE_BG, COLUMBIA_BLUE, CORAL_PINK, FONT, FPS, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
+from . import AVAILABLE_BG, COLUMBIA_BLUE, CORAL_PINK, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, SPACE_CADET, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
 from .playlevel import PlayLevel
+from .data.messages import Reader
 
 
 class ResolveLevel(PlayLevel):
     alpha = 0
     fade_in_speed = 7
+    PLANET_AHEAD_Y = DEFAULT_POS_Y - 150
+    PLANET_NAME_Y = PLANET_AHEAD_Y + 50
+    PLANETS_ALERTS_FONT_SIZE = FONT_SIZE - 10
 
     def __init__(self, screen, player, scoreboard, livescounter, level):
         super().__init__(screen, scoreboard, livescounter, level)
@@ -43,10 +47,26 @@ class ResolveLevel(PlayLevel):
         pygame.time.set_timer(self.bg_fade_in, 100)
 
         self.advance_level = pygame.USEREVENT + 7
-        pygame.time.set_timer(self.advance_level, 3000)
+        pygame.time.set_timer(self.advance_level, 6000)
 
         self.background_posX = 0
         self.background_posY = 0
+
+        self.landing_ahead_message = Reader(
+            'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PLANET_AHEAD_Y), (0, 1))
+        self.planet_level_1 = Reader(
+            'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PLANET_NAME_Y), (1, 2))
+        self.planet_level_2 = Reader(
+            'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PLANET_NAME_Y), (2, 5))
+        self.available_planets_texts = [
+            self.planet_level_1, self.planet_level_2]
+        if self.level == 2:
+            self.landing_ahead_message.font_color = SPACE_CADET
+            self.planet_level_2.font_color = SPACE_CADET
+
+        self.landing_ahead_message.render_lines(self.screen)
+        self.planet_level_1.render_lines(self.screen)
+        self.planet_level_2.render_lines(self.screen)
 
         self.go_to_exit = False
         self.exit = False
@@ -76,8 +96,15 @@ class ResolveLevel(PlayLevel):
             self.screen.blit(
                 self.background_B, (self.background_posX, self.background_posY))
             self.background_B.set_alpha(self.alpha)
-
+            print(f'Estoy en el nivel {self.level}')
             self.add_level_title()
+            self.landing_ahead_message.draw_message(self.screen)
+            if self.alpha == 255:
+                if self.level == 1:
+                    self.planet_level_1.draw_message(self.screen)
+                elif self.level == 2:
+                    self.planet_level_2.draw_message(self.screen)
+                    print(f'Debería haber pintado el mensaje para el planeta 2')
 
             self.scoreboard.show_scoreboard(self.screen)
             self.lives_counter.show_lives(self.screen)
