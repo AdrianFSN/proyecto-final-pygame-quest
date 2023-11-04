@@ -32,7 +32,7 @@ class Reader:
         self.activate_pointer = True
         self.rendered_line = None
 
-    def renderize_lines(self, screen):
+    def render_lines(self, screen):
         with open(self.text_file_path, mode='r', encoding='UTF-8', newline='\n') as message_file:
             lines = message_file.readlines()
             for sentence in range(len(lines)):

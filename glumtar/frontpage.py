@@ -46,9 +46,9 @@ class FrontPage:
             'front_messages.txt', FONT, self.INSTRUCTION_LINES_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (12, 16))
         self.available_messages = [self.paragraph1,
                                    self.paragraph2, self.paragraph3]
-        self.paragraph1.renderize_lines(self.screen)
-        self.paragraph2.renderize_lines(self.screen)
-        self.paragraph3.renderize_lines(self.screen)
+        self.paragraph1.render_lines(self.screen)
+        self.paragraph2.render_lines(self.screen)
+        self.paragraph3.render_lines(self.screen)
 
         self.reader_pointer = 0
         self.exit = False
@@ -61,6 +61,7 @@ class FrontPage:
                     self.kill_game = True
                     return self.kill_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    self.reader_pointer = 0
                     self.exit = True
                     return self.exit
                 if event.type == pygame.USEREVENT + 5:

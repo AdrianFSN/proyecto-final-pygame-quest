@@ -1,19 +1,14 @@
 import os
 import pygame
 from pygame.locals import *
-from . import BLACK, BG_SCROLL_SPEED, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, CORNELL_RED, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, LIVES, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, ROBIN_EGG_BLUE, SPACE_CADET, TITLE_FONT_SIZE, TITLE_MARGIN, WIDTH
-from .entities import LivesCounter, Scoreboard
-from tools.timers_and_countdowns import Countdown, ScrollBG
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_LINES_SPACING, DEFAULT_POS_Y, FONT, FONT_SIZE, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from . data.messages import Reader
 from . data.db_manager import DBManager
 
 
 class BestPlayers:
     MAX_RECORDS_IN_LIST = 5
-    NEW_RECORD_ALERT_Y = 250
-    NEW_RECORD_ALERT_X = WIDTH / 2
-    NEW_RECORD_INSTRUCTION_X = WIDTH / 2
-    NEW_RECORD_INSTRUCTION_Y = 450
+    PRESS_ENTER_Y = 450
     RECORD_TABLE_X = 300
     RECORD_TABLE_Y = 350
 
@@ -67,8 +62,9 @@ class BestPlayers:
         self.redraw_ranking = False
         self.start_rendering = True
         self.good_news = Reader(
-            'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH/2, 300), (1, 2))
-        self.good_news.renderize_lines(self.screen)
+            'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, DEFAULT_POS_Y), (1, 2))
+        self.press_enter = Reader(
+            'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PRESS_ENTER_Y), (2, 3))
         self.get_best_scores()
 
     def mainLoop(self):
@@ -107,7 +103,6 @@ class BestPlayers:
 
             if self.render_new_record:
                 self.render_name_and_score()
-                self.good_news.draw_message(self.screen)
 
             if self.redraw_ranking:
                 self.get_best_scores()
@@ -212,7 +207,6 @@ class BestPlayers:
         height_odd = posy
         cursor_box_alignmentL = alignment_left
         cursor_box_alignmentY = posy - 5
-        self.alert_best_record()
 
         list_of_requests = ['Your name', 'Score', self.new_name.upper(), str(
             self.new_record)]
@@ -226,28 +220,17 @@ class BestPlayers:
             if index % 2 == 0:
                 render_rect = self.screen.blit(render, (
                     alignment_left, height_even))
-                # render_rect.left = alignment_left
                 height_even += cell_height
             elif index % 2 != 0:
                 render_rect = self.screen.blit(render, (
                     alignment_right, height_odd))
-                # render_rect.right = alignment_right
                 height_odd += cell_height
             index += 1
             self.new_record_insert_container[render] = render_rect
-
-    def alert_best_record(self):
-        correction_y = 50
-
-        alert = 'New best score!'
-        alert_render = self.font_style.render(alert, True, COLUMBIA_BLUE)
-        self.screen.blit(
-            alert_render, (self.NEW_RECORD_ALERT_X - alert_render.get_width()/2, self.NEW_RECORD_ALERT_Y + correction_y))
-        instruction = 'Press Enter to save'
-        instruction_render = self.font_style.render(
-            instruction, True, COLUMBIA_BLUE)
-        self.screen.blit(
-            instruction_render, (self.NEW_RECORD_INSTRUCTION_X - instruction_render.get_width()/2, self.NEW_RECORD_INSTRUCTION_Y + correction_y))
+        self.good_news.render_lines(self.screen)
+        self.press_enter.render_lines(self.screen)
+        self.good_news.draw_message(self.screen)
+        self.press_enter.draw_message(self.screen)
 
     def illuminate_box_cursor(self, cell_height, cursor_box_alignmentL, cursor_box_alignmentY):
         if self.activate_box_cursor:
