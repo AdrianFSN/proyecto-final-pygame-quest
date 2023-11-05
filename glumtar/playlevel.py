@@ -52,6 +52,7 @@ class PlayLevel:
         self.execute_game_over = False
         self.stop_bg_scroll = False
         self.exit = False
+        self.go_to_frontpage = False
 
     def mainLoop(self):
         countdown_active = True

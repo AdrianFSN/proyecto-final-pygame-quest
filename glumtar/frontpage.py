@@ -53,6 +53,7 @@ class FrontPage:
 
         self.reader_pointer = 0
         self.exit = False
+        self.go_to_frontpage = False
 
     def mainLoop(self):
         while not self.exit:

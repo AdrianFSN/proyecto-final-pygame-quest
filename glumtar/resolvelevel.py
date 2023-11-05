@@ -49,8 +49,8 @@ class ResolveLevel(PlayLevel):
         self.bg_fade_in = pygame.USEREVENT + 6
         pygame.time.set_timer(self.bg_fade_in, 100)
 
-        self.advance_level = pygame.USEREVENT + 7
-        pygame.time.set_timer(self.advance_level, 60000)
+        self.restart_frontpage = pygame.USEREVENT + 7
+        pygame.time.set_timer(self.restart_frontpage, 100000)
 
         self.background_posX = 0
         self.background_posY = 0
@@ -72,6 +72,7 @@ class ResolveLevel(PlayLevel):
         self.keep_playing_message.render_lines(self.screen)
         self.go_to_exit = False
         self.exit = False
+        self.go_to_frontpage = False
 
     def mainLoop(self):
         while not self.exit:
@@ -95,9 +96,10 @@ class ResolveLevel(PlayLevel):
                         self.alpha += self.fade_in_speed
                     elif self.alpha > 255:
                         self.alpha = 255
-                if event.type == self.advance_level:
-                    if self.player.rect.bottom >= self.player.stop_landing:
-                        self.go_to_exit = True
+                if event.type == self.restart_frontpage:
+                    if self.player.rect.bottom >= self.player.stop_landing and self.level == 2:
+                        self.go_to_frontpage = True
+                        return self.go_to_frontpage, print(f'He pedido ir a front page')
 
             self.screen.fill(CORAL_PINK)
             self.screen.blit(

@@ -65,6 +65,8 @@ class Glumtar:
                             scene.exit = True
                             self.records_page.mainLoop()
                             self.kill_game = self.records_page.kill_game
+                    if scene.go_to_frontpage:
+                        self.reset_game()
                 else:
                     self.activate_play_pointer = False
                     self.records_page.mainLoop()

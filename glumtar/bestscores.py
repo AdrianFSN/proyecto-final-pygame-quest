@@ -75,6 +75,7 @@ class BestPlayers:
         self.best_records_title = Reader(
             'records_messages.txt', FONT, FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.TITLE_Y), (3, 4))
         self.get_best_scores()
+        self.go_to_frontpage = False
 
     def mainLoop(self):
         self.new_record = self.score_board.scoreboard_value
