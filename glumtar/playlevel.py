@@ -133,6 +133,7 @@ class PlayLevel:
                     self.play_ship_explosion_sound()
                     self.lives_counter.reduce_lives(
                         self.collision_detected)
+                    self.allow_collisions = False
 
             if self.lives_counter.lives_value == 0:
                 self.show_game_over()
