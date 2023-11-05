@@ -25,6 +25,7 @@ class Ship(pygame.sprite.Sprite):
         self.rotation_ended = False
         self.rotated_image = None
         self.rotated_image_rect = None
+        self.ship_landed = False
 
         self.img_route = os.path.join(
             'glumtar', 'resources', 'images', 'ship0_0.png')
@@ -100,6 +101,8 @@ class Ship(pygame.sprite.Sprite):
         if self.rotation_ended:
             if self.rect.bottom <= self.stop_landing:
                 self.rect.bottom += descend_speed
+                self.ship_landed = True
+                return self.ship_landed
 
     def rotate_ship(self):
         rotation_center = self.rect.center

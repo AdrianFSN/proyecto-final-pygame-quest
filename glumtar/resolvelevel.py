@@ -12,7 +12,7 @@ class ResolveLevel(PlayLevel):
     PLANET_NAME_Y = PLANET_AHEAD_Y + 50
     PLANETS_ALERTS_FONT_SIZE = FONT_SIZE - 10
 
-    def __init__(self, screen, player, scoreboard, livescounter, level):
+    def __init__(self, screen, player, scoreboard, livescounter, level, execute_game_over):
         super().__init__(screen, scoreboard, livescounter, level)
         pygame.font.init()
         self.clock = pygame.time.Clock()
@@ -22,6 +22,7 @@ class ResolveLevel(PlayLevel):
         self.lives_counter = livescounter
         self.level = level
         self.texts_font_color = COLUMBIA_BLUE
+        self.execute_game_over = execute_game_over
 
         self.available_bg = []
         self.selected_bg = []
@@ -100,7 +101,9 @@ class ResolveLevel(PlayLevel):
                     if self.player.rect.bottom >= self.player.stop_landing and self.level == 2:
                         self.go_to_frontpage = True
                         return self.go_to_frontpage, print(f'He pedido ir a front page')
-
+            if self.lives_counter.lives_value == 0:
+                self.execute_game_over = True
+                return self.execute_game_over
             self.screen.fill(CORAL_PINK)
             self.screen.blit(
                 self.background_A, (self.background_posX, self.background_posY))
@@ -124,7 +127,8 @@ class ResolveLevel(PlayLevel):
             if not self.player.request_draw_rotation:
                 self.screen.blit(self.player.image, self.player.rect)
 
-            if self.player.rect.bottom >= self.player.stop_landing:
+            # if self.player.rect.bottom >= self.player.stop_landing:
+            if self.player.ship_landed:
                 self.keep_playing_message.draw_message(self.screen)
 
             if self.go_to_exit:

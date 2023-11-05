@@ -85,7 +85,7 @@ class Glumtar:
             scenario = PlayLevel(self.screen,
                                  self.score_board, self.lives_counter, scene)
             resolution = ResolveLevel(scenario.screen, scenario.player,
-                                      scenario.scoreboard, scenario.lives_counter, scenario.level)
+                                      scenario.scoreboard, scenario.lives_counter, scenario.level, scenario.execute_game_over)
             self.play_scenes.append(scenario)
             self.play_scenes.append(resolution)
             self.set_a_match = False
