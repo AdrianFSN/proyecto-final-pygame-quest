@@ -1,7 +1,7 @@
 import os
 import pygame
 from pygame.locals import *
-from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
+from . import BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORNELL_RED, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, HEIGHT, TOP_MARGIN_LIMIT, SPACE_CADET, TITLE_FONT_SIZE, WIDTH
 from . data.messages import Reader
 from . data.db_manager import DBManager
 
@@ -82,7 +82,7 @@ class BestPlayers:
         catch_record = True
         while not self.exit:
             self.clock.tick(FPS)
-            self.screen.fill(SPACE_CADET)
+            self.screen.fill(CORNELL_RED)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_0)) or (event.type == pygame.KEYDOWN and event.key == (pygame.K_KP0)):
                     self.kill_game = True
@@ -100,7 +100,6 @@ class BestPlayers:
                         self.activate_box_cursor = True
                     elif self.activate_box_cursor:
                         self.activate_box_cursor = False
-            self.screen.fill(SPACE_CADET)
             self.screen.blit(self.bg_front, (self.bg_front_X, self.bg_front_Y))
             self.screen.blit(self.logo, (self.logo_X, self.logo_Y))
             self.score_board.show_scoreboard(self.screen)
@@ -279,7 +278,7 @@ class BestPlayers:
             self.bg_controller = 0
 
     def add_user_choice_message(self):
-        escape_message = "Press <ESPACE> to start or 0 to quit game"
+        escape_message = "Press SPACE to start or 0 to quit game"
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
         title_render = self.font_style.render(
             escape_message, True, COLUMBIA_BLUE)

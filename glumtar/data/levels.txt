@@ -3,5 +3,5 @@ Krasna-Vahelà
 Glumtar
 Congratulations, Commander!
 This is the end of the trip!
-Press Espace to keep playing
+Press Space key to keep playing
 Press 0 to Quit$

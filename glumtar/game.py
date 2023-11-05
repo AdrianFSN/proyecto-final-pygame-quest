@@ -39,7 +39,6 @@ class Glumtar:
         pygame.mixer.init()
         pygame.mixer.music.load(self.music_route)
         pygame.mixer.music.play(loops=-1)
-        # pygame.mixer.Sound(boom_route).play()
         exit = False
         while not exit:
             self.clock.tick(FPS)

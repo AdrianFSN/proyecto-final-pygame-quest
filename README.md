@@ -24,7 +24,7 @@ Es la página de inicio. Incluye tres páginas con la historia de Glumtar, una b
 Estas páginas se pueden recorrer hacia delante y atrás con las flechas derecha e izquierda.
 
 # Playlevel
-Actualmente solo hay dos. Se distinguen por el escenario, el indicador de nivel en la parte superior de la pantalla y la frecuencia con la que se disparan los meteoritos (se puede modificar en el archivo __init__). Recorrer cada nivel lleva 1 minuto y 30 segundos.
+Actualmente solo hay dos niveles de juego diseñados. Se distinguen por el escenario, el indicador de nivel en la parte superior de la pantalla y la frecuencia con la que se disparan los meteoritos (se puede modificar en el archivo __init__). Recorrer cada nivel lleva 1 minuto y 30 segundos.
 
 El nivel se supera cuando el "scroll" del fondo de la pantalla llega a cero. Eso supone que el extremo derecho de la imagen de fondo está colocado en el extremo derecho de la pantalla. En ese momento, se activa la resolución del nivel.
 

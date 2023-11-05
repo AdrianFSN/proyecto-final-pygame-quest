@@ -98,7 +98,7 @@ class FrontPage:
             self.bg_controller = 0
 
     def add_escape_message(self):
-        escape_message = "Press <ESPACE> to start"
+        escape_message = "Press SPACE to start"
         self.font_style = pygame.font.Font(self.font_route, TITLE_FONT_SIZE)
         title_render = self.font_style.render(
             escape_message, True, COLUMBIA_BLUE)
