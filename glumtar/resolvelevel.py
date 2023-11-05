@@ -98,12 +98,14 @@ class ResolveLevel(PlayLevel):
                     elif self.alpha > 255:
                         self.alpha = 255
                 if event.type == self.restart_frontpage:
-                    if self.player.rect.bottom >= self.player.stop_landing and self.level == 2:
+                    # if self.player.rect.bottom >= self.player.stop_landing and self.level == 2:
+                    if self.player.ship_landed and self.level == 2:
                         self.go_to_frontpage = True
                         return self.go_to_frontpage, print(f'He pedido ir a front page')
             if self.lives_counter.lives_value == 0:
                 self.execute_game_over = True
                 return self.execute_game_over
+            print(f'self kives value está a {self.lives_counter.lives_value}')
             self.screen.fill(CORAL_PINK)
             self.screen.blit(
                 self.background_A, (self.background_posX, self.background_posY))
