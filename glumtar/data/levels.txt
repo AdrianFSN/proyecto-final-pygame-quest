@@ -2,4 +2,6 @@ Ready to land on...
 Krasna-Vahelà
 Glumtar
 Congratulations, Commander!
-This is the end of the trip!$
+This is the end of the trip!
+Press Espace to keep playing
+Press 0 to Quit$

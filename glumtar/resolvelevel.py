@@ -1,6 +1,6 @@
 import os
 import pygame
-from . import AVAILABLE_BG, COLUMBIA_BLUE, CORAL_PINK, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, SPACE_CADET, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
+from . import AVAILABLE_BG, BOTTOM_MARGIN_LIMIT, COLUMBIA_BLUE, CORAL_PINK, DEFAULT_POS_Y, FONT, FONT_SIZE, FPS, HEIGHT, SPACE_CADET, TOP_MARGIN_LIMIT, TITLE_FONT_SIZE, WIDTH
 from .playlevel import PlayLevel
 from .data.messages import Reader
 
@@ -50,7 +50,7 @@ class ResolveLevel(PlayLevel):
         pygame.time.set_timer(self.bg_fade_in, 100)
 
         self.advance_level = pygame.USEREVENT + 7
-        pygame.time.set_timer(self.advance_level, 6000)
+        pygame.time.set_timer(self.advance_level, 60000)
 
         self.background_posX = 0
         self.background_posY = 0
@@ -63,10 +63,13 @@ class ResolveLevel(PlayLevel):
             'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, self.PLANET_NAME_Y), (2, 5))
         self.available_planets_texts = [
             self.planet_level_1, self.planet_level_2]
+        self.keep_playing_message = Reader(
+            'levels.txt', FONT, self.PLANETS_ALERTS_FONT_SIZE, COLUMBIA_BLUE, (WIDTH, HEIGHT - BOTTOM_MARGIN_LIMIT), (5, 7))
 
         self.landing_ahead_message.render_lines(self.screen)
         self.planet_level_1.render_lines(self.screen)
         self.planet_level_2.render_lines(self.screen)
+        self.keep_playing_message.render_lines(self.screen)
         self.go_to_exit = False
         self.exit = False
 
@@ -79,7 +82,14 @@ class ResolveLevel(PlayLevel):
                     self.kill_game = True
                     return self.kill_game
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    self.exit = True
+                    if self.player.rect.bottom >= self.player.stop_landing:
+                        self.exit = True
+
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_0 or (event.type == pygame.KEYDOWN and event.key == pygame.K_KP0):
+                    if self.player.rect.bottom >= self.player.stop_landing:
+                        self.kill_game = True
+                        return self.kill_game
+
                 if event.type == self.bg_fade_in:
                     if self.player.rect.center[0] <= WIDTH/2 and self.alpha < 255:
                         self.alpha += self.fade_in_speed
@@ -87,6 +97,7 @@ class ResolveLevel(PlayLevel):
                         self.alpha = 255
                 if event.type == self.advance_level:
                     if self.player.rect.bottom >= self.player.stop_landing:
+                        self.keep_playing_message.draw_message(self.screen)
                         self.go_to_exit = True
 
             self.screen.fill(CORAL_PINK)
@@ -111,6 +122,10 @@ class ResolveLevel(PlayLevel):
             self.player.update()
             if not self.player.request_draw_rotation:
                 self.screen.blit(self.player.image, self.player.rect)
+
+            if self.player.rect.bottom >= self.player.stop_landing:
+                self.keep_playing_message.draw_message(self.screen)
+
             if self.go_to_exit:
                 self.exit = True
 
