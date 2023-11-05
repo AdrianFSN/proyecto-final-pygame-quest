@@ -97,7 +97,6 @@ class ResolveLevel(PlayLevel):
                         self.alpha = 255
                 if event.type == self.advance_level:
                     if self.player.rect.bottom >= self.player.stop_landing:
-                        self.keep_playing_message.draw_message(self.screen)
                         self.go_to_exit = True
 
             self.screen.fill(CORAL_PINK)

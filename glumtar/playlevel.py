@@ -1,6 +1,6 @@
 import os
 import pygame
-from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, METEO_OUTER_MARGIN, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
+from . import BG_SCROLL_SPEED, COLUMBIA_BLUE, COUNTDOWN_TIME, DEFAULT_BG_SCROLL, FONT, FONT_SIZE, FONT_SIZE_CONTROLLER, FPS, FRAMES_SPEED, GO_TO_RECORDS_DELAY, HEIGHT, TOP_MARGIN_LIMIT, METEO_FREQUENCY_LEVEL1, METEO_FREQUENCY_LEVEL2, METEO_OUTER_MARGIN, ROBIN_EGG_BLUE, TITLE_FONT_SIZE, WIDTH
 from .entities import Meteorite, Ship
 from tools.timers_and_countdowns import Countdown, ScrollBG
 
@@ -24,8 +24,11 @@ class PlayLevel:
         self.bg_scroll = ScrollBG(DEFAULT_BG_SCROLL)
         self.set_bg_scroll = DEFAULT_BG_SCROLL
 
-        self.trigger_meteorite = pygame.USEREVENT + 1
-        pygame.time.set_timer(self.trigger_meteorite, METEO_FREQUENCY_LEVEL1)
+        self.trigger_meteorite1 = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.trigger_meteorite1, METEO_FREQUENCY_LEVEL1)
+
+        self.trigger_meteorite2 = pygame.USEREVENT + 9
+        pygame.time.set_timer(self.trigger_meteorite2, METEO_FREQUENCY_LEVEL2)
 
         self.countdown = Countdown(self.screen, 5, 0)
         self.start_a_countdown = pygame.USEREVENT + 2
@@ -65,9 +68,16 @@ class PlayLevel:
                     print("Alguien ha decidido salir de la aplicación por la X")
                     self.kill_game = True
                     return self.kill_game
-                if event.type == self.trigger_meteorite:
-                    if not countdown_active:
-                        self.generate_meteorites()
+                if event.type == self.trigger_meteorite1:
+                    if self.level == 1:
+                        if not countdown_active:
+                            self.generate_meteorites()
+
+                if event.type == self.trigger_meteorite2:
+                    if self.level == 2:
+                        if not countdown_active:
+                            self.generate_meteorites()
+
                 if event.type == self.start_a_countdown:
                     if countdown_active:
                         self.countdown.discount_countdown()
@@ -204,5 +214,3 @@ class PlayLevel:
             game_over_title, True, COLUMBIA_BLUE)
         self.screen.blit(
             game_over_title_render, (self.pos_X, self.pos_Y))
-
-        # return self.execute_game_over
