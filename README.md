@@ -5,9 +5,6 @@ Glumtar es un juego arcade clásico. Embarcados en una nave espacial, vamos en b
 
 Pero nadie sabe con exactitud dónde está Glumtar. Para encontrarlo, en un entorno distópico y desolado —faltaría más—, solo nos queda el viejo método que ha engrandecido a la raza humana: el ensayo y el error.
 
-# Idioma inglés
-He optado por escribir el código en inglés, para simular trabajar con una empresa internacional.
-
 # Archivo game: el Gameloop
 El Gameloop básico es:
 
