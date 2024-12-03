@@ -1,5 +1,4 @@
-# proyecto-final-pygame-quest
-Mi proyecto final del bootcamp KC17 programación desde cero.
+#Glumtar: The Quest
 
 # Título del juego y sinopsis: Glumtar
 Glumtar es un juego arcade clásico. Embarcados en una nave espacial, vamos en busca del planeta Glumtar. Es el único lugar de la galaxia en el que el ser humano puede habitar, después de que la Tierra haya sido destruida.
